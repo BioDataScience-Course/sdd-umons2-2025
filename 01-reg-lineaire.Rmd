@@ -4,6 +4,7 @@
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
 SciViews::R("model", lang = "fr")
+library(equatiomatic)
 ```
 
 ##### Objectifs {.unnumbered}
@@ -400,7 +401,7 @@ Si nous réalisons un graphique de valeurs d'ordonnées à l'origine, de pentes 
 ```{r}
 p <- chart(data = models1, slope ~ intercept %col=%  fobj) +
   geom_point() +
-  geom_point(data = sfilter(models1, frank(fobj) <= 10),
+  geom_point(data = sfilter(models1, data.table::frank(fobj) <= 10),
     shape = 1, color = 'red', size = 3) +
   labs(x = "Ordonnée à l'origine", y = "Pente",  color = "f_obj") +
   scale_color_viridis_c(direction = -1)
@@ -410,7 +411,7 @@ plotly::ggplotly(p)
 Les dix valeurs les plus faibles sont mises en évidence sur le graphique par des cercles rouges. Le modèle optimal que nous recherchons se trouve dans cette région.
 
 ```{r}
-best_models <- sfilter(models1, frank(fobj) <= 10)
+best_models <- sfilter(models1, data.table::frank(fobj) <= 10)
 ```
 
 Nous pouvons afficher les `r nrow(best_models)` meilleurs modèles sur notre graphique :

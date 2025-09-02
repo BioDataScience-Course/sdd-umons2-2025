@@ -293,8 +293,8 @@ con <- dbConnect(drv)
 # injection de deux data frames comme tables
 # notez bien que nous utilisons le data frame long et correctement nettoyé
 # `whol` pour notre table "who",... pas l'horrible data frame `who` initial !
-dbWriteTable(con, "who", whol)
-dbWriteTable(con, "pop", pop)
+dbWriteTable(con, "who", as_dtt(whol))
+dbWriteTable(con, "pop", as_dtt(pop))
 ```
 
 Pour manipuler et visualiser le schéma de la base de données, il existe différents outils. Nous vous proposons d'utiliser le package R {dm} qui facilite grandement ce travail.

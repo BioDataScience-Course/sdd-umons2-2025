@@ -2,6 +2,7 @@
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
 SciViews::R("model", lang = "fr")
+library(equatiomatic)
 ```
 
 ##### Objectifs {.unnumbered}

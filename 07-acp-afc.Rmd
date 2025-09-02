@@ -288,7 +288,7 @@ Attention toutefois à la transformation logarithmique appliquée sur des donné
 urchin2 %>.%
   sselect(., -origin, -maturity) %>.% # Élimine les variables non quantitatives
   log1p(.) %>.% # Transforme toutes les autres en log(x + 1)
-  pca(., scale = TRUE) -> # Effectue l'ACP après standardisation
+  pca(data = ., ~., scale = TRUE) -> # Effectue l'ACP après standardisation
   urchin2_pca
 ```
 
@@ -330,7 +330,7 @@ head(urchin3)
 Refaisons notre ACP sur `urchin3` ainsi calculé :
 
 ```{r}
-urchin3_pca <- pca(urchin3, scale = TRUE)
+urchin3_pca <- pca(data = urchin3, ~., scale = TRUE)
 summary(urchin3_pca)
 ```
 

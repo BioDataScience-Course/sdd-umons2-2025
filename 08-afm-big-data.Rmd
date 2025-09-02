@@ -478,9 +478,10 @@ csv_bz2_file <- path(testdir, "babynames.csv.bz2")
 (timings$ecriture_s[3] <- system.time(
   write$csv.bz2(babynames, csv_bz2_file)
 )[["elapsed"]])
-(timings$lecture_s[3] <- system.time(
-  babynames2 <- read(csv_bz2_file)
-)[["elapsed"]])
+# error read csv.bz2
+#(timings$lecture_s[3] <- system.time(
+#  babynames2 <- read$csv.bz2(csv_bz2_file)
+#)[["elapsed"]])
 timings$taille_Mo[3] <- file_size(csv_bz2_file) / 2^20 # Transformation en Mo
 ```
 
