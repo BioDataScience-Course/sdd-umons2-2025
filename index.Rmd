@@ -13,7 +13,7 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: 'BioDataScience-Course/sdd-umons2-2024'
+github-repo: 'BioDataScience-Course/sdd-umons2-2025'
 url: 'https\://wp.sciviews.org/sdd-umons2/'
 description: "Cours interactif pour la science des données avec R & SciViews-R II."
 cover-image: "images/front-cover.png"
@@ -35,8 +35,6 @@ Cet ouvrage est conçu pour être utilisé de manière interactive en ligne. En 
 
 *Le matériel dans cet ouvrage est distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).*
 
-Raphaël Conotte a contribué à des versions antérieures (il n'est plus listé comme co-auteur de cet ouvrage, car ses contributions ont disparu au fil des remaniements successifs).
-
 ------------------------------------------------------------------------
 
 <details>
@@ -51,7 +49,7 @@ sessioninfo::session_info()
 
 ## Vue générale du cours {.unnumbered}
 
-Cet ouvrage interactif est le second volume d'une série de trois ouvrages traitant de la science des données biologiques. L'écriture de cette suite de livres a débuté au cours de l'année académique 2018-2019. Pour l'année académique 2024-2025, ceci est le support du cours de [Science des données II : analyse et modélisation](http://applications.umons.ac.be/web/fr/pde/2024-2025/ue/US-B3-SCBIOL-006-M.htm) au troisième Bachelier en Biologie en Faculté des Sciences de l'Université de Mons (UMONS), et dont le responsable est Philippe Grosjean
+Cet ouvrage interactif est le second volume d'une série de trois ouvrages traitant de la science des données biologiques. L'écriture de cette suite de livres a débuté au cours de l'année académique 2018-2019. Pour l'année académique 2025-2026, ceci est le support du cours de [Science des données II : analyse et modélisation](https://webcontent.umons.ac.be/web/fr/pde/2025-2026/ue/US-B3-SCBIOL-006-M.htm) au troisième Bachelier en Biologie en Faculté des Sciences de l'Université de Mons (UMONS), et dont le responsable est Philippe Grosjean
 
 La matière est divisée en dix modules de six heures chacun en présentiel. Il nécessite environ huit heures (variable, en fonction de votre rythme et de votre technique d'apprentissage entre six et dix heures) en travail à domicile. **Cette matière fait suite au premier cours dont le contenu est considéré comme assimilé (voir [cours SDD I](https://wp.sciviews.org/sdd-umons){target="top"}).**
 
@@ -75,7 +73,7 @@ Le matériel pédagogique, rassemblé dans ce syllabus interactif, est aussi var
 
 -   des renvois vers des documents externes en ligne, des vidéos [Youtube](https://www.youtube.com/) ou [Vimeo](https://vimeo.com/), des ouvrages en ligne en anglais ou en français, des blogs, des tutoriels, des questions sur des sites comme [Stackoverflow](https://stackoverflow.com/) ou dans des [mailing lists R](https://www.r-project.org/mail.html), de [X (ex Twitter)](https://twitter.com/)...
 
--   des diapositives de présentations distribuées via le dépôt [sdd_lessons sur BioDataScience-Course](https://github.com/BioDataScience-Course/sdd_lessons/tree/2024-2025).
+-   des diapositives de présentations distribuées via le dépôt [sdd_lessons sur BioDataScience-Course](https://github.com/BioDataScience-Course/sdd_lessons/tree/2025-2026).
 
 ```{block, type='info'}
 ::: {.nocourse}
@@ -117,7 +115,7 @@ Les cours de science des données utilisent une autre approche et se donnent en 
 
 ![](images/sdd2_00/organisation2.png)
 
-Une présentation des changements introduits par rapport à l'année précédente vous est faite durant la première séance introductive. La présentation correspondante est disponible au format PDF [ici](https://github.com/BioDataScience-Course/sdd_lessons/raw/2024-2025/B00/presentations/B00Pa_intro.pdf).
+Une présentation des changements introduits par rapport à l'année précédente vous est faite durant la première séance introductive. La présentation correspondante est disponible au format PDF [ici](https://github.com/BioDataScience-Course/sdd_lessons/raw/2025-2026/B00/presentations/B00Pa_intro.pdf).
 
 ### Quatre niveaux d'exercices {.unnumbered}
 
@@ -146,7 +144,7 @@ L'évaluation est **continue** tout au long de l'année. Il n'y a pas d'examen e
 
 Le plan du cours est une forme de contrat entre les étudiants et les enseignants. Ce document structure les attentes de vos encadrants. Veuillez lire ce document attentivement.
 
--   [Plan du cours de Science des données biologiques II : années 2024-2025](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/2024-2025/docs/plan_de_cours/sdd2_plan_cours_2024-2025.pdf)
+-   [Plan du cours de Science des données biologiques II : années 2025-2026](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/2025-2026/docs/plan_de_cours/sdd2_plan_cours_2025-2026.pdf)
 
 ## Issues {#issues .unnumbered}
 

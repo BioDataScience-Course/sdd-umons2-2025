@@ -4,8 +4,8 @@ learnitdown <- list(
   imgbaseurl =
     "https://filedn.com/lzGVgfOGxb6mHFQcRn9ueUb/sdd-umons2", # The base URL for external (big) images
   shiny_imgdir = "images/shinyapps",     # The Shiny image directory (screenshots)
-  svbox = 2024,                          # The SciViews Box version used
-  rstudio = "start_rstudio2024.html",    # Run RStudio from the box
+  svbox = 2025,                          # The SciViews Box version used
+  rstudio = "start_rstudio2025.html",    # Run RStudio from the box
   package = "BioDataScience2",           # Associated package for the exercises
   institutions = "UMONS",                # Known institutions
   courses = c(
@@ -18,11 +18,11 @@ learnitdown <- list(
     "Science des Données Biologiques II à l'UMONS (Q2 : analyse)" #,
     #"Bioinformatique et Science des Données II à Charleroi"
   ),
-  acad_year = "2024-2025",               # The academic year
-  YY = 24,                               # The academic year short id
-  W = as.Date("2024-09-08") + (0:37)*7,  # Sundays before each academic week
-  Q1 = as.Date("2024-09-08") + (0:15)*7, # There are 15 weeks at Q1
-  Q2 = as.Date("2025-02-02") + c(0:11, 14:16)*7 # Q2 starts 02/02 w22 but w33-34 are holidays
+  acad_year = "2025-2026",               # The academic year
+  YY = 25,                               # The academic year short id
+  W = as.Date("2025-09-07") + (0:37)*7,  # Sundays before each academic week
+  Q1 = as.Date("2025-09-07") + (0:15)*7, # There are 15 weeks at Q1
+  Q2 = as.Date("2026-02-01") + c(0:11, 14:16)*7 # Q2 starts 02/02 w22 but w33-34 are holidays
 )
 
 # We use glue() often for variables replacement from learnitdown, so, we
