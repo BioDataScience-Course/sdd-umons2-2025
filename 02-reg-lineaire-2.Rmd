@@ -163,7 +163,7 @@ if (exists("assignment"))
 -->
 ```
 
-## Régression linéaire multiple
+## Régression linéaire multiple {#reglinmultiple}
 
 Dans le cas de la régression linéaire simple, nous considérions le modèle statistique suivant (avec $\epsilon$ représentant les résidus, terme statistique dans l'équation) :
 
@@ -232,7 +232,7 @@ Notez que dans le cas de l'ajout d'*un seul* terme, la valeur *p* de cette ANOVA
 
 `r learnr("B02La_reg_multi", title = "Régression linéaire multiple", toc = "Régression linéaire multiple")`
 
-## Régression linéaire polynomiale
+## Régression linéaire polynomiale {#reglinpolynomiale}
 
 Pour rappel, un polynôme est une expression mathématique du type (*notez la ressemblance avec l'équation de la régression multiple*) :
 
@@ -316,7 +316,7 @@ summary(trees_lm6) |>
 
 Ah ha, ceci est bizarre ! Le *R*^2^ ajusté nous indique que le modèle serait très bon puisqu'il grimpe presque à 0,98. Le terme $\beta_2$ en diamètre^2^ reste très significatif, ... mais la pente relative à la hauteur $\beta_3$ est maintenant elle aussi très significative alors que dans le modèle multiple `trees_lm3` ce n'était pas le cas. De plus, l'ordonnée à l'origine n'est plus significativement différente de zéro. Bienvenue dans les instabilités liées aux intercorrélations entre paramètres dans les modèles linéaires complexes !
 
-## RMSE & critère d'Akaike
+## RMSE & critère d'Akaike {#rmseakaike}
 
 Le *R*^2^ (ajusté) n'est pas la seule mesure de la qualité d'ajustement d'un modèle. Il existe d'autres indicateurs. Par exemple, l'**erreur quadratique moyenne**, (*root mean square error*, ou RMSE en anglais) est la racine carrée de la moyenne des résidus au carré. Elle représente en quelque sorte la distance "typique" des résidus. Comme cette distance est exprimée dans les mêmes unités que l'axe *y*, cette mesure est particulièrement parlante. Nous pouvons l'obtenir par exemple comme ceci :
 
@@ -392,16 +392,16 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-015' = !"B02Ia_{YY}M_achatina"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/Jz38CzqC"),
+      'S-BIOG-015' = !"{assign_url$B02Ia_achatina}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[7]+1} 10:00:00"),
+      'S-BIOG-015' = !"{class1_start(mod, 'B02')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[8]+1} 23:59:59"),
+      'S-BIOG-015' = !"{n3_end(mod, 'B02')}"),
     term = "Q1", level = 3,
     toc = "Régression linéaire sur achatina")
 ```
 
-## Modèle empirique et mécaniste
+## Modèle empirique et mécaniste {#modeleempirique}
 
 Un **modèle empirique** est issu de l'observation. Nous collectons des données et nous cherchons à les prédire via un modèle statistique. L'important ici est d'obtenir une bonne prédiction, c'est-à-dire, une erreur quadratique moyenne du modèle la plus faible possible. Cependant, la forme mathématique du modèle n'a, éventuellement, rien à voir avec le mécanisme qui génère les données. C'est typiquement le cas pour un modèle polynomial d'ordre élevé.
 
@@ -413,7 +413,7 @@ Un **modèle mécaniste** vise à expliciter le mécanisme qui est responsable d
 
 $$volume = \frac{1}{3} \cdot \pi \cdot rayon^2 \cdot hauteur$$
 
-Avec notre diamètre au carré et notre hauteur, nous n'étions pas loin, à ceci près que les deux variables sont additionnées, et non multipliées dans notre modèle. La régression linéaire, et comme nous le verrons au chapitre suivant, le modèle linéaire sont fondamentalement des modèles additifs où les différents termes s'additionnent. Cependant, nous pouvons faire intervenir un terme qui multiplie nos deux variables explicatives par l'intermédiaire des **interactions** comme pour l'ANOVA à deux facteurs, voir [section 11.3 de SDD I](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/mod%25C3%25A8le-crois%25C3%25A9-complet.html). Afin de nous rapprocher de la formule du volume d'un cône, calculons à présent le carré du rayon et ajustons un modèle linéaire multiple **avec interactions** :
+Avec notre diamètre au carré et notre hauteur, nous n'étions pas loin, à ceci près que les deux variables sont additionnées, et non multipliées dans notre modèle. La régression linéaire, et comme nous le verrons au chapitre suivant, le modèle linéaire sont fondamentalement des modèles additifs où les différents termes s'additionnent. Cependant, nous pouvons faire intervenir un terme qui multiplie nos deux variables explicatives par l'intermédiaire des **interactions** comme pour l'ANOVA à deux facteurs, voir `r course_link("section 11.3 de SDD I", course = 1, "mod%25C3%25A8le-crois%25C3%25A9-complet")`. Afin de nous rapprocher de la formule du volume d'un cône, calculons à présent le carré du rayon et ajustons un modèle linéaire multiple **avec interactions** :
 
 ```{r, warning=FALSE}
 trees <- smutate(trees, radius2 = labelise((diameter/2)^2, "Rayon^2", units = "m^2"))
@@ -475,16 +475,16 @@ if (exists("assignment2"))
     course.ids = c(
       'S-BIOG-015' = !"B02Ga_{YY}M_models"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/PkWLRA7k"),
+      'S-BIOG-015' = !"{assign_url$B02Ga_models}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[7]+4} 08:00:00"),
+      'S-BIOG-015' = !"{class2_start(mod, 'B02')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[15]+2} 23:59:59"),
+      'S-BIOG-015' = !"{n4_end(mod, 'B05')}"),
     term = "Q1", level = 4, n = 4,
     toc = "Modélisations libres par quatre (partie I)")
 ```
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb02}
 
 Ce deuxième module vous a permis de prendre connaissance de différents outils de diagnostic pour sélectionner le meilleur modèle et de découvrir la régression linéaire multiple et polynomiale. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

@@ -22,7 +22,7 @@ SciViews::R("explore")
 
 Vous devez être à l'aise avec l'utilisation de R et RStudio, en particulier pour l'importation, le remaniement et la visualisation de données multivariées. Ceci correspond au cours SDD I. Cette partie est relativement indépendante de **SDD II : modélisation** qui forme la première section de cet ouvrage. Par conséquent, ces deux sections peuvent très bien être inversées si vous le souhaitez (si vous êtes en dehors d'un cours qui impose un ordre bien défini, bien entendu).
 
-## Analyse de données
+## Analyse de données {#analysedonnees}
 
 L'analyse de données (on parle aussi d'*analyse exploratoire des données*, EAD ou **statistiques exploratoires**) met en œuvre des méthodes statistiques multivariées visant à découvrir de l'information pertinente dans un gros jeu de données via des approches multidimensionnelles et essentiellement descriptives. Ces méthodes se regroupent en deux grandes familles :
 
@@ -85,7 +85,7 @@ Par conséquent, seulement une portion de notre matrice de distance (soit le tri
 
 `r h5p(76, height = 270, toc = "Objectif de la matrice de distance")`
 
-```{block2, type='note'}
+```{block, type='note'}
 
 Le package {exploreit} met à votre disposition les fonctions suivantes pour créer une matrice de dissimilarité et pour effectuer des regroupements (*cluster* en anglais) sur base de l'information qu'elle contient (nous verrons leur usage progressivement dans ce module) :
 
@@ -114,7 +114,7 @@ Nous voyons bien ici que R n'imprime que le *triangle inférieur* de notre matri
 
 Nous verrons plus loin comment nous pouvons utiliser l'information que cette matrice de distance contient pour regrouper les individus de manière pertinente à l'aide de la technique CAH. Mais avant cela, nous avons besoin d'un peu de théorie pour bien comprendre quelle **métrique** choisir pour calculer nos distances et pourquoi. On parle aussi d'**indices** de **similarité** ou **dissimilarité**.
 
-```{block2, type='warning'}
+```{block, type='warning'}
 
 **Attention :** nous n'avons pas considéré ici les unités respectives de nos variables. Une surface (mm^2^) ou une longeur (mm) ne sont pas mesurées dans les mêmes unités. Nous risquons alors de donner plus de poids dans nos calculs aux variables qui présentent des valeurs élevées. Nous aurions le même effet si nous décidions par exemple d'exprimer une mesure longitudinale en µm au lieu de l'exprimer en mm. Dans ce cas, il vaut mieux standardiser d'abord le tableau (moyenne de zéro et écart type de un) selon les colonnes avant d'effectuer le calcul. Une illustration de cette approche sera discutée plus loin.
 
@@ -128,7 +128,7 @@ Nous verrons plus loin comment nous pouvons utiliser l'information que cette mat
 
 Un indice de similarité (*similarity index* en anglais) est un descripteur statistique (nombre unique) de la similitude de deux échantillons ou individus représentés par plusieurs variables dans un échantillon multivarié. Un indice de similarité prend une valeur comprise entre 0 (différence totale) et 1 ou 100% (similitude totale). Un indice de dissimilarité est le complément d'un indice de similarité (dis = 1 -- sim) ; sa valeur est comprise entre 100% (différence totale) et 0 (similitude totale).
 
-```{block2, type='warning'}
+```{block, type='warning'}
 
 **Attention :** dans certains cas, un indice de dissimilarité peut varier de 0 à +$\infty$**. Il n'existe alors pas d'indice de similarité complémentaire. C'est le cas précisément de la distance euclidienne que nous avons explorée jusqu'ici.
 
@@ -166,7 +166,7 @@ Toute double absence n'est pas prise en compte ici également. Seuls les indices
 
 -   Bray-Curtis sur données transformées ($log(x+1)$ ou double racine carrée) pour un compromis entre les deux avec prise en compte de toutes les espèces, mais dépondération partielle des espèces les plus abondantes. C'est souvent un bon compromis.
 
-```{block2, type='warning'}
+```{block, type='warning'}
 
 Attention : Si les volumes échantillonnés entre stations ne sont pas comparables, il faut standardiser (moyenne nulle et écart type un) les données selon les échantillons avant de faire les calculs de distances. L'argument `scale = TRUE` pourra être ajouté à l'appel de `dissimilarity()` pour ce faire.
 
@@ -337,7 +337,7 @@ zoo6std_dist %>.%
 
 Voici comment lire ce graphique. Les deux individus les plus semblables sont le 2 et le 5 (regroupement effectué le plus bas, donc, avec la valeur de l'indice de dissimilarité le plus faible). Ensuite ce groupe formé du 2 et du 5 est le plus similaire au 3. Ensuite, le 1 et le 6 sont rassemblés. Puis le 4 se rattache au groupe formé des 2, 3 et 5 un peu plus haut sur l'axe. Finalement, le groupe de droite constitué des individus 2, 3, 4 et 5 et celui de gauche contenant le 1 et le 6 sont reliés encore plus haut suggérant ainsi la dissimilitude la plus forte entre ces deux sous-groupes.
 
-```{block2, type='warning'}
+```{block, type='warning'}
 
 **Attention :** La position des individus selon l'axe horizontal n'est pas importante. Il faut voir le dendrogramme comme un mobile qui peut tourner librement. C'est-à-dire que le groupe constitué de 2, 3, 4 et 5 aurait très bien pu être placé à la gauche de celui constitué de 1 et 6. De même, le sous-groupe 2, 3 et 5 aurait très bien pu être à la gauche du regroupement avec 4 à la droite, etc. Seul compte la hauteur sur l'axe vertical à laquelle le regroupement se fait.
 
@@ -640,11 +640,11 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B06Ia_{YY}M_fish_market"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/TQY58US3"),
+      'S-BIOG-061' = !"{assign_url$B06Ia_fish_market}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[22]+1} 13:00:00"),
+      'S-BIOG-061' = !"{class1_start(mod, 'B06')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[23]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B06')}"),
     term = "Q2", level = 3,
     toc = "Analyse multivarée sur sept poissons (CAH)")
 ```
@@ -747,7 +747,7 @@ Ensuite, avec *k* croissant, notre objectif est de faire des regroupements qui d
 
 Nous recherchons ici des sauts importants dans la décroissance de la somme des carrés, tout comme dans le dendrogramme obtenu par la CAH nous recherchions des sauts importants dans les regroupements (hauteur des barres verticales du dendrogramme). Nous observons ici un saut important pour *k* = 2, puis une diminution un peu moins forte. Ceci *suggère* que nous pourrions considérer deux groupes, mais qu'un regroupement plus détaillé a quand même un sens ici.
 
-```{block2, type='note'}
+```{block, type='note'}
 Le nombre de groupes proposé par `profile_k()` n'est qu'indicatif ! Si vous avez par ailleurs d'autres informations qui vous suggèrent un regroupement différent, ou si vous voulez essayer un regroupement plus ou moins détaillé par rapport à ce qui est proposé, c'est tout aussi correct.
 
 La fonction `profile_k()` propose d'ailleurs deux autres méthodes pour déterminer le nombre optimal de groupes *k*, avec `method = "silhouette"` ou `method = "gap_stat"`. Voyez l'aide en ligne de la fonction `?factoextra::fviz_nbclust`. Ces différentes méthodes peuvent d'ailleurs suggérer des regroupements différents pour les mêmes données... preuve qu'il n'y a pas *une et une seule* solution optimale !
@@ -898,16 +898,16 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B06Ia_{YY}M_fish_market"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/TQY58US3"),
+      'S-BIOG-061' = !"{assign_url$B06Ia_fish_market}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[22]+1} 13:00:00"),
+      'S-BIOG-061' = !"{class1_start(mod, 'B06')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[23]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B06')}"),
     term = "Q2", level = 3,
-    toc = "Analyse multivarée sur sept poissons (Kmeans)")
+    toc = "Analyse multivarée sur sept poissons (kmeans)")
 ```
 
-## Indices de diversité
+## Indices de diversité {#indicesdiversite}
 
 Au premier abord, la notion de biodiversité est simple. Elle représente toute la variété des formes de la vie des gènes jusqu'à l'écosystème. Cependant, réduire toute cette richesse à un seul nombre n'est pas quelque chose d'évident. Les scientifiques vont donc avoir recours à ce que l'on appelle des **indices de diversité** pour tenter de la quantifier. Ces indices sont des paramètres qui sont fréquemment utilisés pour obtenir des informations sur l'état de communautés végétales ou animales, leur viabilité ou leur évolution dans le temps par exemple. Ils permettront également d'apprécier la diversité qui peut exister entre des zones ou des milieux différents. Le choix d'un indice dépendra de la taille de l'échantillon, du type de données et de la résolution spatiale. Dès lors, il existe différentes expressions de la diversité :
 
@@ -1057,7 +1057,7 @@ dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
 
 <!-- Ce document n'est malheureusement plus accessible! [Numerical Ecology with R](https://www.springer.com/gp/book/9781441979766) traite en détail de nombreuses méthodes multivariées avec illustrations dans R (ouvrage recommandé pour tous ceux qui explorent des données multivariées en écologie, en anglais). -->
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb06}
 
 Ce sixième module vous a permis de comprendre la classification hiérarchique, la méthode des k-moyennes et divers indices intéressants en biologie. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

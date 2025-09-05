@@ -16,7 +16,7 @@ SciViews::R("explore", lang = "fr")
 
 -   Comme pour le module 6, vous devez être à l'aise avec l'utilisation de R et RStudio, en particulier pour l'importation, le remaniement et la visualisation de données multivariées. Ceci correspond au début du cours SDD I.
 
-## Réduction de dimensions grâce à l'ordination
+## Réduction de dimensions grâce à l'ordination {#reductiondimensions}
 
 Ici, l'objectif n'est pas de **regrouper** ou de **classifier** les individus du tableau comme nous avons fait avec la CAH ou les k-moyennes, mais de les **ordonner** sur un graphique en nuage de points en deux ou trois dimensions. Ce graphique s'appelle une "carte", et la technique qui la réalise est une **méthode d'ordination**.
 
@@ -74,7 +74,7 @@ pima <- sdrop_na(pima)
 pima
 ```
 
-```{block2, type='warning'}
+```{block, type='warning'}
 Notre tableau est presque amputé de la moitié de ses données, mais il nous reste tout de même encore 392 cas sur 768, soit assez pour notre analyse.
 ```
 
@@ -278,7 +278,7 @@ chart(data = urchin2, log(weight) ~ log(diameter1)) +
   geom_point()
 ```
 
-```{block2, type='warning'}
+```{block, type='warning'}
 Il est crucial de bien nettoyer son jeu de données avant une ACP, et aussi, de vérifier que les relations sont linéaires. Sinon, il faut transformer les données de manière appropriée. Rappelez-vous que l'ACP s'intéresse aux corrélations **linéaires** entre vos variables. 
 ```
 
@@ -306,7 +306,7 @@ chart$scree(urchin2_pca)
 
 Ne vous réjouissez pas trop vite. Nous avons ici un **effet saturant** lié au fait que toutes les variables sont positivement corrélées entre elles. Cet effet est évident. Ici, c'est la taille des oursins. Nous allons conclure que plus un oursin est gros, plus ses dimensions et ses masses sont importantes. **C'est trivial et d'un intérêt très limité**, avouons-le.
 
-```{block2, type='warning'}
+```{block, type='warning'}
 Puisque l'ACP optimise la variance sur le premier axe, un effet saturant aura tendance à occulter d'autres effets intéressants. Nous pouvons nous en débarrasser en identifiant une des variables représentant le mieux cet effet, et en calculant les ratios entre toutes les autres variables et celle-là. Ainsi, nous passons de quantification de la taille sur toutes les variables à des ratios qui quantifient beaucoup mieux des effets de forme plus subtils.
 ```
 
@@ -751,11 +751,11 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B07Ia_{YY}M_acp_afc"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/zljzgEOO"),
+      'S-BIOG-061' = !"{assign_url$B07Ia_acp_afc}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[24]+1} 13:00:00"),
+      'S-BIOG-061' = !"{class1_start(mod, 'B07')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[25]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B07')}"),
     term = "Q2", level = 3,
     toc = "ACP et AFC en pratique (I)")
 ```
@@ -831,7 +831,7 @@ Par exemple, si nous nous posons la question de l'impact de l'éducation sur l'i
 table(wg$B, wg$edu)
 ```
 
--   **Étape 2 :** test de Chi^2^ d'indépendance, voir [section correspondante du cours de SDD I](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/chi2.html%23test-chi2-dind%C3%A9pendance). L'hypothèse nulle du test est que les deux variables sont indépendantes l'une de l'autre. L'hypothèse alternative est qu'une dépendance existe. Si la réponse aux questions est indépendante du niveau d'éducation (pas de rejet de H~0~), notre analyse est terminée. Sinon, il faut approfondir... Choisissons notre seuil $\alpha$ à 5% avant de réaliser notre test.
+-   **Étape 2 :** test de Chi^2^ d'indépendance, voir `r course_link("section correspondante du cours de SDD I", course = 1, "chi2", "test-chi2-dind%C3%A9pendance")`. L'hypothèse nulle du test est que les deux variables sont indépendantes l'une de l'autre. L'hypothèse alternative est qu'une dépendance existe. Si la réponse aux questions est indépendante du niveau d'éducation (pas de rejet de H~0~), notre analyse est terminée. Sinon, il faut approfondir... Choisissons notre seuil $\alpha$ à 5% avant de réaliser notre test.
 
 ```{r}
 chisq.test(wg$B, wg$edu)
@@ -1010,11 +1010,11 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B07Ia_{YY}M_acp_afc"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/zljzgEOO"),
+      'S-BIOG-061' = !"{assign_url$B07Ia_acp_afc}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[24]+1} 13:00:00"),
+      'S-BIOG-061' = !"{class1_start(mod, 'B07')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[25]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B07')}"),
     term = "Q2", level = 3,
     toc = "ACP et AFC en pratique (II)")
 ```
@@ -1059,11 +1059,11 @@ if (exists("challenge"))
     course.ids = c(
       'S-BIOG-061' = !"B07Ca_{YY}M_multi"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/qVGj_Y0s"),
+      'S-BIOG-061' = !"{assign_url$B07Ca_multi}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[24]+5} 11:00:00"),
+      'S-BIOG-061' =  !"{mod['B07', 'challenge']} 09:45:00"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[24]+5} 12:30:00"),
+      'S-BIOG-061' = !"{mod['B07', 'challenge']} 12:30:00"),
     toc = "Challenge analyses multivariées")
 ```
 
@@ -1077,7 +1077,7 @@ Vous pouvez soumettre vos résultats pendant une période de temps précise via 
 `r launch_shiny("https://sdd.umons.ac.be/B07Ca_multi/", height = 800, delay = 20, toc = NULL, alt1 = "*Cliquez pour visualiser le classement.*", alt2 = "*Cliquez pour visualiser le classement.*")`
 :::
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb07}
 
 Ce module 7 vous a permis de découvrir deux méthodes très utilisées dans les statistiques exploratoires : l' ACP et l'AFC. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

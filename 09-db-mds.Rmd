@@ -16,17 +16,17 @@ La section relative aux bases de données fait suite aux notions vues dans le ca
 
 Les techniques MDS étudiées à la fin de ce module sont basées sur des matrices de distances. Elles sont complémentaires à la classification ascendante hiérarchique. Le module \@ref(cah-kmeans-div) doit être assimilé avant de s'attaquer à la présente matière, et en particulier, les métriques et les matrices de distances.
 
-**Le script R relatif à cette section est disponible [ici](https://raw.githubusercontent.com/BioDataScience-Course/sdd_lessons/2024-2025/B09/R/B09Ra_db_mds.R).** Il peut être copié et collé dans un document `.R` dans RStudio sous SaturnCloud pour l'exécuter et l'explorer par vous-même.
+**Le script R relatif à cette section est disponible `r !{"[ici](https://raw.githubusercontent.com/BioDataScience-Course/sdd_lessons/{acad_year}/B09/R/B09Ra_db_mds.R)"}`.** Il peut être copié et collé dans un document `.R` dans RStudio sous SaturnCloud pour l'exécuter et l'explorer par vous-même.
 
 ```{asis, eval=is_html_output()}
 ![[Mosaïque d'"identicônes" de SaturnCloud, generative aRt (art généré à l'aide du langage R), par Ijeamaka Anyene.](https://ijeamaka.art/portfolio/saturn_cloud/)](https://ijeamaka.art/img/portfolio/saturn_cloud_final_collage.png)
 ```
 
-## Accès aux bases de données
+## Accès aux bases de données {#accesdb}
 
 Puisque nous traitons de jeux de données multivariés potentiellement très gros, il devient important de pouvoir accéder aux données stockées de manière plus structurée que dans un fichier au format CSV ou Excel. Les bases de données, et notamment les **bases de données relationnelles**, sont prévues pour stocker de grandes quantités de données de manière structurée et pour pouvoir en extraire la partie qui nous intéresse à l'aide de **requêtes**. Nous allons ici étudier les rudiments indispensables pour nous permettre de gérer l'accès à de telles bases de données depuis R.
 
-```{block2, type='note'}
+```{block, type='note'}
 SQL est un langage dédié aux requêtes et à la manipulation de bases de données relationnelles, constituées de *tables* (équivalent à des tableaux cas par variables en statistiques) reliées entre elles par une ou plusieurs *clés*. Par exemple, le champ `auteur` d'une liste de livres dans la table `Livres` renvoie (est lié à) vers le champs `nom` d'une autre table `Ecrivains` qui fournit plus de détails sur chaque auteur.
 ```
 
@@ -69,7 +69,7 @@ Ce code vous permet de vous connecter, interagir et vous déconnecter de la base
 
 `r h5p(110, height = 270, toc = "Connexion à une base de données")`
 
-```{block2, type='note'}
+```{block, type='note'}
 Avec certains drivers (SQLite2, PostgreSQL ...) RStudio affiche la liste des tables et des variables disponibles dans la base de données dans l'onglet **Connexions** de manière assez similaire à l'affichage des objets R en mémoire dans l'onglet **Environnement**. Malheureusement, cette fonctionnalité n'est pas (encore) disponible pour DuckDB. Par contre, vous pouvez utiliser `dbListTables(con)` pour lister les tables disponibles et `dbListFields(con, "table_name")` pour lister les champs dans une table nommée `table_name`.
 ```
 
@@ -108,7 +108,7 @@ Par contre, la table `who` est un peu plus "nébuleuse", car elle contient 60 va
 
 Ce sont les 56 autres colonnes qui devraient vous intriguer. La page d'aide indique que le nom de chaque colonne est formé de plusieurs items : "new" (pour nouveaux cas de tuberculose), "rel", "sn", "sp", "ep", un code indiquant la méthode de diagnostic, et enfin, une dernière composante commençant par "m" ou "f" (le genre) et suivi de deux à quatre chiffres indiquant la classe d'âge, par exemple, "1524" pour les 15 à 24 ans, avec "014", la classe de 0 à 14 ans et "65", la classe de 65 ans et plus. Vous vous doutez bien qu'un tel encodage des données ne va pas être facile à utiliser ! Cela nous permet d'aborder des règles de remaniement des tableaux de données qui simplifient leur usage dans une base de données relationnelle. Cela s'appelle la **normalisation** des données. Mais avant d'aborder cela, voyons comment travailler dans R directement avec ces données (à titre de comparaison).
 
-```{block2, type='note'}
+```{block, type='note'}
 La question à laquelle nous souhaitons répondre est la suivante : **Quels sont les dix pays où la prévalence de la tuberculose est la plus forte en moyenne pendant les années 2000 (2000 à 2009 inclus), chez les femmes âgées de 25 à 54 ans ?**
 ```
 
@@ -184,7 +184,7 @@ Nous avons quand même un petit problème ici que nous détaillerons un peu plus
 
 </details>
 
-Nous allons remanier le tableau `who` pour nous économiser les difficultés dans nos traitements ultérieurs et dans la base de données. Le tableau `who` est en fait une **forme large** et nous devons le transformer en un **tableau long** en tout premier lieu avec `pivot_longer()`. Nous avons vu ces techniques au [module 5 du cours de SDD I](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/recombinaison-de-tableaux.html). Outre le tableau à traiter, nous indiquons successivement les colonnes à remanier en long (toutes celles qui commencent par `"new"`), le nom de la colonne qui reprend les anciens noms (`type`) et le nom de la colonne qui reprend les valeurs (`new_cases`).
+Nous allons remanier le tableau `who` pour nous économiser les difficultés dans nos traitements ultérieurs et dans la base de données. Le tableau `who` est en fait une **forme large** et nous devons le transformer en un **tableau long** en tout premier lieu avec `pivot_longer()`. Nous avons vu ces techniques au `r course_link("module 5 du cours de SDD I", course = 1, "recombinaison-de-tableaux")`. Outre le tableau à traiter, nous indiquons successivement les colonnes à remanier en long (toutes celles qui commencent par `"new"`), le nom de la colonne qui reprend les anciens noms (`type`) et le nom de la colonne qui reprend les valeurs (`new_cases`).
 
 ```{r}
 whol <- pivot_longer(who, starts_with("new"), names_to = "type", values_to = "new_cases")
@@ -493,7 +493,7 @@ dm_from_con(con, learn_keys = FALSE) %>.%
 dm_draw(who_dm, view_type = "all")
 ```
 
-La définition de deux clés étrangères depuis "who" et "pop" vers la clé primaire "country" dans la table "countries" crée ce que l'on appelle une **relation cyclique** entre les trois tables. Avec les versions antérieures de {dm} cela n'était pas possible. Vérifiez donc bien la version de votre package {dm}. Dans la SciViews Box 2024, il s'agit de la version 1.0.10. Cependant, ces relations cycliques ne sont pas encore bien gérées par d'autres fonctions de {dm}, notamment `dm_filter()` que nous utiliserons ensuite. Nous allons donc créer une version plus simple de notre modèle de données sans la clé étrangère entre "pop" et "countries".
+La définition de deux clés étrangères depuis "who" et "pop" vers la clé primaire "country" dans la table "countries" crée ce que l'on appelle une **relation cyclique** entre les trois tables. Avec les versions antérieures de {dm} cela n'était pas possible. Vérifiez donc bien la version de votre package {dm}. Dans la SciViews Box 2025, il s'agit de la version 1.0.11. Cependant, ces relations cycliques ne sont pas encore bien gérées par d'autres fonctions de {dm}, notamment `dm_filter()` que nous utiliserons ensuite. Nous allons donc créer une version plus simple de notre modèle de données sans la clé étrangère entre "pop" et "countries".
 
 ```{r}
 dm_from_con(con, learn_keys = FALSE) %>.%
@@ -686,7 +686,7 @@ Ce graphique s'interprète comme suit :
 -   Les stations aux extrémités sont des configurations extrêmes ; celles au centre sont des configurations plus courantes.
 -   Par contre, ni l'orientation des axes ni les valeurs absolues sur ces axes n'ont de significations particulières ici. N'en tenez pas compte.
 
-```{block2, type='warning'}
+```{block, type='warning'}
 
 Attention : rien ne garantit que notre MDS métrique projettée en deux dimensions soit suffisamment représentative des données dans leur ensemble. Si la méthode n'a pas réussi à représenter fidèlement les données, c'est que ces dernières sont trop complexes et ne s'y prêtent pas. Contrôlez donc toujours les indicateurs que sont les valeurs de "Goodness-of-fit" (GOF, qualité d'ajustement).
 
@@ -706,7 +706,7 @@ Ici `GOF1` est la somme des valeurs propres obtenues lors du calcul. Retenez sim
 
 `r h5p(97, height = 270, toc = "Qualité d'ajustement d'un MDS")`
 
-```{block2, type='note'}
+```{block, type='note'}
 
 Rappelons que la PCoA sur matrice euclidienne après standardisation ou non des données est équivalente à une **Analyse en Composantes Principales** (ACP) ... mais avec un calcul nettement moins efficace. Dans ce contexte, la PCoA n'a donc pas grand intérêt. Elle est surtout utile lorsque vous voulez représenter des métriques de distances *différentes* de la distance euclidienne comme c'est le cas ici avec un choix de distances de Bray-Curtis.
 
@@ -766,7 +766,7 @@ Si par contre, vous voulez être plus contraignant, alors, les distances seront 
 
 Ici, nous pouvons constater que les deux critères sont bons. Nous pouvons donc nous fier à la carte obtenue à l'aide de la MDS non métrique de Kruskal.
 
-```{block2, type='warning'}
+```{block, type='warning'}
 
 Restez toujours attentif à la taille du jeu de données que vous utilisez pour réaliser une MDS, en particuliers une MDS non métrique. Quelques centaines de lignes, cela dois passer, plusieurs dizaines de milliers ou plus, cela ne passera pas ! La limite dépend bien sûr de la puissance de votre ordinateur et de la quantité de mémoire vive disponible. Retenez toutefois que la quantité de calculs augmente drastiquement avec la taille du jeu de données à traiter.
 
@@ -789,11 +789,11 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B09Ia_{YY}M_portalr"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/uwN21SjN"),
+      'S-BIOG-061' = !"{assign_url$B09Ia_portalr}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[30]+1} 13:00:00"),
+      'S-BIOG-061' = !"{class1_start(mod, 'B09')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[31]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B09')}"),
     term = "Q2", level = 3,
     toc = "Bases de données et analyse MDS (rat-kangourous à Portal)")
 ```
@@ -807,16 +807,16 @@ if (exists("assignment2"))
     course.ids = c(
       'S-BIOG-061' = !"B09Ga_{YY}M_open_data"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/Y2z-pPM8"),
+      'S-BIOG-061' = !"{assign_url$B09Ga_open_data}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[30]+5} 08:00:00"),
+      'S-BIOG-061' = !"{class2_start(mod, 'B09')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[35]+2} 23:59:59"),
+      'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
     term = "Q2", level = 4, n = 4,
     toc = "Étude de données ouvertes choisies librement (I)")
 ```
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb09}
 
 Ce neuvième module vous a permis de découvrir le travail sur les bases de données ainsi qu'une autre famille d'analyses multivariées : les MDS. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

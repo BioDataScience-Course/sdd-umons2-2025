@@ -245,7 +245,7 @@ chart$contingency(mar_mfa2, choices = c(1, 2))
 
 Ici aussi les quatre classes de plancton `EchinodermLarvae`, `GasteropodsLarvae`, `Cladocerans` et `Pteropods` s'individualisent à gauche, contre tous les autres à droite. Également les stations proches de Nice se retrouvent à la gauche, et toutes les autres à droite.
 
-```{block2, type='note'}
+```{block, type='note'}
 Nous voyons ici que le traitement sous forme ACP ou sous forme AFC (pour le comptage exhaustif d'espèces ou de classes taxonomiques par station, les deux sont envisageables) ne donne pas de résultats franchement différents. Ce n'est pas forcément toujours le cas. Veuillez à bien choisir vos types de variables dans l'AFM !
 ```
 
@@ -274,13 +274,27 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B08Ia_{YY}M_mfa"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/4WTy61cc"),
+      'S-BIOG-061' = !"{assign_url$B08Ia_mfa}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[26]+1} 13:00:00"),
+      'S-BIOG-061' = !"{class1_start(mod, 'B08')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[27]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B08')}"),
     term = "Q2", level = 3,
     toc = "AFM sur oiseaux alpins")
+
+if (exists("assignment"))
+  assignment("B08Ib_zooscannet", part = NULL,
+    url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
+    course.ids = c(
+      'S-BIOG-061' = !"B08Ib_{YY}M_zooscannet"),
+    course.urls = c(
+      'S-BIOG-061' = !"{assign_url$B08Ib_zooscannet}"),
+    course.starts = c(
+      'S-BIOG-061' = !"{class2_start(mod, 'B08')}"),
+    course.ends = c(
+      'S-BIOG-061' = !"{n3_end(mod, 'B08')}"),
+    term = "Q2", level = 3,
+    toc = "AFM sur plancton (gros jeu de données)")
 ```
 
 <!--
@@ -326,7 +340,7 @@ Si vous souhaitez monter un PC qui ne sera limité que par la taille maximale ad
 
 Mais prenons maintenant un peu de recul : combien de fois aurez-vous à traiter d'aussi gros jeux de données (et surtout à les traiter en une seule fois) ? Il est fort probable plutôt que vous ne rencontrerez déjà que rarement des tableau avec plus de quelques dizaines de millions de lignes. Donc, la quasi-totalité de vos tableaux de données pourra être traitée entièrement en mémoire vive, que ce soit dans votre PC directement, ou dans une machine virtuelle plus grosse dans le cloud. Aujourd'hui, un PC puissant, style station de travail, qui coûte quelques milliers d'euros, peut accueillir très facilement 128Go de mémoire vive. De plus, vous avez aussi accès (avec un compte payant) à des machines sur le cloud qui ont autant, voire plus de mémoire vive. Par exemple, dans [SaturnCloud](https://saturncloud.io), vous avez les machines **4XLarge** avec 16 cœurs et 128Go de RAM, **8XLarge** avec 32 cœurs et 256Go RAM, et même **16XLarge** avec 64 cœurs et 512Go de RAM !
 
-```{block2, type='info'}
+```{block, type='info'}
 Avec Excel, vous ne pourrez pas traiter des tableaux plus gros qu'environ 1 million de lignes (voir [ici](https://support.microsoft.com/en-us/office/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3)) et aujourd'hui des tableaux de cette taille se rencontrent en biologie, même si ce n'est pas ultra fréquent. Par contre, la limite dans R est :
 
 -   soit de 2^31-1 lignes = plus de 2 milliards de lignes (nombre de lignes maximales indexables dans un **data.table**),
@@ -388,7 +402,7 @@ Mais revenons à notre onglet **Environment**. Si vous cliquez sur la petite fl�
 
 Il a fallu bien moins d'une seconde sur la machine qui compile ce cours pour faire cette opération. Vous voyez donc que, non seulement, nous pouvons lire dans R très facilement des tableaux de plusieurs millions de lignes, mais qu'en plus, les remaniements classiques avec les fonctions "speedy" dont le nom commence par "s" sont également très rapides.
 
-```{block2, type='note'}
+```{block, type='note'}
 Lorsque vos calculs commencent à "devenir lents", c'est-à-dire, quand il faut plus d'une dizaine de secondes pour retrouver la main, cela vaut la peine d'utiliser les versions les plus rapides des fonctions de manipulation de tableaux de données. En général, les fonctions "tidy" privilégient la clarté de l'interface utilisateur à la vitesse. Les fonctions "speedy" sont plus rapides et moins gourmandes en mémoire vive. S'il faut encore gagner, utilisez [{data.table}](https://rdatatable.gitlab.io/data.table/), [{duckdb}](https://r.duckdb.org), ou [{polars}](https://rpolars.github.io). Dans tous les cas, il existe un package qui permet de continuer à écrire son code presque comme d'habitude avec des `select()`, `filter()` ... grâce à [{dtplyr}](https://dtplyr.tidyverse.org), [{dbplyr}](https://dbplyr.tidyverse.org) ou [{tidypolars}](https://tidypolars.etiennebacher.com). [Cette page](https://duckdblabs.github.io/db-benchmark/) présente une comparaison des performances de différents systèmes de traitement de gros jeux de données en mémoire.
 ```
 
@@ -402,7 +416,7 @@ Il s'agit de prénoms masculins. Cela veut donc dire que les principaux prénoms
 
 Notez à présent la quantité de mémoire utilisée par votre session R... Normalement, si vous êtes parti d'une session vide, vous restez encore en dessous du gigaoctet, soit encore loin des 4Go disponibles. On a de la marge et aucune précaution particulière ne doit être prise avec des tableaux "aussi petits" pour R. Par contre, faites bien attention aux outils statistiques que vous utilisez dessus. Par exemple, ajuster un modèle linéaire généralisé avec variable aléatoire dans une telle quantité de données prendra soit un temps très, très long, soit fera planter la machine par manque de mémoire (il s'agit d'une technique qui demande énormément de calculs).
 
-```{block2, type='info'}
+```{block, type='info'}
 Lorsque vous manipulez des gros jeux de données dans R, pensez toujours à surveiller l'utilisation de la mémoire vive par la session en cours et à éliminer les objets qui ne sont plus utiles. Pour cela, vous pouvez utiliser `rm()`. Par exemple, pour effacer de la mémoire un tableau nommé `df`, et un vecteur `x`, vous entrez `rm(df, x)`.
 ```
 
@@ -704,16 +718,16 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-061' = !"B08Ib_{YY}M_zooscannet"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/de7MFpcj"),
+      'S-BIOG-061' = !"{assign_url$B08Ib_zooscannet}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[26]+5} 08:00:00"),
+      'S-BIOG-061' = !"{class2_start(mod, 'B08')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[27]+1} 23:59:59"),
+      'S-BIOG-061' = !"{n3_end(mod, 'B08')}"),
     term = "Q2", level = 3,
     toc = "AFM sur plancton (gros jeu de données)")
 ```
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb08}
 
 Ce module 8 vous a permis de découvrir l'AFM, et de traiter correctement des jeux de données volumineux. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

@@ -13,7 +13,7 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: 'BioDataScience-Course/sdd-umons2-2025'
+github-repo: "`r !'BioDataScience-Course/sdd-umons2-{YYYY}'`"
 url: 'https\://wp.sciviews.org/sdd-umons2/'
 description: "Cours interactif pour la science des données avec R & SciViews-R II."
 cover-image: "images/front-cover.png"
@@ -47,7 +47,7 @@ sessioninfo::session_info()
 
 </details>
 
-## Vue générale du cours {.unnumbered}
+## Vue générale du cours {#vuegeneral .unnumbered}
 
 Cet ouvrage interactif est le second volume d'une série de trois ouvrages traitant de la science des données biologiques. L'écriture de cette suite de livres a débuté au cours de l'année académique 2018-2019. Pour l'année académique 2025-2026, ceci est le support du cours de [Science des données II : analyse et modélisation](https://webcontent.umons.ac.be/web/fr/pde/2025-2026/ue/US-B3-SCBIOL-006-M.htm) au troisième Bachelier en Biologie en Faculté des Sciences de l'Université de Mons (UMONS), et dont le responsable est Philippe Grosjean
 
@@ -146,20 +146,24 @@ Le plan du cours est une forme de contrat entre les étudiants et les enseignant
 
 -   [Plan du cours de Science des données biologiques II : années 2025-2026](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/2025-2026/docs/plan_de_cours/sdd2_plan_cours_2025-2026.pdf)
 
+`r !{"[Plan du cours de Science des données biologiques II : années {acad_year}](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/{acad_year}/docs/plan_de_cours/sdd2_plan_cours_{acad_year}.pdf)"}`
+
 ## Issues {#issues .unnumbered}
 
 Toutes les questions relatives aux exercices sont à poser dans les **"issues" GitHub** dédiées à ce cours.
 
-```{r assign_B00Ga_issues, echo=FALSE, results='asis'}
+```{r assign_B00Qa_issues, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B00Ga_issues", part = NULL, clone = FALSE,
+  assignment2("B00Qa_issues", part = NULL, clone = FALSE,
     url = "https://github.com/BioDataScience-Course/B00Qa_24M_issues-b24",
     course.ids = c(
-      'S-BIOG-015'         = !"B00Ga_{YY}M_issues"),
+      'S-BIOG-015'         = !"B00Qa_{YY}M_issues"),
     course.urls = c(
-      'S-BIOG-015'         = "https://classroom.github.com/a/Ej7qxJ4N"),
+      'S-BIOG-015'         = !"{assign_url$B00Qa_issues}"),
+    course.starts = c(
+      'S-BIOG-015'         = !"{course_start} 10:00:00"),
     course.ends = c(
-      'S-BIOG-015'         = !"{W[37]+5} 23:59:59"),
+      'S-BIOG-015'         = !"{course_end} 23:59:59"),
     term = "", level = 0,
     toc = "Poser ses questions dans une issue.", n = 100,
     texts = learnitdown::assignment2_fr(
@@ -176,24 +180,24 @@ Une fois que vous avez rejoint le groupe **`r !"b{YY}"`**, il n'est plus nécess
 
 Vous pouvez aussi directement créer une issue depuis RStudio. Voyez le fichier `README.md` dans le dépôt des issues pour les explications.
 
-## Planning des séances {.unnumbered}
+## Planning des séances {#planning .unnumbered}
 
-| Module            | Préparation pour le ... | Fin N1-3         | Projet N4                  | Challenge            | Interrogation        |
-|-------------------|-------------------------|------------------|----------------------------|----------------------|----------------------|
-| **Quadri 1**      |                         |                  |                            |                      |                      |
-| *(install party)* | `r !"{W[2]+1}"`         |                  |                            |                      |                      |
-| 1 Rég. lin. 1.    | `r !"{W[4]+1}"`         | `r !"{W[5]+1}"`  |                            |                      | **`r !"{W[4]+5}"`**  |
-| 2 Rég. lin. 2     | `r !"{W[7]+1}"`         | `r !"{W[8]+1}"`  | **début `r !"{W[7]+4}"`**  |                      | **`r !"{W[7]+4}"`**  |
-| 3 LM              | `r !"{W[9]+1}"`         | `r !"{W[10]+1}"` | **continue...**            |                      | **`r !"{W[9]+4}"`**  |
-| 4 GLM             | `r !"{W[11]+1}"`        | `r !"{W[12]+1}"` | **continue...**            |                      | **`r !"{W[11]+4}"`** |
-| 5 Non linéaire    | `r !"{W[13]+1}"`        | `r !"{W[14]+1}"` | **fin `r !"{W[15]+2}"`**   | **`r !"{W[13]+4}"`** |                      |
-| *(rattrapage)*    | `r !"{W[15]+1}"`        |                  |                            |                      |                      |
-| **Quadri 2**      |                         |                  |                            |                      |                      |
-| 6 Classif.        | `r !"{W[22]+1}"`        | `r !"{W[23]+1}"` |                            |                      | **`r !"{W[22]+5}"`** |
-| 7 ACP/AFC         | `r !"{W[24]+1}"`        | `r !"{W[25]+1}"` |                            | **`r !"{W[24]+5}"`** |                      |
-| 8 AFM             | `r !"{W[26]+1}"`        | `r !"{W[27]+1}"` |     |                      | **`r !"{W[26]+5}"`** |
-| 9 MDS             | `r !"{W[30]+1}"`        | `r !"{W[31]+1}"` | **début `r !"{W[30]+5}"`** |                      | **`r !"{W[30]+5}"`** |
-| 10 SOM            | `r !"{W[32]+1}"`        | `r !"{W[33]+1}"` | **fin `r !"{W[35]+2}"`**   |                      | **`r !"{W[32]+5}"`** |
+| Module             | Préparation pour le ... |  Fin N1-3            | Projet N4                   | Challenge                       | Interrogation.             |
+|--------------------|-------------------------|----------------------|-----------------------------|---------------------------------|----------------------------|
+| **Quadri 1**       |                         |                      |                             |                                 |                            |
+| *(install party)*  | `r !"{mod$start[1]}"`   | `r !"{mod$N3[1]}"`   | `r !"{mod$N4[1]}"`          | **`r !"{mod$challenge[1]}"`**   | **`r !"{mod$test[1]}"`**   |
+| 1 Rég. lin. 1.     | `r !"{mod$start[2]}"`   | `r !"{mod$N3[2]}"`   | `r !"{mod$N4[2]}"`          | **`r !"{mod$challenge[2]}"`**   | **`r !"{mod$test[2]}"`**   |
+| 2 Rég. lin. 2      | `r !"{mod$start[3]}"`   | `r !"{mod$N3[3]}"`   | `r !"{mod$N4[3]}"`          | **`r !"{mod$challenge[3]}"`**   | **`r !"{mod$test[3]}"`**   |
+| 3 LM               | `r !"{mod$start[4]}"`   | `r !"{mod$N3[4]}"`   | `r !"{mod$N4[4]}"`          | **`r !"{mod$challenge[4]}"`**   | **`r !"{mod$test[4]}"`**   |
+| 4 GLM              | `r !"{mod$start[5]}"`   | `r !"{mod$N3[5]}"`   | `r !"{mod$N4[5]}"`          | **`r !"{mod$challenge[5]}"`**   | **`r !"{mod$test[5]}"`**   |
+| 5 Non linéaire     | `r !"{mod$start[6]}"`   | `r !"{mod$N3[6]}"`   | **fin `r !"{mod$N4[6]}"` ** | **`r !"{mod$challenge[6]}"`**   | **`r !"{mod$test[6]}"`**   |
+| *(rattrapage)*     | `r !"{mod$start[7]}"`   | `r !"{mod$N3[7]}"`   | `r !"{mod$N4[7]}"`          | **`r !"{mod$challenge[7]}"`**   | **`r !"{mod$test[7]}"`**   |
+| **Quadri 2**       |                         |                      |                             |                                 |                            |
+| 6 Classif.         | `r !"{mod$start[8]}"`   | `r !"{mod$N3[8]}"`   | `r !"{mod$N4[8]}"`          | **`r !"{mod$challenge[8]}"`**   | **`r !"{mod$test[8]}"`**   |
+| 7 ACP/AFC          | `r !"{mod$start[9]}"`   | `r !"{mod$N3[9]}"`   | `r !"{mod$N4[9]}"`          | **`r !"{mod$challenge[9]}"`**   | **`r !"{mod$test[9]}"`**   |
+| 8 AFM              | `r !"{mod$start[10]}"`  | `r !"{mod$N3[10]}"`  | `r !"{mod$N4[10]}"`         | **`r !"{mod$challenge[10]}"`**  | **`r !"{mod$test[10]}"`**  |
+| 9 MDS              | `r !"{mod$start[11]}"`  | `r !"{mod$N3[11]}"`  | `r !"{mod$N4[11]}"`         | **`r !"{mod$challenge[11]}"`**  | **`r !"{mod$test[11]}"`**  |
+| 10 SOM             | `r !"{mod$start[12]}"`  | `r !"{mod$N3[12]}"`  | `r !"{mod$N4[12]}"`         | **`r !"{mod$challenge[12]}"`**  | **`r !"{mod$test[12]}"`**  |
 
 : Dates importantes pour les activités de science des données biologiques II (à 23:59:59 pour les fins de projets N3 ou N4, à l'heure de la séance en présentiel pour les autres dates).
 

@@ -15,9 +15,9 @@ library(equatiomatic)
 
 ##### Prérequis {.unnumbered}
 
--   L'ANOVA (modules 9 & 10 du cours [SDD 1](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/variance.html)), ainsi que la régression linéaire (modules 1 et 2 du présent cours) doivent être maîtrisées avant d'aborder cette matière.
+-   L'ANOVA (`r course_link("module 9", course = 1, "variance")` & `r course_link("module 10", course = 1, "variance2")` du cours SDD 1), ainsi que la régression linéaire ([module 1](#lm) et [module 2](#lm2) du présent cours) doivent être maîtrisées avant d'aborder cette matière.
 
-## Variables numériques ou facteurs
+## Variables numériques ou facteurs {#varnumeriquesfacteurs}
 
 L'ANOVA analyse une **variable dépendante numérique** en fonction d'une ou plusieurs **variables indépendantes qualitatives**. Ces variables sont dites "facteurs" non ordonnés (objets de classe **factor**), ou "facteurs" ordonnés (objets de classe **ordered**) dans R.
 
@@ -34,7 +34,7 @@ Donc, la principale différence entre ANOVA et régression linéaire telles que 
 -   variables qualitatives non ordonnées prenant également un petit nombre de valeurs possibles, mais sans ordre particulier (**factor** dans R).
 
 ```{block, type='warning'}
-Par la suite, un encodage correct des variables sera *indispensable* afin de distinguer ces différentes situations. En effet, R considérera automatiquement comment mener l'analyse en fonction de la classe des variables fournies. Donc, si la classe est incorrecte, l'analyse le sera aussi ! Si vous avez des doutes concernant les types de variables, relisez la section [type de variables](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/types-de-variables.html) avant de continuer ce module.
+Par la suite, un encodage correct des variables sera *indispensable* afin de distinguer ces différentes situations. En effet, R considérera automatiquement comment mener l'analyse en fonction de la classe des variables fournies. Donc, si la classe est incorrecte, l'analyse le sera aussi ! Si vous avez des doutes concernant les types de variables, relisez la section [type de variables](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2025/types-de-variables.html) avant de continuer ce module.
 ```
 
 ##### À vous de jouer ! {.unnumbered}
@@ -42,7 +42,7 @@ Par la suite, un encodage correct des variables sera *indispensable* afin de dis
 `r h5p(217, height = 270, toc = "Types de variables")`
 
 
-## ANOVA et régression linéaire
+## ANOVA et régression linéaire {#anovareglin}
 
 Avez-vous remarqué une ressemblance particulière entre la régression linéaire que nous avons réalisée précédemment et l'analyse de variance (ANOVA) ? Les plus observateurs auront mis en avant que la fonction de base dans R est la même dans les deux cas : `lm()`. Cette fonction est donc capable de traiter aussi bien des variables indépendantes qualitatives que quantitatives, et effectue alors une ANOVA dans un cas ou une régression linéaire dans l'autre.
 
@@ -597,11 +597,11 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-015' = !"B03Ia_{YY}M_who"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/VMjGUUde"),
+      'S-BIOG-015' = !"{assign_url$B03Ia_who}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[9]+1} 10:00:00"),
+      'S-BIOG-015' = !"{class1_start(mod, 'B03')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[10]+1} 23:59:59"),
+      'S-BIOG-015' = !"{n3_end(mod, 'B03')}"),
     term = "Q1", level = 3,
     toc = "Modèle linéaire (WHO)")
 ```
@@ -613,16 +613,16 @@ if (exists("assignment2"))
     course.ids = c(
       'S-BIOG-015' = !"B02Ga_{YY}M_models"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/PkWLRA7k"),
+      'S-BIOG-015' = !"{assign_url$B02Ga_models}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[7]+4} 08:00:00"),
+      'S-BIOG-015' = !"{class2_start(mod, 'B02')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[15]+2} 23:59:59"),
+      'S-BIOG-015' = !"{n4_end(mod, 'B05')}"),
     term = "Q1", level = 4, n = 4,
     toc = "Modélisations libres par quatre (partie II)")
 ```
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb03}
 
 Ce troisième module vous a permis de comprendre le modèle linéaire et de découvrir l'ANCOVA. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

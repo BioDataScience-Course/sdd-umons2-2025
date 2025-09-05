@@ -19,7 +19,7 @@ library(equatiomatic)
 
 Les trois premiers modules du présent cours permettent progressivement de comprendre et de maîtriser la régression linéaire et le modèle linéaire dans R. Assurez-vous de bien avoir assimilé leur contenu avant d'attaquer ce quatrième module.
 
-## Modèle linéaire généralisé
+## Modèle linéaire généralisé {#mod-lineaire-generalise}
 
 Le modèle linéaire nous a permis de combiner différents types de **variables indépendantes ou explicatives** dans un même modèle. Cependant, la **variable dépendante ou réponse** à la gauche de l'équation doit *absolument* être numérique et une distribution normale est exigée pour la composante statistique du modèle exprimée dans les résidus $\epsilon$. Donc, si nous voulons modéliser une variable dépendante qui ne répond pas à ces caractéristiques, nous sommes dans l'impasse avec la fonction `lm()`. Dans certains cas, une transformation des données peut résoudre le problème. Par exemple, prendre le logarithme d'une variable qui a une distribution log-normale au départ la normalise. Dans d'autres cas, il semble qu'il n'y ait pas de solution... C'est ici que le **modèle linéaire *généralisé*** vient nous sauver la mise.
 
@@ -381,9 +381,9 @@ mutate(mite, Ori = as.numeric(Oribatl1 == "present")) %>.%
 `r learnr("B04La_glm", title = "Modèle linéaire généralisé", toc = "Modèle linéaire généralisé")`
 
 
-## Modèle linéaire généralisé mixte
+## Modèle linéaire généralisé mixte {#mod-lineaire-gen-mixte}
 
-Dans le cours [SDD I module 10](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/effet-al%25C3%25A9atoire.html) nous avons découvert les **effets aléatoires** dans les modèles comme étant une variable ayant une distribution statistique connue (souvent normale) dont on tire un échantillon aléatoire dans notre jeu de données. Cela se produit lorsque les modalités de la variable facteur utilisée sont très nombreuses et que seulement un petit nombre tiré au hasard est étudié. L'exemple que nous avions donné était le cas d'antibiotiques testés dans différentes boîtes de Pétri. Nous avions un nombre **restreint et fixe** d'antibiotiques, mais les boîtes de Pétri utilisées représentent en quelque sort un **échantillon** parmi la population statistique de boîtes de Pétri. De plus, l'effet "boîte de Pétri" n'est pas le sujet principal de l'étude. Comme nous suspections que la boîte de Pétri pouvait aussi avoir un impact sur le résultat, nous l'avons incluse dans notre modèle, mais comme **effet aléatoire**. Lorsque nous mélangeons un ou plusieurs effets aléatoires avec des effets fixes, nous obtenons alors un **modèle linéaire mixte** (LMM) ou un **modèle linéaire généralisé mixte** (GLMM) en fonction de la variable réponse $y$ utilisée et la fonction de lien.
+Dans le cours `r course_link("SDD I module 10", course = 1, "effet-al%25C3%25A9atoire")`, nous avons découvert les **effets aléatoires** dans les modèles comme étant une variable ayant une distribution statistique connue (souvent normale) dont on tire un échantillon aléatoire dans notre jeu de données. Cela se produit lorsque les modalités de la variable facteur utilisée sont très nombreuses et que seulement un petit nombre tiré au hasard est étudié. L'exemple que nous avions donné était le cas d'antibiotiques testés dans différentes boîtes de Pétri. Nous avions un nombre **restreint et fixe** d'antibiotiques, mais les boîtes de Pétri utilisées représentent en quelque sort un **échantillon** parmi la population statistique de boîtes de Pétri. De plus, l'effet "boîte de Pétri" n'est pas le sujet principal de l'étude. Comme nous suspections que la boîte de Pétri pouvait aussi avoir un impact sur le résultat, nous l'avons incluse dans notre modèle, mais comme **effet aléatoire**. Lorsque nous mélangeons un ou plusieurs effets aléatoires avec des effets fixes, nous obtenons alors un **modèle linéaire mixte** (LMM) ou un **modèle linéaire généralisé mixte** (GLMM) en fonction de la variable réponse $y$ utilisée et la fonction de lien.
 
 Prenons un exemple concret. Des scientifiques veulent mesurer l'effet d'une concentration croissante en éthanol dans le liquide séminal de l'homme sur la mobilité des spermatozoïdes. La question est évidemment en relation avec la consommation d'alcool et la fertilité, mais aussi avec des protocoles expérimentaux qui utilisent des molécules dissoutes dans l'éthanol. Des spermatozoïdes de huit patients différents sont soumis à des concentrations de 0, 0,1, 0,5, 1 et 2% d'éthanol pendant 4h. Ensuite, le nombre de spermatozoïdes mobiles est décompté sous microscope. Plutôt que d'encoder une variable binaire qui prend 1 si un spermatozoïde est mobile et 0 dans le cas contraire, un tableau plus compact qui reprend le nombre de spermatozoïdes mobiles et le total des spermatozoïdes comptés pour chaque échantillon des huit donneurs à chaque concentration d'éthanol. Voici les résultats obtenus :
 
@@ -440,7 +440,7 @@ spe <- smutate(spe, mob_frac = mobile / total, donor = as.factor(donor), conc = 
 head(spe)
 ```
 
-La variable réponse est ici, en réalité, une variable binaire même si elle est encodée autrement. Pour chaque spermatozoïde observé, on peut avoir un résultat 0 (immobile) ou 1 (mobile), et la distribution peut être considérée comme une binomiale avec le nombre d'essais égal *n* égal à 1 (voir cours [SDD I module 7](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2024/distribution-binomiale.html)). On parle aussi de distribution de Bernouilli dans le cas particulier d'une distribution binomiale à un seul essai. La mesure est **répétée** un nombre de fois spécifié dans notre tableau dans la colonne `total` pour chaque échantillon traité (8 donneurs x 5 concentrations d'éthanol = 40 échantillons). Donc, nous sommes dans une situation différente du jeu de données `mite` parce qu'il **n'y a pas indépendance entre les observations pour chaque spermatozoïde**. Plusieurs dizaines à centaines d'entre eux sont dénombrés à chaque fois dans le **même échantillon**. Les mesures répétées pour un même sujet d'expérience et lorsque le sujet de l'expérience est lui-même un facteur aléatoire sont automatiquement prises en compte correctement dans un modèle mixte.
+La variable réponse est ici, en réalité, une variable binaire même si elle est encodée autrement. Pour chaque spermatozoïde observé, on peut avoir un résultat 0 (immobile) ou 1 (mobile), et la distribution peut être considérée comme une binomiale avec le nombre d'essais égal *n* égal à 1 (voir cours `r course_link("SDD I module 7", course = 1, "distribution-binomiale")`). On parle aussi de distribution de Bernouilli dans le cas particulier d'une distribution binomiale à un seul essai. La mesure est **répétée** un nombre de fois spécifié dans notre tableau dans la colonne `total` pour chaque échantillon traité (8 donneurs x 5 concentrations d'éthanol = 40 échantillons). Donc, nous sommes dans une situation différente du jeu de données `mite` parce qu'il **n'y a pas indépendance entre les observations pour chaque spermatozoïde**. Plusieurs dizaines à centaines d'entre eux sont dénombrés à chaque fois dans le **même échantillon**. Les mesures répétées pour un même sujet d'expérience et lorsque le sujet de l'expérience est lui-même un facteur aléatoire sont automatiquement prises en compte correctement dans un modèle mixte.
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -706,32 +706,32 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-015' = !"B04Ia_{YY}M_lungcap"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/mmUCKnSv"),
+      'S-BIOG-015' = !"{assign_url$B04Ia_lungcap}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[11]+1} 10:00:00"),
+      'S-BIOG-015' = !"{class1_start(mod, 'B04')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[12]+1} 23:59:59"),
+      'S-BIOG-015' = !"{n3_end(mod, 'B04')}"),
     term = "Q1", level = 3,
     toc = "Modèle linéaire généralisé (jeunes fumeurs)")
 ```
 
 ```{r assign_B02Ga_models_III, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B02Ga_models", part = "III",
+  assignment2("B02Ga_models", part = "II",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
     course.ids = c(
       'S-BIOG-015' = !"B02Ga_{YY}M_models"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/PkWLRA7k"),
+      'S-BIOG-015' = !"{assign_url$B02Ga_models}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[7]+4} 08:00:00"),
+      'S-BIOG-015' = !"{class2_start(mod, 'B02')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[15]+2} 23:59:59"),
+      'S-BIOG-015' = !"{n4_end(mod, 'B05')}"),
     term = "Q1", level = 4, n = 4,
     toc = "Modélisations libres par quatre (partie III)")
 ```
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb04}
 
 Ce quatrième module vous a permis de comprendre le modèle linéaire généralisé et les modèles linéaires (généralisés) mixtes. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

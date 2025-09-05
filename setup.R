@@ -1,4 +1,16 @@
 # Learnitdown configuration and functions
+# We use glue() often for variables replacement from learnitdown, so, we
+# define the `!` operator for character objects to glue the string
+# Cons: it slightly slows down the usual `!` operator (10x slower)
+`!` <- function(x) {
+  if (is.character(x)) {
+    as.character(glue::glue_data(learnitdown, x))
+  } else {# Usual ! operator
+    .Primitive('!')(x)
+  }
+}
+
+# General configuration data
 learnitdown <- list(
   baseurl = "https://wp.sciviews.org", # The base URL for the site
   imgbaseurl =
@@ -19,22 +31,94 @@ learnitdown <- list(
     #"Bioinformatique et Science des Données II à Charleroi"
   ),
   acad_year = "2025-2026",               # The academic year
+  YYYY = 2025,                           # The academic year long id
   YY = 25,                               # The academic year short id
   W = as.Date("2025-09-07") + (0:37)*7,  # Sundays before each academic week
   Q1 = as.Date("2025-09-07") + (0:15)*7, # There are 15 weeks at Q1
   Q2 = as.Date("2026-02-01") + c(0:11, 14:16)*7 # Q2 starts 02/02 w22 but w33-34 are holidays
 )
 
-# We use glue() often for variables replacement from learnitdown, so, we
-# define the `!` operator for character objects to glue the string
-# Cons: it slightly slows down the usual `!` operator (10x slower)
-`!` <- function(x) {
-  if (is.character(x)) {
-    as.character(glue::glue_data(learnitdown, x))
-  } else {# Usual ! operator
-    .Primitive('!')(x)
+# Course start and end dates
+learnitdown$course_start <- !"{W[2]+1}"
+learnitdown$course_end   <- !"{W[35]+2}"
+
+# Modules dates
+learnitdown$mod <- as.data.frame(tibble::tribble(
+  ~id,       ~term,       ~start,       ~class1,         ~end,       ~class2,         ~N3,            ~N4,   ~challenge,        ~test,
+  # Q1
+  "install",  "Q1",  !"{W[2]+1}", "10:30-12:30",          "-",          "-",          "-",            "-",          "-",          "-",
+  "B01",      "Q1",  !"{W[4]+1}", "10:30-12:30",  !"{W[4]+5}", "13:30-17:30", !"{W[5]+1}",            "-",          "-",  !"{W[4]+5}",
+  "B02",      "Q1",  !"{W[7]+1}", "10:30-12:30",  !"{W[7]+4}", "08:15-12:30", !"{W[8]+1}",    !"{W[7]+4}",          "-",  !"{W[7]+4}",
+  "B03",      "Q1",  !"{W[9]+1}", "10:30-12:30",  !"{W[9]+4}", "08:15-12:30", !"{W[10]+1}", "continue...",          "-",  !"{W[9]+4}",
+  "B04",      "Q1", !"{W[11]+1}", "10:30-12:30", !"{W[11]+4}", "08:15-12:30", !"{W[12]+1}", "continue...",          "-", !"{W[11]+4}",
+  "B05",      "Q1", !"{W[13]+1}", "10:30-12:30", !"{W[13]+4}", "08:15-12:30", !"{W[14]+1}",  !"{W[15]+2}", !"{W[13]+4}",          "-",
+  "remed",    "Q1", !"{W[15]+1}", "10:30-12:30",          "-",          "-",           "-",           "-",          "-",          "-",
+  # Q2
+  "B06",      "Q2", !"{W[22]+1}", "13:30-15:30", !"{W[22]+5}", "08:15-12:30", !"{W[23]+1}",           "-",          "-", !"{W[22]+5}",
+  "B07",      "Q2", !"{W[24]+1}", "13:30-15:30", !"{W[24]+5}", "08:15-12:30", !"{W[25]+1}",           "-", !"{W[24]+5}",          "-",
+  "B08",      "Q2", !"{W[26]+1}", "13:30-15:30", !"{W[26]+5}", "08:15-12:30", !"{W[27]+1}",           "-",          "-", !"{W[26]+5}",
+  "B09",      "Q2", !"{W[30]+1}", "13:30-15:30", !"{W[30]+5}", "08:15-12:30", !"{W[31]+1}",  !"{W[30]+5}",          "-", !"{W[30]+5}",
+  "B10",      "Q2", !"{W[32]+1}", "13:30-15:30", !"{W[32]+5}", "08:15-12:30", !"{W[33]+1}",  !"{W[35]+2}",          "-", !"{W[32]+5}"
+))
+rownames(learnitdown$mod) <- learnitdown$mod$id
+
+# Assignment URLS
+learnitdown$assign_url <- list(
+  # Q1
+  B00Qa_issues         = "https://classroom.github.com/a/...",
+  B01Ia_debug          = "https://classroom.github.com/a/...",
+  B01Ib_abalone        = "https://classroom.github.com/a/...",
+  B02Ia_achatina       = "https://classroom.github.com/a/...",
+  B02Ga_models         = "https://classroom.github.com/a/...",
+  B03Ia_who            = "https://classroom.github.com/a/...",
+  B04Ia_lungcap        = "https://classroom.github.com/a/...",
+  B05Ia_abies_balsamea = "https://classroom.github.com/a/...",
+  B05Ca_models         = "https://classroom.github.com/a/...",
+  # Q2
+  B06Ia_fish_market    = "https://classroom.github.com/a/...",
+  B07Ia_acp_afc        = "https://classroom.github.com/a/...",
+  B07Ca_multi          = "https://classroom.github.com/a/...",
+  B08Ia_mfa            = "https://classroom.github.com/a/...",
+  B08Ib_zooscannet     = "https://classroom.github.com/a/...",
+  B09Ia_portalr        = "https://classroom.github.com/a/...",
+  B09Ga_open_data      = "https://classroom.github.com/a/..."
+)
+
+# Date and time for start and end of classes for each module
+class1_start <- function(x, module)
+  paste0(x[module, 'start'], " ", substring(x[module, 'class1'], 1, 5), ":00")
+class1_end <- function(x, module)
+  paste0(x[module, 'start'], " ", substring(x[module, 'class1'], 7, 11), ":00")
+class2_start <- function(x, module)
+  paste0(x[module, 'end'], " ", substring(x[module, 'class2'], 1, 5), ":00")
+class2_end <- function(x, module)
+  paste0(x[module, 'end'], " ", substring(x[module, 'class2'], 7, 11), ":00")
+n3_end <- function(x, module, hour = "23:59:59")
+  paste0(x[module, 'N3'], " ", hour)
+n4_end <- function(x, module, hour = "23:59:59")
+  paste0(x[module, 'N4'], " ", hour)
+
+# Link inside the courses: the link are a little bit more complex because the
+# bookdown is embedded in a Wordpress site. A direct link like:
+# https://wp.sciviews.org/sdd-umons2-2025/outils-de-diagnostic-suite.html#résumé-avec-summarysuite
+# becomes:
+# https://wp.sciviews.org/sdd-umons2/?iframe=wp.sciviews.org/sdd-umons2-2025/outils-de-diagnostic-suite.html%23résumé-avec-summarysuite
+course_link <- function(label, course = 1, page, anchor = "", year = !"{YYYY}",
+                        baseurl = !"{baseurl}", course_page = "sdd-umons") {
+  if (course == 1) {
+    course <- ""
+  } else{
+    course <- as.character(course)
   }
+  if (anchor != "")
+    anchor <- paste0("%23", anchor) # %23 is the URLencoded value of '#'
+  baseurl2 <- sub("https://", "", baseurl, fixed = TRUE) # Remove https://
+  url <- glue::glue("{baseurl}/{course_page}{course}/?iframe={baseurl2}/{course_page}{course}-{year}/{page}.html{anchor}")
+  paste0("[", label, "](", url, ")")
 }
+# ex.: course_link("diagnostic", 2, "outils-de-diagnostic-suite", "résumé-avec-summarysuite")
+
+
 
 # Examples:
 #!"svbox{svbox} is for academic year {acad_year}"

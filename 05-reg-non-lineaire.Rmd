@@ -19,7 +19,7 @@ library(equatiomatic)
 
 -   Les modules 1 & 2 du cours concernant la régression linéaire sont une entrée en matière indispensable puisque la régression va être abordée ici comme une extension de ce qui a déjà été vu.
 
-## Rendement photosynthétique
+## Rendement photosynthétique {#rend-photo}
 
 Afin d'avoir un premier aperçu de ce qu'est une régression non linéaire par les moindres carrés et comment on la calcule dans R, nous allons détailler un exemple concret. La posidonie *Posidonia oceanica* (L.) Delile (1813) est une plante à fleurs marine qui forme des herbiers denses en mer Méditerranée. Ses feuilles sont particulièrement adaptées à l'utilisation de la lumière qui règne à quelques dizaines de mètres en dessous de la surface où elle prospère en herbiers denses.
 
@@ -281,7 +281,7 @@ apropos("^SS", ignore.case = FALSE)
 
 Ensuite, nous recherchons l'aide relative à ces fonctions, par exemple via `?SSasymp` (note : il peut y avoir des faux positifs, comme `SSD` ici qui n'a rien à voir avec les fonctions **selfStart**).
 
-## Modèles courants en biologie
+## Modèles courants en biologie {#mod-courants-bio}
 
 Les domaines les plus courants où des modèles non linéaires sont utilisés en biologie concernent les cinétiques de réactions (chimiques, biochimiques), les courbes de type dose-réponse, les courbes de survie et les modèles de croissance. Nous verrons principalement divers modèles de croissance dans la section suivante. Certains de ces modèles, comme le modèle exponentiel, celui de Gompertz ou de Weibull sont aussi utilisés comme courbes de survie. De plus, la courbe logistique est un modèle classique de type dose-réponse. Ainsi, les différentes courbes de croissances recouvrent également une majorité des modèles utilisés dans d'autres domaines.
 
@@ -651,7 +651,7 @@ chart(data = tanaka_data, y ~ t) +
   geom_vline(xintercept = 0, col = "darkgray")
 ```
 
-## Choix du modèle
+## Choix du modèle {#choixmod}
 
 Le choix d'un modèle non linéaire fait intervenir des critères identiques à ceux d'un modèle linéaire (qualité d'ajustement évaluée par l'AIC, inspection visuelle de l'ajustement dans le nuage de points), mais il fait aussi intervenir une dimension supplémentaire : le choix de la fonction mathématique à ajuster. Comme nous venons de le voir au travers de quelques modèles courants en biologie, le nombre de fonctions mathématiques résultant en des formes similaire, par exemple de type sigmoïde, est grand. Ainsi, le choix de la meilleure fonction à utiliser dans un cas particulier est rendu plus difficile.
 
@@ -803,27 +803,27 @@ if (exists("assignment"))
     course.ids = c(
       'S-BIOG-015'         = !"B05Ia_{YY}M_abies_balsamea"),
     course.urls = c(
-      'S-BIOG-015'         = "https://classroom.github.com/a/5V8pnRmE"),
+      'S-BIOG-015'         = !"{assign_url$B05Ia_abies_balsamea}"),
     course.starts = c(
-      'S-BIOG-015'         = !"{W[13]+1} 10:00:00"),
+      'S-BIOG-015'         = !"{class1_start(mod, 'B05')}"),
     course.ends = c(
-      'S-BIOG-015'         = !"{W[14]+1} 23:59:59"),
+      'S-BIOG-015'         = !"{n3_end(mod, 'B05')}"),
     term = "Q1", level = 3,
     toc = "Croissance d'un conifère")
 ```
 
 ```{r assign_B02Ga_models_IV, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B02Ga_models", part = "IV",
+  assignment2("B02Ga_models", part = "II",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
     course.ids = c(
       'S-BIOG-015' = !"B02Ga_{YY}M_models"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/PkWLRA7k"),
+      'S-BIOG-015' = !"{assign_url$B02Ga_models}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[7]+4} 08:00:00"),
+      'S-BIOG-015' = !"{class2_start(mod, 'B02')}"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[15]+2} 23:59:59"),
+      'S-BIOG-015' = !"{n4_end(mod, 'B05')}"),
     term = "Q1", level = 4, n = 4,
     toc = "Modélisations libres par quatre (partie IV)")
 ```
@@ -858,11 +858,11 @@ if (exists("challenge"))
     course.ids = c(
       'S-BIOG-015' = !"B05Ca_{YY}M_models"),
     course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/K0NIl0ip"),
+      'S-BIOG-015' = !"{assign_url$B05Ca_models}"),
     course.starts = c(
-      'S-BIOG-015' = !"{W[13]+4} 10:15:00"),
+      'S-BIOG-015' = !"{mod['B05', 'challenge']} 10:15:00"),
     course.ends = c(
-      'S-BIOG-015' = !"{W[13]+4} 12:30:00"),
+      'S-BIOG-015' = !"{mod['B05', 'challenge']} 12:30:00"),
     toc = "Challenge modélisation")
 ```
 
@@ -876,7 +876,7 @@ Vous pouvez soumettre vos résultats pendant une période de temps précise via 
 `r launch_shiny("https://sdd.umons.ac.be/B05Ca_models/", height = 800, delay = 20, toc = NULL, alt1 = "*Cliquez pour visualiser le classement.*", alt2 = "*Cliquez pour visualiser le classement.*")`
 :::
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb05}
 
 Ce cinquième module vous a permis de comprendre les régressions non linéaires. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 

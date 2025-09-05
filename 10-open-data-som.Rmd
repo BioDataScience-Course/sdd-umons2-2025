@@ -14,7 +14,7 @@ SciViews::R("explore", lang = "fr")
 
 -   Une bonne connaissance des données et des formats de stockage des données, ainsi que du modèle de données dans le cadre des bases relationnelles est un plus qui complémente la section sur les données ouvertes. Ces notions ont été abordées dans les modules 8 et 9.
 
-## Données ouvertes
+## Données ouvertes {#donneesouvertes}
 
 L'*"Open Data"* ou données ouvertes est un phénomène en pleine expansion. Vous y serez certainement confrontés dans votre carrière. Autant bien comprendre de quoi il s'agit et rendre vos données accessibles et publiques de la meilleure façon qui soit. Cette dernière partie est une brève introduction en la matière, qui devrait vous permettre de bien démarrer.
 
@@ -137,7 +137,7 @@ Pour déterminer la *qualité* des données mises à disposition, voici une chec
 
 -   Le contexte des données
 
-Une description des données est directement accessible. Les noms des auteurs sont spécifiés. La date de publication est indiquée et les données sont versionnées. Le 18 novembre 2020, la version était `v2020.11.17`. Les données sont également associées à un dépôt GitHub qui contient du code pour les représenter graphiquement : [J535D165/CoronaWatchNL](https://github.com/J535D165/CoronaWatchNL). Même si ce dépôt est archivé depuis avril 2021, il reste disponible (dernière vérification faite en mars 2025).
+Une description des données est directement accessible. Les noms des auteurs sont spécifiés. La date de publication est indiquée et les données sont versionnées. Le 18 novembre 2020, la version était `v2020.11.17`. Les données sont également associées à un dépôt GitHub qui contient du code pour les représenter graphiquement : [J535D165/CoronaWatchNL](https://github.com/J535D165/CoronaWatchNL). Même si ce dépôt est archivé depuis avril 2021, il reste disponible (dernière vérification faite en septembre 2025).
 
 -   Un code unique et persistant
 
@@ -422,16 +422,16 @@ if (exists("assignment2"))
     course.ids = c(
       'S-BIOG-061' = !"B09Ga_{YY}M_open_data"),
     course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/Y2z-pPM8"),
+      'S-BIOG-061' = !"{assign_url$B09Ga_open_data}"),
     course.starts = c(
-      'S-BIOG-061' = !"{W[30]+5} 08:00:00"),
+      'S-BIOG-061' = !"{class2_start(mod, 'B09')}"),
     course.ends = c(
-      'S-BIOG-061' = !"{W[35]+2} 23:59:59"),
+      'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
     term = "Q2", level = 4, n = 4,
     toc = "Étude de données ouvertes choisies librement (II)")
 ```
 
-## Récapitulatif des exercices
+## Récapitulatif des exercices {#recapitulatifb10}
 
 Ce dixième module vous a permis de comprendre ce que sont des données ouvertes et comment partager ses propres données de manière optimale. Vous avez aussi appris à réaliser des cartes auto-adaptatives. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
