@@ -4,7 +4,6 @@
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
 SciViews::R("model", lang = "fr")
-library(equatiomatic)
 ```
 
 ##### Objectifs {.unnumbered}
@@ -17,7 +16,7 @@ library(equatiomatic)
 
 ##### Prérequis {.unnumbered}
 
-Avant de vous lancer tête baissée dans de la matière nouvelle, assurez-vous d'avoir installé la SciViews Box `r learnitdown$svbox`. Si ce n'est pas encore fait, retournez à la [page d'accueil pour bien débuter](https://wp.sciviews.org).
+Avant de vous lancer tête baissée dans de la matière nouvelle, assurez-vous d'avoir installé la SciViews Box `r !'{svbox}'`. Si ce n'est pas encore fait, retournez à la [page d'accueil pour bien débuter](https://wp.sciviews.org).
 
 RStudio et (R) Markdown/Quarto ne doivent plus avoir de secrets pour vous. Les modifications par rapport à l'année précédente vous sont présentées à la première séance du cours. La présentation est disponible `r !"[ici](https://github.com/BioDataScience-Course/sdd_lessons/raw/{acad_year}/B00/presentations/B00Pa_intro.pdf)"` .
 
@@ -33,7 +32,7 @@ Vous devez aussi maîtriser les bases de Git et de GitHub (avoir un compte GitHu
 
 L'ensemble de ces outils a été abordé dans le premier module et dans les annexes du cours précédents `r course_link("SDD I", course = 1, "outils")`.
 
-Outre les outils logiciels, ce cours s'appuie sur des notions que nous avons déjà abordées dans le premier cours comme la réalisation de `r course_link("graphiques en nuage de points", course = 1, "nuagedepoints")` et de `r course_link("graphiques qunatile-quantile", course = 1, "graphique-quantile-quantile")`, le `r course_link("test de Student", course = 1, "test-t-de-student")`, l'`r course_link("analyse de la variance à un facteur", course = 1, "anova-%25C3%25A0-un-facteur")` et `r course_link("à deux facteurs", course = 1, "anova-%25C3%25A0-deux-facteurs")` ou encore les `r course_link("associations entre les variables", course = 1, "corr%25C3%25A9lation")`. **Assurez-vous de bien maîtriser ces différentes parties du cours 1 avant d'entamer le présent module.**
+Outre les outils logiciels, ce cours s'appuie sur des notions que nous avons déjà abordées dans le premier cours comme la réalisation de `r course_link("graphiques en nuage de points", course = 1, "nuagedepoints")` et de `r course_link("graphiques quantile-quantile", course = 1, "quantilequantile")`, le `r course_link("test de Student", course = 1, "studentt")`, l'`r course_link("analyse de la variance à un facteur", course = 1, "anovaunfacteur.")` et `r course_link("à deux facteurs", course = 1, "anovadeuxfacteurs")` ou encore les `r course_link("associations entre les variables", course = 1, "correlation")`. **Assurez-vous de bien maîtriser ces différentes parties du cours 1 avant d'entamer le présent module.**
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -113,7 +112,7 @@ Idéalement, un modèle devrait pouvoir servir à ces différentes applications.
 
 Étant donné deux variables quantitatives, trois niveaux d'association de force croissante peuvent être définis entre ces deux variables :
 
--   La **corrélation** quantifie l'allongement dans une direction préférentielle du nuage de points à l'aide des coefficients de corrélation linéaire de **Pearson** ou non linéaire de **Spearman**. Ce niveau d'association a été traité dans le `r course_link("module 6 du cours 1", course = 1, "corr%25C3%25A9lation")`. Il est purement descriptif et n'implique aucune autre hypothèse sur les données observées.
+-   La **corrélation** quantifie l'allongement dans une direction préférentielle du nuage de points à l'aide des coefficients de corrélation linéaire de **Pearson** ou non linéaire de **Spearman**. Ce niveau d'association a été traité dans le `r course_link("module 6 du cours 1", course = 1, "correlation")`. Il est purement descriptif et n'implique aucune autre hypothèse sur les données observées.
 
 -   La **relation** considère que la corrélation observée entre les deux variables est issue d'un mécanisme sous-jacent qui nous intéresse. Un **modèle mathématique** de l'association entre les deux variables matérialise de manière éventuellement simplifiée, ce mécanisme. Il permet de réaliser ensuite des calculs utiles. Nous verrons plus loin que des contraintes plus fortes doivent être supposées concernant la distribution des deux variables.
 
@@ -163,7 +162,7 @@ Ensuite, nous importons le jeu de données `trees` depuis le package {datasets} 
 trees <- read("trees", package = "datasets")
 ```
 
-Rappelons-nous que dans le `r course_link("module 6 du cours de science des données 1", course = 1, "corr%25C3%25A9lation")`, nous avons étudié l'association de deux variables quantitatives (ou numériques). Nous utilisons donc une matrice de corrélation afin de mettre en évidence la corrélation entre nos trois variables qui composent le jeu de donnée `trees`.
+Rappelons-nous que dans le `r course_link("module 6 du cours de science des données 1", course = 1, "correlation")`, nous avons étudié l'association de deux variables quantitatives (ou numériques). Nous utilisons donc une matrice de corrélation afin de mettre en évidence la corrélation entre nos trois variables qui composent le jeu de donnée `trees`.
 
 La fonction `correlation()` nous renvoie une matrice de corrélation avec l'indice de Pearson (corrélation linéaire) par défaut. C'est précisément ce coefficient qui nous intéresse dans le cadre d'une régression *linéaire* comme description préalable des données autant que pour servir de premier guide dans le choix des variables les plus pertinentes pour notre modèle. Nous utilisons ici `tabularise()` ensuite pour obtenir un tableau formaté dans notre rapport. Cela ne serait pas nécessaire si nous souhaitons seulement imprimer la matrice de corrélation à la console R.
 
@@ -174,7 +173,7 @@ La fonction `correlation()` nous renvoie une matrice de corrélation avec l'indi
 
 Nous pouvons également observer cette matrice sous la forme d'un graphique.
 
-```{r}
+```{r, warning=FALSE}
 plot(trees_corr, type = "lower")
 ```
 
@@ -182,7 +181,8 @@ plot(trees_corr, type = "lower")
 
 `r h5p(195, height = 270, toc = "Les coefficients de corrélation")`
 
-Cependant, n'oubliez pas qu'il est indispensable de visualiser le nuage de points pour ne pas tomber dans le piège mis en avant par le `r course_link("jeu de données artificiel appelé 'quartet d'Anscombe'", course = 1, "corr%25C3%25A9lation", "importance-des-graphiques")` qui montre très bien comment des données très différentes peuvent avoir une même moyenne, une même variance et un même coefficient de corrélation. Un graphique de type matrice de nuages de points est tout indiqué ici.
+Cependant, n'oubliez pas qu'il est indispensable de visualiser le nuage de points pour ne pas tomber dans le piège mis en avant par le `r course_link("jeu de données artificiel appelé 'quartet d'Anscombe'", course = 1, "correlation", "importance-des-graphiques")` qui montre très bien comment des données très différentes peuvent avoir une même moyenne, une même variance et un même coefficient de corrélation. Un graphique de type matrice de nuages de points est tout indiqué ici.
+
 
 ```{r, message=FALSE, warning=FALSE}
 GGally::ggscatmat(trees, 1:3)
@@ -264,7 +264,7 @@ sum(resid)
 
 L'idée est ici que, lorsque cette somme tend vers zéro, cela signifierait que les résidus tendent aussi vers zéro dans l'ensemble. Donc cela voudrait dire que notre modèle décrit les données de manière optimale. Appliquons ces calculs sur nos quatre modèles afin de les comparer... Le modèle pour lequel notre métrique serait minimale serait alors considéré comme le meilleur.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 dist_calc <- list()
 for (i in 1:nrow(models)) {
   dist_calc[i] <- sum(trees$volume -
@@ -290,7 +290,7 @@ chart(data = trees, volume ~ diameter) +
 
 `r h5p(196, height = 270, toc = "Qualité d'ajustement d'un modèle")`
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 yhat4 <- model_predict(x = trees$diameter,
   intercept = models$intercept[4], slope = models$slope[4])
 
@@ -312,7 +312,7 @@ Ainsi avec notre première méthode naïve de somme des résidus, il suffit d'av
 
 Nous obtenons les résultats suivants :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 dist_calc <- list()
 for (i in 1:nrow(models)) {
   dist_calc[i] <- sum((trees$volume - 
@@ -328,7 +328,7 @@ tabularise(as_dtf(dist_calc))
 
 Voici ce que cela donne :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 dist_calc <- list()
 for (i in 1:nrow(models)) {
   dist_calc[i] <- sum(abs(trees$volume - 
@@ -507,7 +507,7 @@ class(trees_lm)
 ```{block, type='note'}
 Pour la régression par les moindres carrés (des résidus), le fait de considérer que toute l'erreur porte sur la variable dépendante *Y* est une décision importante qui a de nombreuses conséquences. Outre un calcul simplifié de la meilleure droite et des contraintes sur la distribution des résidus (qui doit être Normale), nous avons également une **asymétrie qui apparait entre les deux variables _X_ et _Y_**.
 
-Ainsi, la régression $Y = \alpha + \beta \ X$ ne correspond *pas* à la même droite que $X = \alpha' + \beta' \ Y'$. En effet, dans le premier cas, l'erreur est entièrement reportée sur *Y* tandis que dans le second cas, elle est entièrement reportée sur *X*. C'est pour cela que l'on distingue la **variable réponse** ou **dépendante** à la gauche de l'équation de la **variable explicative** ou **indépendante** à sa droite.
+Ainsi, la régression $Y = \alpha + \beta \ X$ ne correspond *pas* à la même droite que $X = \alpha2 + \beta2 \ Y$. En effet, dans le premier cas, l'erreur est entièrement reportée sur *Y* tandis que dans le second cas, elle est entièrement reportée sur *X*. C'est pour cela que l'on distingue la **variable réponse** ou **dépendante** à la gauche de l'équation de la **variable explicative** ou **indépendante** à sa droite.
 
 Décider quel variable est réponse dans l'équation n'est donc pas anodin. Utilisez les critères suivants :
 
@@ -583,7 +583,7 @@ $$`r eq__(trees_lm, use_coefs = TRUE)`$$ Notez que nous avons laissé tombé $\e
 
 `r learnr("B01La_reg_lin", title = "Régression linéaire simple", toc = "Récapitulatif régression linéaire simple")`
 
-## Outils de diagnostic
+## Outils de diagnostic {#diagnostic}
 
 Une fois la meilleure droite de régression obtenue, le travail est loin d'être terminé. Il se peut que le nuage de point ne soit pas tout à fait linéaire, que sa dispersion ne soit pas homogène, que les résidus n'aient pas une distribution Normale, qu'il existe des valeurs extrêmes aberrantes, ou qui "tirent la droite vers elle" de manière excessive (points trop influents).
 
@@ -620,8 +620,10 @@ chart$qqplot(trees_lm)
 ```
 
 ```{block, type='warning'}
-**Attention !** Le graphique quantile-quantile a été abordé au premier cours de Science des Données Biologiques, mais il apparaît que de nombreux étudiants ne comprennent pas bien ce qu'il représente, ni ne savent comment l'utiliser dans le présent contexte. Assurez-vous d'avoir bien compris son mécanisme et retournez voir [l'explication dans le cours précédent](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2025/graphique-quantile-quantile.html).
+**Attention !** Le graphique quantile-quantile a été abordé au premier cours de Science des Données Biologiques, mais il apparaît que de nombreux étudiants ne comprennent pas bien ce qu'il représente, ni ne savent comment l'utiliser dans le présent contexte.
 ```
+
+Assurez-vous d'avoir bien compris le mécanisme à la base du graphique quantile-quantile et retournez voir `r course_link("l'explication dans le cours précédent", course = 1, "quantilequantile")` si nécessaire.
 
 Le graphique quantile-quantile s'interprète en regardant si les points s'alignent plus ou moins bien le long de la droite, en particulier aux extrémités. Des petits écarts sont d'autant plus acceptables que l'échantillon est de petite taille. Ils sont aussi tolérables parce que la régression linéaire est relativement robuste par rapport à ces écarts, surtout si la distribution reste symétrique. **Ici nous ne notons pas de difficultés particulières : les points sont assez proches de la droite.** Pour être bien clair, le graphique quantile-quantile ne prouve *jamais* que les résidus suivent effectivement une distribution Normale. Il indique seulement si leur distribution *ressemble* à la distribution théorique Normale. En fait, dans le cas de notre régression linéaire, ceci est suffisant.
 

@@ -27,7 +27,7 @@ Afin d'avoir un premier aperçu de ce qu'est une régression non linéaire par l
 
 Pour étudier le rendement de sa photosynthèse, c'est-à-dire la part du rayonnement lumineux reçu qui est effectivement utilisée pour initier la chaîne de transport d'électrons au sein de son photosystème II, nous pouvons utiliser un appareil spécialisé : le diving PAM.
 
-![Diving PAM, photo par Arnaud Abadie.](https://www.walz.com/assets/images/3/diving-pam-II_02xl-14fe3e4b.jpg)
+![Diving PAM en action.](https://bionef.fr/wp-content/uploads/2021/01/diving-pam-II_02xl-14fe3e4b-768x480.jpg)
 
 Cet appareil est capable de déterminer le taux de transfert des électrons (ETR en µmol électrons/m^2^/s) par l'analyse de la fluorescence réémise par la plante lorsque ses photosites sont excités par une lumière monochromatique pulsée [@diving_pam2018]. Une façon de déterminer la réponse de la plante en rendement photosynthétique en fonction de l'intensité de la lumière reçue est de mesurer successivement l'ETR pour différentes intensités de lumière. En anglais cela s'appelle la "Rapid Light Curve" ou RLC en abrégé. Comme toutes les longueurs d'ondes lumineuses ne sont pas utilisables par la chlorophylle, l'intensité lumineuse est exprimée dans une unité particulière, le "PAR" ou "Photosynthetically Active Radiation" en µmol photons/m^2^/s qui ne prend en compte que les rayons utilisables. Une RLC représente donc la variation de l'ETR en fonction des PAR[^05-reg-non-lineaire-1]. Une RLC typique commence par une relation quasi linéaire aux faibles intensités, pour s'infléchir et atteindre un plateau de rendement maximum. Au-delà, si l'intensité lumineuse augmente encore, des phénomènes de photoinhibition apparaissent et le rendement diminue dans une troisième phase. Voici une RLC mesurée à l'aide du diving PAM sur une feuille de *P. oceanica*.
 
@@ -121,7 +121,7 @@ Voyons ce que cela donne sur le graphique. Nous utiliserons pour ce faire une pe
 chart(data = rlc, etr ~ par) +
   geom_point() +
   stat_function(fun = as.function(rlc_nls), col = "skyblue3", linewidth = 1)
-# On peut aussi faire simplenet (mais c'est moins flexible) :
+# On peut aussi faire simplement (mais c'est moins flexible) :
 #chart(rlc_nls)
 ```
 
@@ -281,7 +281,7 @@ apropos("^SS", ignore.case = FALSE)
 
 Ensuite, nous recherchons l'aide relative à ces fonctions, par exemple via `?SSasymp` (note : il peut y avoir des faux positifs, comme `SSD` ici qui n'a rien à voir avec les fonctions **selfStart**).
 
-## Modèles courants en biologie {#mod-courants-bio}
+## Modèles courants en biologie {#modelesbio}
 
 Les domaines les plus courants où des modèles non linéaires sont utilisés en biologie concernent les cinétiques de réactions (chimiques, biochimiques), les courbes de type dose-réponse, les courbes de survie et les modèles de croissance. Nous verrons principalement divers modèles de croissance dans la section suivante. Certains de ces modèles, comme le modèle exponentiel, celui de Gompertz ou de Weibull sont aussi utilisés comme courbes de survie. De plus, la courbe logistique est un modèle classique de type dose-réponse. Ainsi, les différentes courbes de croissances recouvrent également une majorité des modèles utilisés dans d'autres domaines.
 
@@ -651,7 +651,7 @@ chart(data = tanaka_data, y ~ t) +
   geom_vline(xintercept = 0, col = "darkgray")
 ```
 
-## Choix du modèle {#choixmod}
+## Choix du modèle {#choixmodele}
 
 Le choix d'un modèle non linéaire fait intervenir des critères identiques à ceux d'un modèle linéaire (qualité d'ajustement évaluée par l'AIC, inspection visuelle de l'ajustement dans le nuage de points), mais il fait aussi intervenir une dimension supplémentaire : le choix de la fonction mathématique à ajuster. Comme nous venons de le voir au travers de quelques modèles courants en biologie, le nombre de fonctions mathématiques résultant en des formes similaire, par exemple de type sigmoïde, est grand. Ainsi, le choix de la meilleure fonction à utiliser dans un cas particulier est rendu plus difficile.
 
@@ -814,7 +814,7 @@ if (exists("assignment"))
 
 ```{r assign_B02Ga_models_IV, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B02Ga_models", part = "II",
+  assignment2("B02Ga_models", part = "IV",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
     course.ids = c(
       'S-BIOG-015' = !"B02Ga_{YY}M_models"),
@@ -828,22 +828,6 @@ if (exists("assignment2"))
     toc = "Modélisations libres par quatre (partie IV)")
 ```
 
-<!-- éliminé pour l'instant
-{r assign_B05Ga_bacterial_growth, echo=FALSE, results='asis'}
-if (exists("assignment2"))
-  assignment2("B05Ga_bacterial_growth", part = NULL,
-    url = "https://github.com/BioDataScience-Course/B05Ga_bacterial_growth",
-    course.ids = c(
-      'S-BIOG-015' = !"B05Ga_{YY}M_bacterial_growth"),
-    course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/..."),
-    course.starts = c(
-      'S-BIOG-015' = !"{W[13]+4} 08:00:00"),
-    course.ends = c(
-      'S-BIOG-015' = !"{W[14]+1} 23:59:59"),
-    term = "Q1", level = 4, n = 2,
-    toc = "Croissance bactérienne")
--->
 
 ## Challenge
 

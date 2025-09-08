@@ -40,7 +40,7 @@ vembedr::embed_youtube("q-IVQoh1nxA", width = 770, height = 433, query = "end=13
 
 `r h5p(75, height = 270, toc = "Objectif des statistiques exploratoires")`
 
-## Distance entre individus
+## Distance entre individus {#distance}
 
 Pour partir d'un exemple concret, imaginez que vous êtes en train d'analyser des données concernant les échantillons de plancton que vous avez prélevé sur votre lieu de recherche. Ce plancton a été numérisé (photo de chaque organisme) et les images ont été traitées avec un logiciel qui mesure automatiquement une vingtaine de variables telles que la surface de l'objet sur l'image, son périmètre, sa longueur... Vous vous trouvez donc face à un jeu de données qui a une taille non négligeable : 20 colonnes par 1262 lignes, soit le nombre d'individus mesurés dans vos échantillons.
 
@@ -130,7 +130,7 @@ Un indice de similarité (*similarity index* en anglais) est un descripteur stat
 
 ```{block, type='warning'}
 
-**Attention :** dans certains cas, un indice de dissimilarité peut varier de 0 à +$\infty$**. Il n'existe alors pas d'indice de similarité complémentaire. C'est le cas précisément de la distance euclidienne que nous avons explorée jusqu'ici.
+**Attention :** dans certains cas, un indice de dissimilarité peut varier de 0 à +$\infty$. Il n'existe alors pas d'indice de similarité complémentaire. C'est le cas précisément de la distance euclidienne que nous avons explorée jusqu'ici.
 
 ```
 
@@ -285,7 +285,7 @@ Vérifions en laissant R faire le calcul :
 (dissimilarity(ex1, method = "canberra"))
 ```
 
-## Regroupement avec CAH
+## Regroupement avec CAH {#cah}
 
 À partir du moment où nous avons une matrice de dissimilarité entre toutes les paires d'individus de notre jeu de données, nous pouvons les regrouper en fonction de leurs ressemblances. Deux approches radicalement différentes existent. Soit nous pouvons diviser l'échantillon progressivement jusqu'à obtenir des groupes homogènes (**méthodes divisives, telles que les k-moyennes** que nous aborderons un peu plus loin), soit nous pouvons regrouper les items semblables petit à petit jusqu'à avoir traité tout l'échantillon (**méthodes agglomératives, telles que la classification ascendante hiérarchique** ou CAH étudiée ici).
 
@@ -649,7 +649,7 @@ if (exists("assignment"))
     toc = "Analyse multivarée sur sept poissons (CAH)")
 ```
 
-## K-moyennes
+## K-moyennes {#kmoyennes}
 
 Les k-moyennes (ou *k-means* en anglais) représentent une autre façon de regrouper les individus d'un tableau multivarié. Par rapport à la CAH, cette technique est généralement moins efficace, mais elle a l'avantage de permettre le regroupement d'un très grand nombre d'individus (gros jeu de données), là où la CAH nécessiterait trop de temps de calcul et de mémoire vive. Il est donc utile de connaître cette seconde technique à utiliser comme solution de secours lorsque le dendrogramme de la CAH devient illisible sur de très gros jeux de données.
 

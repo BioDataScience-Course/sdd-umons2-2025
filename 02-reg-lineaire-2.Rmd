@@ -2,7 +2,6 @@
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
 SciViews::R("model", lang = "fr")
-library(equatiomatic)
 ```
 
 ##### Objectifs {.unnumbered}
@@ -17,7 +16,7 @@ library(equatiomatic)
 
 Le module précédent est une entrée en matière indispensable qui est complétée par le contenu du présent module.
 
-## Outils de diagnostic (suite)
+## Outils de diagnostic (suite) {#diagnostic2}
 
 La régression linéaire est une matière complexe et de nombreux outils existent pour vous aider à déterminer si le modèle que vous ajustez tient la route ou non. Il est très important de le vérifier avant d'utiliser un modèle. **Ajuster un modèle quelconque dans des données est à la portée de tout le monde, mais choisir un modèle pertinent et pouvoir expliquer pourquoi est nettement plus difficile !**
 
@@ -144,24 +143,6 @@ Comparez ces résultats avec ceux du modèle qui utilise tous les points. Lequel
 
 `r h5p(203, height = 270, toc = "Métrique pour modèle prédictif")`
 
-```{=html}
-<!--
-{{r assign_B02Ia_anscombe, echo=FALSE, results='asis'}
-if (exists("assignment"))
-  assignment("B02Ia_anscombe", part = NULL,
-    url = "https://github.com/BioDataScience-Course/B02Ia_anscombe",
-    course.ids = c(
-      'S-BIOG-015' = !"B02Ia_{YY}M_anscombe"),
-    course.urls = c(
-      'S-BIOG-015' = "https://classroom.github.com/a/..."),
-    course.starts = c(
-      'S-BIOG-015' = !"{W[7]+1} 10:00:00"),
-    course.ends = c(
-      'S-BIOG-015' = !"{W[7]+1} 13:00:00"),
-    term = "Q1", level = 3,
-    toc = "Quartet d’Anscombe")
--->
-```
 
 ## Régression linéaire multiple {#reglinmultiple}
 
@@ -194,7 +175,7 @@ library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
-```{r}
+```{r, warning=FALSE}
 car::scatter3d(data = trees, volume ~ diameter + height,
   fit = "linear", residuals = TRUE, bg = "white", axis.scales = TRUE,
   grid = TRUE, ellipsoid = FALSE)
@@ -413,7 +394,7 @@ Un **modèle mécaniste** vise à expliciter le mécanisme qui est responsable d
 
 $$volume = \frac{1}{3} \cdot \pi \cdot rayon^2 \cdot hauteur$$
 
-Avec notre diamètre au carré et notre hauteur, nous n'étions pas loin, à ceci près que les deux variables sont additionnées, et non multipliées dans notre modèle. La régression linéaire, et comme nous le verrons au chapitre suivant, le modèle linéaire sont fondamentalement des modèles additifs où les différents termes s'additionnent. Cependant, nous pouvons faire intervenir un terme qui multiplie nos deux variables explicatives par l'intermédiaire des **interactions** comme pour l'ANOVA à deux facteurs, voir `r course_link("section 11.3 de SDD I", course = 1, "mod%25C3%25A8le-crois%25C3%25A9-complet")`. Afin de nous rapprocher de la formule du volume d'un cône, calculons à présent le carré du rayon et ajustons un modèle linéaire multiple **avec interactions** :
+Avec notre diamètre au carré et notre hauteur, nous n'étions pas loin, à ceci près que les deux variables sont additionnées, et non multipliées dans notre modèle. La régression linéaire, et comme nous le verrons au chapitre suivant, le modèle linéaire sont fondamentalement des modèles additifs où les différents termes s'additionnent. Cependant, nous pouvons faire intervenir un terme qui multiplie nos deux variables explicatives par l'intermédiaire des **interactions** comme pour l'ANOVA à deux facteurs, voir `r course_link("section 11.3 de SDD I", course = 1, "anovacomplete")`. Afin de nous rapprocher de la formule du volume d'un cône, calculons à présent le carré du rayon et ajustons un modèle linéaire multiple **avec interactions** :
 
 ```{r, warning=FALSE}
 trees <- smutate(trees, radius2 = labelise((diameter/2)^2, "Rayon^2", units = "m^2"))

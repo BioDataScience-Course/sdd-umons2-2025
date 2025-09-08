@@ -47,9 +47,9 @@ sessioninfo::session_info()
 
 </details>
 
-## Vue générale du cours {#vuegeneral .unnumbered}
+## Vue générale du cours {#vuegenerale .unnumbered}
 
-Cet ouvrage interactif est le second volume d'une série de trois ouvrages traitant de la science des données biologiques. L'écriture de cette suite de livres a débuté au cours de l'année académique 2018-2019. Pour l'année académique 2025-2026, ceci est le support du cours de [Science des données II : analyse et modélisation](https://webcontent.umons.ac.be/web/fr/pde/2025-2026/ue/US-B3-SCBIOL-006-M.htm) au troisième Bachelier en Biologie en Faculté des Sciences de l'Université de Mons (UMONS), et dont le responsable est Philippe Grosjean
+Cet ouvrage interactif est le second volume d'une série de trois ouvrages traitant de la science des données biologiques. L'écriture de cette suite de livres a débuté au cours de l'année académique 2018-2019. Pour l'année académique `r !'{acad_year}'`, ceci est le support du cours de `r !'[Science des données II : analyse et modélisation](https://webcontent.umons.ac.be/web/fr/pde/{acad_year}/ue/US-B3-SCBIOL-006-M.htm)'` au troisième Bachelier en Biologie en Faculté des Sciences de l'Université de Mons (UMONS), et dont le responsable est Philippe Grosjean
 
 La matière est divisée en dix modules de six heures chacun en présentiel. Il nécessite environ huit heures (variable, en fonction de votre rythme et de votre technique d'apprentissage entre six et dix heures) en travail à domicile. **Cette matière fait suite au premier cours dont le contenu est considéré comme assimilé (voir [cours SDD I](https://wp.sciviews.org/sdd-umons){target="top"}).**
 
@@ -73,7 +73,7 @@ Le matériel pédagogique, rassemblé dans ce syllabus interactif, est aussi var
 
 -   des renvois vers des documents externes en ligne, des vidéos [Youtube](https://www.youtube.com/) ou [Vimeo](https://vimeo.com/), des ouvrages en ligne en anglais ou en français, des blogs, des tutoriels, des questions sur des sites comme [Stackoverflow](https://stackoverflow.com/) ou dans des [mailing lists R](https://www.r-project.org/mail.html), de [X (ex Twitter)](https://twitter.com/)...
 
--   des diapositives de présentations distribuées via le dépôt [sdd_lessons sur BioDataScience-Course](https://github.com/BioDataScience-Course/sdd_lessons/tree/2025-2026).
+-   des diapositives de présentations distribuées via le dépôt `r !'[sdd_lessons sur BioDataScience-Course](https://github.com/BioDataScience-Course/sdd_lessons/tree/{acad_year})'`.
 
 ```{block, type='info'}
 ::: {.nocourse}
@@ -115,7 +115,7 @@ Les cours de science des données utilisent une autre approche et se donnent en 
 
 ![](images/sdd2_00/organisation2.png)
 
-Une présentation des changements introduits par rapport à l'année précédente vous est faite durant la première séance introductive. La présentation correspondante est disponible au format PDF [ici](https://github.com/BioDataScience-Course/sdd_lessons/raw/2025-2026/B00/presentations/B00Pa_intro.pdf).
+Une présentation des changements introduits par rapport à l'année précédente vous est faite durant la première séance introductive. La présentation correspondante est disponible au format PDF `r !'[ici](https://github.com/BioDataScience-Course/sdd_lessons/raw/{acad_year}/B00/presentations/B00Pa_intro.pdf)'`.
 
 ### Quatre niveaux d'exercices {.unnumbered}
 
@@ -140,11 +140,12 @@ Les notes des exercices plus faciles de niveau 1, 2 et 3 sont comptabilisées s�
 L'évaluation est **continue** tout au long de l'année. Il n'y a pas d'examen en fin d'année et il n'y a pas moyen non plus de repasser un examen en seconde session. La présence aux séances est **obligatoire** pour cette raison et toute absence injustifiée sera sanctionnée par un zéro pour la matière concernée.
 ```
 
-### Plan du cours {.unnumbered}
+### Plan du cours {#plancours .unnumbered}
 
 Le plan du cours est une forme de contrat entre les étudiants et les enseignants. Ce document structure les attentes de vos encadrants. Veuillez lire ce document attentivement.
 
--   `r !{"[Plan du cours de Science des données biologiques II : années {acad_year}](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/{acad_year}/docs/plan_de_cours/sdd2_plan_cours_{acad_year}.pdf)"}`
+-   `r !'[Plan du cours de Science des données biologiques II : années {acad_year}](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/{acad_year}/docs/plan_de_cours/sdd2_plan_cours_{acad_year}.pdf)'`
+
 
 ## Issues {#issues .unnumbered}
 
@@ -153,7 +154,7 @@ Toutes les questions relatives aux exercices sont à poser dans les **"issues" G
 ```{r assign_B00Qa_issues, echo=FALSE, results='asis'}
 if (exists("assignment2"))
   assignment2("B00Qa_issues", part = NULL, clone = FALSE,
-    url = "https://github.com/BioDataScience-Course/B00Qa_24M_issues-b24",
+    url = "https://github.com/BioDataScience-Course/B00Qa_{YY}M_issues-b{YY}",
     course.ids = c(
       'S-BIOG-015'         = !"B00Qa_{YY}M_issues"),
     course.urls = c(
