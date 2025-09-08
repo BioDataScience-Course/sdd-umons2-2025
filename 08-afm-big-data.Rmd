@@ -18,7 +18,7 @@ SciViews::R("explore", lang = "fr")
 ![[Plume, generative aRt (art généré à l'aide du langage R), CC-BY-4.0, Danielle Navarro.](https://storage.googleapis.com/djnavarro-art/series-puffs/3000/pollen_13_1366.jpg)](https://storage.googleapis.com/djnavarro-art/series-puffs/800/pollen_13_1366.jpg)
 ```
 
-## Analyse factorielle multiple (AFM)
+## Analyse factorielle multiple (AFM) {#afm}
 
 Jusqu'ici nous avons étudié différentes techniques pour explorer des données multivariées *soit* quantitatives (ACP), *soit* qualitatives (AFC). Nous n'avons pas abordé encore la question de données *mixtes* avec des tableaux qui contiennent *à la fois* des variables quantitatives et des données qualitatives.
 
@@ -111,7 +111,7 @@ Dans notre cas concret ici, cela donne :
 
 L'analyse se fait en appelant `mfa(data = ...., formula)`. Nous assignons le résultat du calcul à `mar_mfa` :
 
-```{r}
+```{r, warning=FALSE}
 mar_mfa <- mfa(data = mar,
   ~ 4*std %as% environment + 24*num %as% plancton - 1*fct %as% zone)
 ```
@@ -156,7 +156,7 @@ chart$scores(mar_mfa, choices = c(1, 2))
 
 Nous pouvons aussi profiter de la variable supplémentaire zone pour colorer les points en fonction des masses d'eaux et représenter des ellipses pour chaque masse d'eau sur le graphique. La variante avec ces ellipses se réalise avec `chart$ellipses()` et il est plus clair dans pareil cas.
 
-```{r}
+```{r, warning=FALSE, fig.keep='last'}
 chart$ellipses(mar_mfa, choices = c(1, 2), keepvar = "Zone")
 ```
 
@@ -192,7 +192,7 @@ La variable supplémentaire zone est aussi représentée à proximité de la str
 
 Jusqu'ici, nous avons réalisé une AFM avec uniquement des données quantitatives (hors variable supplémentaire "zones"), mais l'AFM peut aussi traiter des données qualitatives, sous forme de tableaux de contingence à double entrée, ou sous forme de variables facteurs. Nous allons tester cette variante sans sortir de notre exemple du plancton méditerranéen. En effet, le tableau plancton peut *aussi* être considéré comme un tableau de contingence à double entrée. Il nous suffit de changer le type de **cnum** à **cnt** (pour l'analyse des fréquences) dans la formule pour traiter à présent le plancton sous la forme d'une AFC dans `mar_mfa2` :
 
-```{r}
+```{r, warning=FALSE}
 mar_mfa2 <- mfa(data = mar,
   ~ 4*std %as% environment + 24*cnt %as% plancton - 1*fct %as% zone)
 ```
@@ -225,7 +225,7 @@ chart$axes(mar_mfa2, choices = c(1, 2))
 
 Les conclusions sont similaires sur les axes. Voyons maintenant l'espace des individus, toujours avec les couleurs et les ellipses par zones :
 
-```{r}
+```{r, warning=FALSE, fig.keep='last'}
 chart$ellipses(mar_mfa2, choices = c(1, 2), keepvar = "Zone")
 ```
 
@@ -281,9 +281,11 @@ if (exists("assignment"))
       'S-BIOG-061' = !"{n3_end(mod, 'B08')}"),
     term = "Q2", level = 3,
     toc = "AFM sur oiseaux alpins")
+```
 
+```{r assign_B08Ib_zooscannet_I, echo=FALSE, results='asis'}
 if (exists("assignment"))
-  assignment("B08Ib_zooscannet", part = NULL,
+  assignment("B08Ib_zooscannet", part = "I",
     url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
     course.ids = c(
       'S-BIOG-061' = !"B08Ib_{YY}M_zooscannet"),
@@ -294,29 +296,10 @@ if (exists("assignment"))
     course.ends = c(
       'S-BIOG-061' = !"{n3_end(mod, 'B08')}"),
     term = "Q2", level = 3,
-    toc = "AFM sur plancton (gros jeu de données)")
+    toc = "AFM sur plancton (gros jeu de données) partie I")
 ```
 
-<!--
-**Créez un projet de groupe par quatre étudiants, que vous continuerez jusqu'au module 10 compris.**
-
-{r assign_B08Ga_multi_I, echo=FALSE, results='asis'}
-if (exists("assignment2"))
-  assignment2("B08Ga_multi", part = "I",
-    url = "https://github.com/BioDataScience-Course/B08Ga_multi",
-    course.ids = c(
-      'S-BIOG-061' = !"B08Ga_{YY}M_multi"),
-    course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/-0inbKR_"),
-    course.starts = c(
-      'S-BIOG-061' = !"{W[26]+5} 08:00:00"),
-    course.ends = c(
-      'S-BIOG-061' = !"{W[35]+2} 23:59:59"),
-    term = "Q2", level = 4, n = 4,
-    toc = "Étude d'un jeu de données multivarié (I)")
--->
-
-## Big data
+## Big data {#bigdata}
 
 On entend souvent parler de "big data", mais qu'est-ce que c'est réellement ? En quoi cela me concerne en qualité de biologiste ? Que dois-je faire si je suis confronté à un gros jeu de données ? Autant de questions auxquelles nous allons nous attaquer maintenant.
 
@@ -711,9 +694,9 @@ DBI::dbDisconnect(con, shutdown = TRUE)
 
 `r learnr("B08Lb_bigd", title = "Données volumineuses (big data)", toc = "Données volumineuses (big data)")`
 
-```{r assign_B08Ib_zooscannet, echo=FALSE, results='asis'}
+```{r assign_B08Ib_zooscannet_II, echo=FALSE, results='asis'}
 if (exists("assignment"))
-  assignment("B08Ib_zooscannet", part = NULL,
+  assignment("B08Ib_zooscannet", part = "II",
     url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
     course.ids = c(
       'S-BIOG-061' = !"B08Ib_{YY}M_zooscannet"),
@@ -724,7 +707,7 @@ if (exists("assignment"))
     course.ends = c(
       'S-BIOG-061' = !"{n3_end(mod, 'B08')}"),
     term = "Q2", level = 3,
-    toc = "AFM sur plancton (gros jeu de données)")
+    toc = "AFM sur plancton (gros jeu de données) partie II")
 ```
 
 ## Récapitulatif des exercices {#recapitulatifb08}

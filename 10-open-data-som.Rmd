@@ -176,7 +176,7 @@ Comme vous venez de le constater, Zenodo, de par la façon dont il présente les
 -   L'outil institutionnel de l'Université de Mons pour réaliser un plan de gestion de données est disponible [DMPonline.be](https://dmponline.be)
 
 
-## Cartes auto-adaptatives (SOM)
+## Cartes auto-adaptatives (SOM) {#som}
 
 Pour clore ce cours, nous allons étudier une nouvelle technique multivariée qui n'est pas très couramment employée en biologie, mais qui mérite pourtant que l'on s'y intéresse. Il s'agit d'une approche radicalement différente de l'ACP, AFC, ou encore MDS, qui reste plus générale, car non linéaire. C'est la méthode des **cartes auto-adaptatives**, ou encore, **cartes de Kohonen** du nom de son auteur. En anglais, nous parlerons de *"self-organizing map"*, d'où son acronyme **SOM** qui est fréquemment utilisé, même en français. Cette technique va encore une fois représenter les individus sur une carte. Cette fois-ci, la carte contient un certain nombre de cellules qui forment une grille rectangulaire, ou mieux, une disposition en nid d'abeille (nous verrons plus loin pourquoi cette disposition particulière est intéressante). Comme à l'habitude, nous allons faire en sorte que des individus qui se ressemblent soient proches sur la carte, et des individus différents soient éloignés. La division de la carte en différentes cellules permet, en plus, de regrouper les individus. La méthode réalise également une classification comme pour la CAH ou les k-moyennes, en bonus à la visualisation de la carte. Les SOM apparaissent donc comme une technique hybride entre **ordination** (représentation sur des cartes) et **classification** (regroupement des individus).
 
@@ -232,7 +232,7 @@ rect_grid_7_7 <- somgrid(7, 7, topo = "rectangular") # Crée la grille
 
 Il n'y a pas de graphique `chart` ou `ggplot2` dans le package {kohonen}. Nous utiliserons ici les graphiques de base de R. Pour visualiser la grille, il faut la transformer en un objet **kohonen**. Nous pouvons ajouter plein d'information sur la grille. Ici, nous rajoutons une propriété calculée à l'aide de `unit.distances()` qui est la distance des cellules de la carte par référence à la cellule centrale. Les cellules sont numérotées de 1 à *n* en partant en bas à gauche, en progressant le long de la ligne du bas vers la droite, et en reprenant à gauche à la ligne au-dessus. Donc, la ligne du bas contient de gauche à droite les cellules n°1 à 7. La ligne au-dessus contient les cellules n°8 à 14, et ainsi de suite. Donc, pour vérifier si on a bien compris, quel est le numéro de la cellule centrale dans notre grille ? Elle est située en quatrième ligne en partant du bas et en position 4 sur cette ligne, soit trois lignes complètes plus quatre ($3*7+4=25$). C'est donc la cellule n°25.
 
-```{r}
+```{r, warning=FALSE}
 rect_grid_7_7 %>.%
   # Transformation en un objet de classe kohonen qui est une liste
   structure(list(grid = .), class = "kohonen") %>.% # Objet de classe kohonen
@@ -245,7 +245,7 @@ Les cellules de la grille ne sont pas disposées au hasard dans la carte SOM. De
 
 L'autre topologie possible est la grille hexagonale. Voyons ce que cela donne :
 
-```{r}
+```{r, warning=FALSE}
 hex_grid_7_7 <- somgrid(7, 7, topo = "hexagonal")
 
 hex_grid_7_7 %>.%
@@ -264,7 +264,7 @@ Ici, nous n'avons que six voisins directs, mais trois directions dans lesquelles
 
 Effectuons maintenant le calcul de notre SOM à l'aide de la fonction `som()` du package {kohonen}. Comme l'analyse fait intervenir le générateur pseudo-aléatoire, nous pouvons utiliser de manière optionnelle `set.seed()` avec un nombre entier **choisi au hasard** (et toujours différent à chaque utilisation) pour que cette analyse particulière là soit reproductible. Sinon, à chaque exécution, nous obtiendrons un résultat légèrement différent.
 
-```{r}
+```{r, warning=FALSE}
 set.seed(8657)
 zoo_som <- som(zoo_mat, grid = somgrid(7, 7, topo = "hexagonal"))
 summary(zoo_som)
@@ -278,7 +278,7 @@ plot(zoo_som, type = "changes")
 
 Ici, il semble que nous ne diminuons plus vraiment à partir de l'itération 85 environ. Nous pouvons être tentés de nous en convaincre en relançant l'analyse avec un plus grand nombre d'itérations (indiqué via l'argument `rlen =` de `som()`). Essayons avec 200 itérations :
 
-```{r}
+```{r, warning=FALSE}
 set.seed(954)
 zoo_som <- som(zoo_mat, grid = somgrid(7, 7, topo = "hexagonal"), rlen = 200)
 plot(zoo_som, type = "changes")
@@ -299,7 +299,7 @@ Nous n'avons pas ajouté de légende qui indique à quelle classe correspond cha
 
 Nous voyons donc ici que, malgré que l'information contenue dans `class` n'ait pas été utilisées. Les différents individus de zooplancton ne se répartissent pas au hasard en fonction de ce critère. Nous pouvons également observer les cellules qui contiennent plus ou moins d'individus, mais si l'objectif est de visionner *uniquement* le remplissage des cellules, le graphique avec `type = "counts"` est plus adapté.
 
-```{r}
+```{r, warning=FALSE}
 plot(zoo_som, type = "counts", shape = "straight")
 ```
 
@@ -338,7 +338,7 @@ Ce graphique est riche en informations. Nous voyons que :
 
 Nous pouvons donc **orienter** notre carte SOM en indiquant l'information relative aux variables. Lorsque le nombre de variables est élevé ou relativement élevé comme ici, cela devient néanmoins difficile à lire. Il est aussi possible de colorer les cartes en fonction d'une et une seule variable pour en faciliter la lecture à l'aide de `type = "property"`. Voici quelques exemples (notez la façon de diviser une page graphique en lignes et colonnes à l'aide de `par(mfrow = )` en graphiques R de base, ensuite une boucle `for` réalise les six graphiques l'un après l'autre) :
 
-```{r}
+```{r, warning=FALSE}
 par(mfrow = c(2, 3)) # Graphiques sur 2 lignes et 3 colonnes
 for (var in c("size", "mode", "range", "aspect", "elongation", "circularity"))
   plot(zoo_som, type = "property", property = zoo_som$codes[[1]][, var],
@@ -384,7 +384,7 @@ Visualisons ce découpage sur la carte SOM (l'argument `bgcol =` colorie le fond
 [^10-open-data-som-4]: Nous avons choisi ici encore une autre palette de couleurs provenant du package {RColorBrewer}, voir [ici](http://www.sthda.com/french/wiki/couleurs-dans-r).
 
 ```{r}
-plot(zoo_som, type = "mapping", pch = ".", main = "SOM zoo, six groupes",
+plot(zoo_som, type = "mapping", pchs = ".", main = "SOM zoo, six groupes",
   bgcol =  RColorBrewer::brewer.pal(5, "Set2")[groupes])
 add.cluster.boundaries(zoo_som, clustering = groupes)
 ```

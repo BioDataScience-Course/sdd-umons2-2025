@@ -22,8 +22,8 @@ learnitdown <- list(
   institutions = "UMONS",                # Known institutions
   courses = c(
     "S-BIOG-015",                        # SDD2 Q1
-    "S-BIOG-061" #,                        # SDD2 Q2
-    #"S-BIOG-937-958-959"                 # SDD2 Charleroi
+    "S-BIOG-061" #,                      # SDD2 Q2
+    #"S-BIOG-937-958-959"                # SDD2 Charleroi
   ),
   courses_names = c(
     "Science des Données Biologiques II à l'UMONS (Q1 : modélisation)",
@@ -104,7 +104,7 @@ n4_end <- function(x, module, hour = "23:59:59")
 # becomes:
 # https://wp.sciviews.org/sdd-umons2/?iframe=wp.sciviews.org/sdd-umons2-2025/outils-de-diagnostic-suite.html%23résumé-avec-summarysuite
 course_link <- function(label, course = 1, page, anchor = "", year = !"{YYYY}",
-                        baseurl = !"{baseurl}", course_page = "sdd-umons") {
+    baseurl = !"{baseurl}", course_page = "sdd-umons") {
   if (course == 1) {
     course <- ""
   } else{
@@ -117,7 +117,6 @@ course_link <- function(label, course = 1, page, anchor = "", year = !"{YYYY}",
   paste0("[", label, "](", url, ")")
 }
 # ex.: course_link("diagnostic", 2, "outils-de-diagnostic-suite", "résumé-avec-summarysuite")
-
 
 
 # Examples:

@@ -30,7 +30,7 @@ Ce que nous voulons faire avec l'**Analyse en Composantes Principales**, c'est u
 
 En statistique, cela correspond à réaliser une projection d'un ensemble à un autre qui va maximiser la **variance** des observations dans l'espace réduit choisi (le plan ou un espace à trois dimensions). Or, les mathématiciens savent très bien comment répondre à ce genre de question. Donc, c'est parfaitement réalisable avec un ordinateur.
 
-## Analyse en composantes principales
+## Analyse en composantes principales {#acp}
 
 L'**Analyse en Composantes Principales** ou ACP (*Principal Component Analysis* ou PCA en anglais) est une méthode d'ordination de base qu'il est indispensable de connaître et de comprendre. La plupart des autres techniques d'ordination plus sophistiquées peuvent être vues comme des variantes de l'ACP. L'ACP sera utilisable lorsque :
 
@@ -98,14 +98,14 @@ Quelques corrélations positives d'intensités moyennes se dégagent ici, notamm
 
 Nous utiliserons la fonction `pca()` qui prend un argument `data =` et une formule du type `~ var1 + var2 + .... + varn`, ou plus simplement, directement un tableau contenant uniquement les variables à analyser comme argument unique. Comme les différentes variables sont mesurées dans des unités différentes, nous devons les standardiser (écart type ramené à un pour toutes). Ceci est réalisé par la fonction `pca()` en lui indiquant `scale = TRUE`. Donc :
 
-```{r}
+```{r, warning=FALSE}
 pima_pca <- pca(data = pima, ~ glucose + pressure + triceps + insulin + mass +
   pedigree + age, scale = TRUE)
 ```
 
 Ou alors, nous sélectionnons les variables d'intérêt avec `sselect()` et appliquons `pca()` directement sur ce tableau, ce qui donnera le même résultat.
 
-```{r}
+```{r, warning=FALSE}
 pima %>.%
   sselect(., glucose:age) %>.%
   pca(., scale = TRUE) %->%
@@ -284,7 +284,7 @@ Il est crucial de bien nettoyer son jeu de données avant une ACP, et aussi, de 
 
 Attention toutefois à la transformation logarithmique appliquée sur des données qui peuvent contenir des zéros (par exemple, `gonads` ou `dry_gonads`). Dans ce cas, la transformation logarithme(x + 1) réalisée avec la fonction `log1p()` est plus indiquée. Nous allons ici transformer **toutes** les variables en `log(x + 1)`. C'est assez fastidieux à faire avec `smutate()`, mais nous pouvons l'utiliser directement sur le tableau entier réduit aux variables quantitatives continues seules lors de l'appel à `pca()` comme suit :
 
-```{r}
+```{r, warning=FALSE}
 urchin2 %>.%
   sselect(., -origin, -maturity) %>.% # Élimine les variables non quantitatives
   log1p(.) %>.% # Transforme toutes les autres en log(x + 1)
@@ -329,7 +329,7 @@ head(urchin3)
 
 Refaisons notre ACP sur `urchin3` ainsi calculé :
 
-```{r}
+```{r, warning=FALSE}
 urchin3_pca <- pca(data = urchin3, ~., scale = TRUE)
 summary(urchin3_pca)
 ```
@@ -352,7 +352,7 @@ chart$loadings(urchin3_pca, choices = c(2, 3))
 
 Enfin, dans l'espace des individus, avec l'origine reprise en couleur, nous observons ceci dans le premier plan de l'ACP :
 
-```{r}
+```{r, warning=FALSE}
 chart$scores(urchin3_pca, choices = c(1, 2),
   col = urchin2$origin, labels = urchin2$maturity, aspect.ratio = 3/5) +
   theme(legend.position = "right") +
@@ -361,7 +361,7 @@ chart$scores(urchin3_pca, choices = c(1, 2),
 
 Et pour le plan PC2 - PC3 :
 
-```{r}
+```{r, warning=FALSE}
 chart$scores(urchin3_pca, choices = c(2, 3),
   col = urchin2$origin, labels = urchin2$maturity, aspect.ratio = 3/5) +
   theme(legend.position = "right") +
@@ -388,8 +388,8 @@ chart(data = pima, glucose ~ insulin %col=% diabetes) +
 Le package {rgl} permet de réaliser ce genre de graphique 3D interactif (que vous pouvez faire tourner dans l'orientation que vous voulez à la souris). Dans un document R Markdown ou Quarto, il faut absolument configurer {knitr} qui est responsable de l'inclusion des graphiques R dans le document comme ceci avant toute chose :
 
 ```{r}
-library(rgl)
 options(rgl.printRglwidget = TRUE)
+library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
@@ -757,7 +757,7 @@ if (exists("assignment"))
     course.ends = c(
       'S-BIOG-061' = !"{n3_end(mod, 'B07')}"),
     term = "Q2", level = 3,
-    toc = "ACP et AFC en pratique (I)")
+    toc = "ACP et AFC en pratique (partie I)")
 ```
 
 ##### Pour aller plus loin {.unnumbered}
@@ -770,7 +770,7 @@ if (exists("assignment"))
 
 -   Une page qui reprend [des explications et une série de vidéos](http://www.sthda.com/english/articles/21-courses/65-principal-component-analysis-course-using-factominer/) qui présentent les différentes facettes de l'ACP (en anglais).
 
-## Analyse factorielle des correspondances
+## Analyse factorielle des correspondances {#afc}
 
 Comme l'ACP s'intéresse à des corrélations linéaires entre variables quantitatives, elle n'est absolument pas utilisable pour traiter des variables qualitatives. L'**Analyse Factorielle des Correspondances** sera utile dans ce dernier cas (AFC, ou en anglais *Correspondence Analysis* ou CA).
 
@@ -831,7 +831,7 @@ Par exemple, si nous nous posons la question de l'impact de l'éducation sur l'i
 table(wg$B, wg$edu)
 ```
 
--   **Étape 2 :** test de Chi^2^ d'indépendance, voir `r course_link("section correspondante du cours de SDD I", course = 1, "chi2", "test-chi2-dind%C3%A9pendance")`. L'hypothèse nulle du test est que les deux variables sont indépendantes l'une de l'autre. L'hypothèse alternative est qu'une dépendance existe. Si la réponse aux questions est indépendante du niveau d'éducation (pas de rejet de H~0~), notre analyse est terminée. Sinon, il faut approfondir... Choisissons notre seuil $\alpha$ à 5% avant de réaliser notre test.
+-   **Étape 2 :** test de Chi^2^ d'indépendance, voir `r course_link("section correspondante du cours de SDD I", course = 1, "chi2", "chi2independance")`. L'hypothèse nulle du test est que les deux variables sont indépendantes l'une de l'autre. L'hypothèse alternative est qu'une dépendance existe. Si la réponse aux questions est indépendante du niveau d'éducation (pas de rejet de H~0~), notre analyse est terminée. Sinon, il faut approfondir... Choisissons notre seuil $\alpha$ à 5% avant de réaliser notre test. 
 
 ```{r}
 chisq.test(wg$B, wg$edu)
@@ -1016,29 +1016,9 @@ if (exists("assignment"))
     course.ends = c(
       'S-BIOG-061' = !"{n3_end(mod, 'B07')}"),
     term = "Q2", level = 3,
-    toc = "ACP et AFC en pratique (II)")
+    toc = "ACP et AFC en pratique (partie II)")
 ```
 
-<!--
-
-**Le projet suivant est un travail par groupe de quatre personnes et se poursuivra tout au long du Q2.**
-
-{r assign_B07Ga_doubs_I, echo=FALSE, results='asis'}
-if (exists("assignment2"))
-  assignment2("B07Ga_doubs", part = "I",
-    url = "https://github.com/BioDataScience-Course/B07Ga_doubs",
-    course.ids = c(
-      'S-BIOG-061' = !"B07Ga_{YY}M_doubs"),
-    course.urls = c(
-      'S-BIOG-061' = "https://classroom.github.com/a/4JzXaaBR"),
-    course.starts = c(
-      'S-BIOG-061' = !"{W[24]+1} 13:00:00"),
-    course.ends = c(
-      'S-BIOG-061' = !"{W[35]+2} 23:59:59"),
-    term = "Q2", level = 4, n = 4,
-    toc = "Étude écologique sur le Doubs (I)")
-
--->
 
 ##### Pour en savoir plus {.unnumbered}
 

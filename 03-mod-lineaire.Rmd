@@ -15,7 +15,7 @@ library(equatiomatic)
 
 ##### Prérequis {.unnumbered}
 
--   L'ANOVA (`r course_link("module 9", course = 1, "variance")` & `r course_link("module 10", course = 1, "variance2")` du cours SDD 1), ainsi que la régression linéaire ([module 1](#lm) et [module 2](#lm2) du présent cours) doivent être maîtrisées avant d'aborder cette matière.
+-   L'ANOVA (`r course_link("module 9", course = 1, "variance")` & `r course_link("module 10", course = 1, "variance2")` du cours SDD 1), ainsi que la régression linéaire (\@ref(lm) et \@ref(lm2) du présent cours) doivent être maîtrisées avant d'aborder cette matière.
 
 ## Variables numériques ou facteurs {#varnumeriquesfacteurs}
 
@@ -34,13 +34,12 @@ Donc, la principale différence entre ANOVA et régression linéaire telles que 
 -   variables qualitatives non ordonnées prenant également un petit nombre de valeurs possibles, mais sans ordre particulier (**factor** dans R).
 
 ```{block, type='warning'}
-Par la suite, un encodage correct des variables sera *indispensable* afin de distinguer ces différentes situations. En effet, R considérera automatiquement comment mener l'analyse en fonction de la classe des variables fournies. Donc, si la classe est incorrecte, l'analyse le sera aussi ! Si vous avez des doutes concernant les types de variables, relisez la section [type de variables](https://wp.sciviews.org/sdd-umons/?iframe=wp.sciviews.org/sdd-umons-2025/types-de-variables.html) avant de continuer ce module.
+Par la suite, un encodage correct des variables sera *indispensable* afin de distinguer ces différentes situations. En effet, R considérera automatiquement comment mener l'analyse en fonction de la classe des variables fournies. Donc, si la classe est incorrecte, l'analyse le sera aussi ! Si vous avez des doutes concernant les types de variables, relisez la section `r course_link("types de variables", course = 1, "types-de-variables")` avant de continuer ce module.
 ```
 
 ##### À vous de jouer ! {.unnumbered}
 
 `r h5p(217, height = 270, toc = "Types de variables")`
-
 
 ## ANOVA et régression linéaire {#anovareglin}
 
@@ -119,7 +118,7 @@ L'encodage tel que présenté plus haut s'appelle un encodage en variable muette
 
 `r h5p(219, height = 270, toc = "Recodage de variable")`
 
-## Matrice de contraste
+## Matrice de contraste {#contraste}
 
 La version que nous avons étudiée jusqu'ici pour nos variables indicatrices, à savoir, une seule prend la valeur 1 lorsque toutes les autres prennent une valeur zéro, n'est qu'un cas particulier de ce qu'on appelle les **contrastes** appliqués à ces variables indicatrices. En réalité, nous pouvons leur donner bien d'autres valeurs (on parle aussi de **poids**). Cela permettra de considérer des contrastes différents, eux-mêmes représentatifs de situations différentes.
 
@@ -268,6 +267,7 @@ Dans un cas comme celui-ci, nous pouvons simplifier le modèle en éliminant le 
 urchin_lm2 <- lm(data = urchin, skeleton ~ weight + weight:origin, subset = weight >= 30)
 summary(urchin_lm2)
 ```
+
 Nous voyons qu'effectivement, le terme non significatif a disparu et il ne reste plus que les termes significatifs au seuil $\alpha$ de 5%.
 
 ```{r}
@@ -280,7 +280,7 @@ $$skeleton_{Culture} = 2.31 + 0.23 \cdot weight_{Culture}$$
 
 $$skeleton_{Pêcherie} = 2.31 + 0.29 \cdot weight_{Pêcherie}$$
 
-Les interactions sont significatives dans notre modèle linéaire, qu'on le simplifie ou non. Cela démontre que **les pentes sont différentes également de manière significative au seuil $\alpha$ de 5%**.
+Les interactions sont significatives dans notre modèle linéaire, qu'on le simplifie ou non. Cela démontre que **les pentes sont différentes également de manière significative au seuil** $\alpha$ de 5%.
 
 Jusqu'ici, nous avons repris les sorties "brutes" de R pour les tableaux et nous avons écrit des équations à la main. Mais nous pouvons aussi utiliser `tabularise()` et `eq_()` pour des équations en ligne ou `eq__()` pour des équations sur leur propre ligne, avec éventuellement `use_coefs = TRUE` et `coef_digits =` pour la version paramétrisée. Voici ce que cela donne pour notre modèle simplifié :
 
@@ -294,8 +294,7 @@ Nous avons l'équation du modèle qui reprend les deux droites en même temps. L
 
 Pour le modèle complet avec décalage de pente, l'équation paramétrée est :
 
-$$`r eq__(urchin_lm, use_coefs = TRUE, coef_digits = c(2, 2, 2, 3))`$$
-Ici, la variable muette est appelée $origin_{Pêcherie}$, ce qui est un nom plus correct (une correction est sans doute nécessaire ici dans le moteur qui génère automatiquement les équations depuis le modèle dans le cas simplifié). Le principe est le même : la variable muette permet de prendre en compte le décalage de pente et d'ordonnée à l'origine, mais seulement dans le cas de la sous-population `"Pêcherie"` (valeur 1), puisque ces termes tombent pour `"Culture"`(valeur 0).
+$$`r eq__(urchin_lm, use_coefs = TRUE, coef_digits = c(2, 2, 2, 3))`$$ Ici, la variable muette est appelée $origin_{Pêcherie}$, ce qui est un nom plus correct (une correction est sans doute nécessaire ici dans le moteur qui génère automatiquement les équations depuis le modèle dans le cas simplifié). Le principe est le même : la variable muette permet de prendre en compte le décalage de pente et d'ordonnée à l'origine, mais seulement dans le cas de la sous-population `"Pêcherie"` (valeur 1), puisque ces termes tombent pour `"Culture"`(valeur 0).
 
 Nous n'avons pas encore réalisé l'analyse des résidus qui reste à faire également pour la partie régression linéaire de notre modèle. Voici l'analyse pour le modèle simplifié.
 
@@ -382,7 +381,7 @@ Dans le tableau supérieur, nous avons le détail du modèle linéaire complet q
 
 Les coefficients $\beta_1$, $\beta_2$ et $\beta_3$ des termes `smoke == "before"`, `smoke == "until"` et `smoke == "during"` respectivement, sont les contrastes appliqués par rapport au contrôle (`smoke == "never"`). Ce sont les **décalages des ordonnées à l'origine** dans la régression du poids du bébé en fonction du poids de la mère, lorsque la matrice de contrastes de traitements est utilisée comme ici. Par exemple, pour `smoke == "before"`, l'estimation de l'ordonnée à l'origine pour la sous-population de référence `smoke == "never"` est de 3.000 (paramètre $\alpha$) -0.0355, valeur de décalage estimé de $\beta_1$ pour le terme `smoke == "before"`, ce qui donne une ordonnée à l'origine pour la droite de la sous-population `smoke == "before"` de 2.965. Le même raisonnement peut être fait pour la sous-population `smoke == "until"` (3.000 + 0.902 = 3.902) et `smoke == "during"` (3.000 - 0.304 = 2.696).
 
-Les coefficients $\beta_5$, $\beta_6$ et $\beta_7$ correspondent aux termes d'interactions notés `smokebefore:wt1`, `smokeuntil:wt1` et `smokeduring:wt1` dans les sorties brutes de R (sans utiliser `tabularise()`), ou $smoke_{before} \times wt1$, $smoke_{until} \times wt1$ et $smoke_{during} \times wt1$ dans les équations avec `tabularise()`. Concrètement, cela représente le **décalage de la pente** par rapport à la droite représentant le poids des bébés `wt` en fonction du poids de la mère `wt1` dans la sous-population de référence `smoke == "never"` dont la pente $\beta_4$  est estimée à 0.00812. Nous pouvons donc dire que la pente estimée pour la sous-population `smoke == "before"` est de 0.00812 + 0.00118 = 0.00930, pour la sous-population `smoke == "until"` elle est de 0.00812 - 0.0153 = -0.00718, et enfin pour la sous-population `smoke == "during"`, elle est de 0.00812 + 0.00115 = 0.00927.
+Les coefficients $\beta_5$, $\beta_6$ et $\beta_7$ correspondent aux termes d'interactions notés `smokebefore:wt1`, `smokeuntil:wt1` et `smokeduring:wt1` dans les sorties brutes de R (sans utiliser `tabularise()`), ou $smoke_{before} \times wt1$, $smoke_{until} \times wt1$ et $smoke_{during} \times wt1$ dans les équations avec `tabularise()`. Concrètement, cela représente le **décalage de la pente** par rapport à la droite représentant le poids des bébés `wt` en fonction du poids de la mère `wt1` dans la sous-population de référence `smoke == "never"` dont la pente $\beta_4$ est estimée à 0.00812. Nous pouvons donc dire que la pente estimée pour la sous-population `smoke == "before"` est de 0.00812 + 0.00118 = 0.00930, pour la sous-population `smoke == "until"` elle est de 0.00812 - 0.0153 = -0.00718, et enfin pour la sous-population `smoke == "during"`, elle est de 0.00812 + 0.00115 = 0.00927.
 
 Bien. Mais maintenant, est-ce que ces décalages d'ordonnées à l'origine et de pente sont significatifs ? Nous regardons les tests *t* de Student sur la même ligne du tableau pour chacun des coefficients (H~0~: coefficient = 0, H~1~: coefficient ≠ 0). Au seuil alpha de 5% choisi au départ avant de faire l'analyse, nous regardons donc si la valeur de *p* de chaque test est inférieure à ce seuil $\alpha$ pour rejeter H~0~ et considérer le coefficient comme significativement différent de zéro. Nous constatons que les droites pour `smoke == "before"` (décalage d'ordonnée à l'origine $\beta_1$ et décalage de pente = $\beta_5$) sont toutes deux non significatifs. Pour `smoke == "during"` (décalage d'ordonnée à l'origine $\beta_3$ et décalage de pente = $\beta_7$) nous faisons le même constat. Dans les deux cas, nous concluons donc qu'il n'y a pas de différences avec la droite de référence pour `smoke == "never"` (pente $\beta_4$ et ordonnée à l'origine $\alpha$). Par contre, tant le décalage de l'ordonnée à l'origine ($\beta_2$ pour le terme `smoke == "until"` alias $smoke_{until}$ dans l'équation) que le décalage de pente ($\beta_6$ du terme `smokeuntil:wt1` alias $smoke_{until} \times wt1$ dans l'équation) sont significatifs au seuil alpha de 5%. Donc, la sous-population `smoke == "until"` semble avoir un comportement différent en termes de variation du poids du bébé `wt` en fonction du poids de la mère `wt1` d'après le résumé du modèle linéaire.
 
@@ -402,7 +401,7 @@ lm(data = babies2, wt ~ wt1, subset = smoke == "before") |>
   summary() |> tabularise()
 ```
 
-Nous avons une ordonnée à l'origine qui vaut 2,965 et une pente qui vaut 0.00929, exactement comme calculées plus haut (aux arrondis près). L'estimation de l'ordonnée à l'origine correspond donc bien, dans l'ANCOVA, à $\alpha$ + $\beta_1$ = 3,000 - -0.0355 = 2,965. De même, la pente de notre droite pour la sous-population `smoke == "before"` est égale à $\beta_4$ + $\beta_5$ = 0.00812 + 0.00118 = 0.00930 (équivalent à 0.00929 aux arrondis près). Cela se vérifie aussi pour les deux autres droites pour `smoke == "until"` et `smoke == "during"`. 
+Nous avons une ordonnée à l'origine qui vaut 2,965 et une pente qui vaut 0.00929, exactement comme calculées plus haut (aux arrondis près). L'estimation de l'ordonnée à l'origine correspond donc bien, dans l'ANCOVA, à $\alpha$ + $\beta_1$ = 3,000 - -0.0355 = 2,965. De même, la pente de notre droite pour la sous-population `smoke == "before"` est égale à $\beta_4$ + $\beta_5$ = 0.00812 + 0.00118 = 0.00930 (équivalent à 0.00929 aux arrondis près). Cela se vérifie aussi pour les deux autres droites pour `smoke == "until"` et `smoke == "during"`.
 
 Donc, notre modèle complet ne fait rien d'autre que d'ajuster les quatre droites correspondant aux relations linéaires entre `wt` et `wt1`, **mais en décompose les effets, niveau par niveau de la variable qualitative `smoke`** en fonction de la matrice de contraste que l'on a choisie. En bonus, nous avons la possibilité de tester si chacune des composantes (tableau coefficient de `summary()`) ou si globalement chacune des variables (tableau obtenu avec `anova()`) a un effet significatif ou non dans le modèle.
 
@@ -552,7 +551,7 @@ chart$cooksd(babies2_lm4)
 
 Ici le comportement des résidus est sain. Des petits écarts à la normalité sur le graphique quantile-quantile s'observent peut-être, mais ce n'est pas dramatique et le modèle linéaire est robuste à ce genre de petits changements d'autant plus qu'ils apparaissent relativement symétriques à gauche et à droite de la distribution. En conclusion de cette analyse, nous pouvons dire que la masse du bébé dépend de la masse de la mère, mais assez faiblement (seulement 7,7% de la variance totale expliquée). Par contre, nous pouvons aussi dire que le fait de fumer pendant la grossesse a un effet moyen significatif sur la réduction de la masse du bébé à la naissance (en moyenne cette réduction est de 0,25kg pour une masse moyenne à la naissance de 3,04kg, soit une réduction de 0,25 / 3,04 \* 100 = 8%).
 
-Voilà, nous venons d'analyser et d'interpréter notre premier modèle linéaire constitué d'une variable prédictive numérique et d'une variable prédictive facteur (anciennement appelé ANCOVA). Les données à traiter (graphiques descriptifs) ne montraient *a priori* pas un allongement visible du nuage de point, et effectivement, le *R*^2^ du modèle est extrêmement faible (< 8%). Il n'est **pas** utilisable pour **prédire** la masse du bébé à la naissance en fonction de la masse de la mère, bien que la relation soit significative au seuil $\alpha$ de 5%. Il nous a pourtant servi à mettre en évidence un léger décalage significatif de la masse du bébé pour des mères qui ont fumé pendant leurs grossesses. Ceci n'aurait pas été mis en évidence par une ANOVA à un facteur sans tenir compte de la relation masse du bébé *versus* masse de la mère *simultanément* dans le modèle linéaire. En pratique, la plupart des données que vous traiterez en modèle linéaire (ou ANCOVA) auront très probablement un bien meilleur *R*^2^. Mais ce jeu de données a été choisi pour vous montrer qu'il est parfois possible de sortir des résultats intéressants de données pour lesquelles une première analyse descriptive ne montre pas de relation évidente.
+Voilà, nous venons d'analyser et d'interpréter notre premier modèle linéaire constitué d'une variable prédictive numérique et d'une variable prédictive facteur (anciennement appelé ANCOVA). Les données à traiter (graphiques descriptifs) ne montraient *a priori* pas un allongement visible du nuage de point, et effectivement, le *R*^2^ du modèle est extrêmement faible (\< 8%). Il n'est **pas** utilisable pour **prédire** la masse du bébé à la naissance en fonction de la masse de la mère, bien que la relation soit significative au seuil $\alpha$ de 5%. Il nous a pourtant servi à mettre en évidence un léger décalage significatif de la masse du bébé pour des mères qui ont fumé pendant leurs grossesses. Ceci n'aurait pas été mis en évidence par une ANOVA à un facteur sans tenir compte de la relation masse du bébé *versus* masse de la mère *simultanément* dans le modèle linéaire. En pratique, la plupart des données que vous traiterez en modèle linéaire (ou ANCOVA) auront très probablement un bien meilleur *R*^2^. Mais ce jeu de données a été choisi pour vous montrer qu'il est parfois possible de sortir des résultats intéressants de données pour lesquelles une première analyse descriptive ne montre pas de relation évidente.
 
 ### Choix du modèle
 

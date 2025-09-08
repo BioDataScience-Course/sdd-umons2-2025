@@ -493,7 +493,7 @@ dm_from_con(con, learn_keys = FALSE) %>.%
 dm_draw(who_dm, view_type = "all")
 ```
 
-La définition de deux clés étrangères depuis "who" et "pop" vers la clé primaire "country" dans la table "countries" crée ce que l'on appelle une **relation cyclique** entre les trois tables. Avec les versions antérieures de {dm} cela n'était pas possible. Vérifiez donc bien la version de votre package {dm}. Dans la SciViews Box 2025, il s'agit de la version 1.0.11. Cependant, ces relations cycliques ne sont pas encore bien gérées par d'autres fonctions de {dm}, notamment `dm_filter()` que nous utiliserons ensuite. Nous allons donc créer une version plus simple de notre modèle de données sans la clé étrangère entre "pop" et "countries".
+La définition de deux clés étrangères depuis "who" et "pop" vers la clé primaire "country" dans la table "countries" crée ce que l'on appelle une **relation cyclique** entre les trois tables. Ces relations cycliques ne sont pas encore bien gérées par d'autres fonctions de {dm}, notamment `dm_filter()` que nous utiliserons ensuite. Nous allons donc créer une version plus simple de notre modèle de données sans la clé étrangère entre "pop" et "countries".
 
 ```{r}
 dm_from_con(con, learn_keys = FALSE) %>.%
@@ -583,7 +583,7 @@ unlink("duckdb_test.db")
 
 -   Les [dix commandements d'une base de données réussie](https://thinkr.fr/base-de-donnees-reussie/). Il s'agit ici plutôt de la création d'une base de données que de la requête sur une base de données existante... mais tôt ou tard, vous créerez vos propres bases de données et ces conseils vous seront alors utiles.
 
-## Positionnement multidimensionnel (MDS)
+## Positionnement multidimensionnel (MDS) {#mds}
 
 Revenons à présent sur les techniques statistiques d'analyse de données multivariées. Le positionnement multidimensionnel, ou *multidimensional scaling* en anglais, d'où son acronyme fréquemment utilisé en français également : le MDS, est une façon de représenter clairement l'information contenue dans une matrice de distances. Au départ, nous avons *p* colonnes et *n* lignes dans le tableau cas par variables, c'est-à-dire, *p* variables quantitatives mesurées sur *n* individus distincts. Nous voulons déterminer les similitudes ou différences de ces *n* individus en les visualisant sur une carte où la distance d'un individu à l'autre représente cette similitude. Plus deux individus sont proches, plus ils sont semblables. Ces distances entre paires d'individus, nous les avons déjà calculées dans la matrice de distance au module \@ref(cah-kmeans-div). Mais comment les représenter ? En effet, une représentation exacte ne peut se faire que dans un espace à *p* dimensions (même nombre de dimensions que de variables initiales). Donc, afin de réduire les dimensions à seulement deux ou trois, nous allons devoir "tordre" les données tout en acceptant de perdre un peu d'information lors de cette transformation.
 

@@ -2,7 +2,6 @@
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
 SciViews::R("model", lang = "fr")
-library(equatiomatic)
 ```
 
 ##### Objectifs {.unnumbered}
@@ -19,7 +18,7 @@ library(equatiomatic)
 
 Les trois premiers modules du présent cours permettent progressivement de comprendre et de maîtriser la régression linéaire et le modèle linéaire dans R. Assurez-vous de bien avoir assimilé leur contenu avant d'attaquer ce quatrième module.
 
-## Modèle linéaire généralisé {#mod-lineaire-generalise}
+## Modèle linéaire généralisé {#modlingen}
 
 Le modèle linéaire nous a permis de combiner différents types de **variables indépendantes ou explicatives** dans un même modèle. Cependant, la **variable dépendante ou réponse** à la gauche de l'équation doit *absolument* être numérique et une distribution normale est exigée pour la composante statistique du modèle exprimée dans les résidus $\epsilon$. Donc, si nous voulons modéliser une variable dépendante qui ne répond pas à ces caractéristiques, nous sommes dans l'impasse avec la fonction `lm()`. Dans certains cas, une transformation des données peut résoudre le problème. Par exemple, prendre le logarithme d'une variable qui a une distribution log-normale au départ la normalise. Dans d'autres cas, il semble qu'il n'y ait pas de solution... C'est ici que le **modèle linéaire *généralisé*** vient nous sauver la mise.
 
@@ -120,7 +119,7 @@ chart(data = dune, ~ Lolipere) +
 
 Nous avons huit sites où la graminée est absente. Ensuite il semble qu'il y ait un mode aux alentours de six plants par quadra avec quatre sites concernés. Comment se distribuent les sites en fonction de l'humidité du sol et du mode de gestion ?
 
-```{r}
+```{r, warning=FALSE}
 table(Humidité = dune$Moisture, Gestion = dune$Management) |>
   tabularise()
 ```
@@ -136,7 +135,7 @@ chart(data = dune, Lolipere ~ A1) +
 
 Ce genre de graphique est assez classique pour des données d'abondance en fonction d'une variable quantitative. C'est loin d'être un beau nuage de points bien étiré que nous avons l'habitude de rencontrer en régression linéaire. Nous avons quand même les abondances les plus importantes qui se retrouvent pour des épaisseurs A1 faibles. Commençons par un modèle simple relatif à cette dernière variable `A1` uniquement. Nous choisissons une GLM de type poisson.
 
-```{r}
+```{r, warning=FALSE}
 dune_glm <- glm(data = dune, Lolipere ~ A1, family = poisson)
 summary(dune_glm) |> tabularise()
 ```
@@ -145,7 +144,7 @@ Il n'y a pas ici d'ANOVA pour déterminer si le modèle est significatif, mais l
 
 Ensuite, il est précisé que le paramètre de dispersion $\phi$ est fixé à 1 dans une GLM avec famille poisson. Vérifions ce que nous obtenons avec nos données en divisant la *déviance résiduelle* par ses *degrés de liberté* = 41.44 / 18 = 2.3 \>\> 1. **Nous sommes dans une situation de surdispersion.** Ajustons alors un modèle quasi-poisson à la place pour tenir compte de cette surdispersion.
 
-```{r}
+```{r, warning=FALSE}
 dune_glm_quasi <- glm(data = dune, Lolipere ~ A1, family = quasipoisson)
 summary(dune_glm_quasi) |> tabularise()
 ```
@@ -154,7 +153,7 @@ Cette fois-ci, la dispersion $\phi$ est estimée à 1.7 et c'est cette valeur qu
 
 En cas de surdispersion ou sousdispersion, il est plutôt conseillé de revoir le modèle poisson (les variables explicatives du modèle) plutôt que de se lancer directement dans un quasi-poisson. On peut tester des transformations de la variable quantitative explicative (essayer la transformation log en particulier), ou ajouter/enlever des termes au modèle. Ici, nous allons introduire nos variables `Moisture` et `Management`. Vu le peu de données à dispositions, nous préférons ne pas introduire de termes d'interactions (ce qui ne veut pas dire qu'ils n'existent pas !)
 
-```{r}
+```{r, warning=FALSE}
 dune_glm2 <- glm(data = dune, Lolipere ~ A1 +  Management + Moisture,
   family = poisson)
 summary(dune_glm2) |> tabularise()
@@ -190,7 +189,7 @@ Enfin, $\beta_1$ est également significatif au seuil $\alpha$ de 5% et est nég
 
 Ce modèle pourrait être simplifié. Nous procéderons comme pour le modèle linéaire en comparant les critères d'Akaike comme nous l'avons fait entre nos deux modèles poissons précédents, ou en utilisant un test $\chi^2$ équivalent de l'ANOVA de comparaison dans le cas de modèles linéaires imbriqués. L'AIC était en faveur du second modèle, que nous donne le test $\chi^2$ ?
 
-```{r}
+```{r, warning=FALSE}
 anova(dune_glm, dune_glm2, test = "Chisq") |> tabularise()
 ```
 
@@ -254,7 +253,7 @@ chart(data = ovo, prop ~ hypo) +
 
 La GLM binomiale peut être utilisée ici avec une fonction de lien logit qui ajustera une courbe logistique en forme de S dans ces données.
 
-```{r}
+```{r, warning=FALSE}
 ovo_glm <- glm(data = ovo, prop ~ hypo,
   family = binomial, weights = ovo$tot)
 summary(ovo_glm) |> tabularise()
@@ -262,7 +261,7 @@ summary(ovo_glm) |> tabularise()
 
 Il n'y a pas surdispersion (déviance résiduelle/degrés de liberté = 5.58/5 = 1.1 ≈ 1). Tous les paramètres sont significatifs au seuil $\alpha$ de 5%. Notez que nous avons des proportions calculées sur des totaux différents pour chaque concentration. Le modèle en tient compte si nous indiquons ces totaux dans l'argument `weights =`. Une autre façon de renseigner cela au modèle est une forme un peu particulière. On lui donne une matrice de deux colonnes qui reprend le nombre de cas positifs et le total. Le modèle obtenu est le même.
 
-```{r}
+```{r, warning=FALSE}
 ovo_glm_bis <- glm(data = ovo, cbind(mat, tot) ~ hypo,
   family = binomial)
 summary(ovo_glm) |> tabularise()
@@ -304,7 +303,7 @@ chart(data = mite, Oribatl1 ~ WatrCont | Topo) +
 
 Qu'est-ce qu'on peut bien faire avec des données ayant ce genre de répartition ? En fait, si on considère une GLM binomiale, la transformation logit va nous calculer une transition de "absent" vers "présent" sous forme d'une **courbe logistique en forme de S**. Le modèle s'ajuste comme ceci :
 
-```{r}
+```{r, warning=FALSE}
 mite_glm <- glm(data = mite, Oribatl1 ~ WatrCont * Topo,
   family = binomial)
 summary(mite_glm) |> tabularise()
@@ -312,7 +311,7 @@ summary(mite_glm) |> tabularise()
 
 Nous vérifions la dispersion $\phi$ observée qui doit être proche de un avec ce modèle en divisant la déviance résiduelle par les degrés de liberté, soit 67.7/66 = 1.03 ≈ 1. Nous avons une AIC de 75.7. Les paramètres $\alpha$ (ordonnées à l'origine) et $\beta_1$ (teneur en eau) sont significatifs au seuil $\alpha$ de 5%. Simplifions notre modèle en considérant que la topographie n'aurait aucun effet.
 
-```{r}
+```{r, warning=FALSE}
 mite_glm2 <- glm(data = mite, Oribatl1 ~ WatrCont,
   family = binomial)
 summary(mite_glm2) |> tabularise()
@@ -326,7 +325,7 @@ anova(mite_glm, mite_glm2, test = "Chisq")
 
 La différence significative au seuil $\alpha$ de 5% est aussi en faveur de conserver le modèle le plus complexe... Nous avons peut-être trop simplifié. Ajoutons `Topo`, mais cette fois-ci, sans les interactions.
 
-```{r}
+```{r, warning=FALSE}
 mite_glm3 <- glm(data = mite, Oribatl1 ~ WatrCont + Topo,
   family = binomial)
 summary(mite_glm3) |> tabularise()
@@ -381,9 +380,9 @@ mutate(mite, Ori = as.numeric(Oribatl1 == "present")) %>.%
 `r learnr("B04La_glm", title = "Modèle linéaire généralisé", toc = "Modèle linéaire généralisé")`
 
 
-## Modèle linéaire généralisé mixte {#mod-lineaire-gen-mixte}
+## Modèle linéaire généralisé mixte {#modlingenmixte}
 
-Dans le cours `r course_link("SDD I module 10", course = 1, "effet-al%25C3%25A9atoire")`, nous avons découvert les **effets aléatoires** dans les modèles comme étant une variable ayant une distribution statistique connue (souvent normale) dont on tire un échantillon aléatoire dans notre jeu de données. Cela se produit lorsque les modalités de la variable facteur utilisée sont très nombreuses et que seulement un petit nombre tiré au hasard est étudié. L'exemple que nous avions donné était le cas d'antibiotiques testés dans différentes boîtes de Pétri. Nous avions un nombre **restreint et fixe** d'antibiotiques, mais les boîtes de Pétri utilisées représentent en quelque sort un **échantillon** parmi la population statistique de boîtes de Pétri. De plus, l'effet "boîte de Pétri" n'est pas le sujet principal de l'étude. Comme nous suspections que la boîte de Pétri pouvait aussi avoir un impact sur le résultat, nous l'avons incluse dans notre modèle, mais comme **effet aléatoire**. Lorsque nous mélangeons un ou plusieurs effets aléatoires avec des effets fixes, nous obtenons alors un **modèle linéaire mixte** (LMM) ou un **modèle linéaire généralisé mixte** (GLMM) en fonction de la variable réponse $y$ utilisée et la fonction de lien.
+Dans le cours `r course_link("SDD I module 10", course = 1, "effetsaleatoires.")`, nous avons découvert les **effets aléatoires** dans les modèles comme étant une variable ayant une distribution statistique connue (souvent normale) dont on tire un échantillon aléatoire dans notre jeu de données. Cela se produit lorsque les modalités de la variable facteur utilisée sont très nombreuses et que seulement un petit nombre tiré au hasard est étudié. L'exemple que nous avions donné était le cas d'antibiotiques testés dans différentes boîtes de Pétri. Nous avions un nombre **restreint et fixe** d'antibiotiques, mais les boîtes de Pétri utilisées représentent en quelque sort un **échantillon** parmi la population statistique de boîtes de Pétri. De plus, l'effet "boîte de Pétri" n'est pas le sujet principal de l'étude. Comme nous suspections que la boîte de Pétri pouvait aussi avoir un impact sur le résultat, nous l'avons incluse dans notre modèle, mais comme **effet aléatoire**. Lorsque nous mélangeons un ou plusieurs effets aléatoires avec des effets fixes, nous obtenons alors un **modèle linéaire mixte** (LMM) ou un **modèle linéaire généralisé mixte** (GLMM) en fonction de la variable réponse $y$ utilisée et la fonction de lien.
 
 Prenons un exemple concret. Des scientifiques veulent mesurer l'effet d'une concentration croissante en éthanol dans le liquide séminal de l'homme sur la mobilité des spermatozoïdes. La question est évidemment en relation avec la consommation d'alcool et la fertilité, mais aussi avec des protocoles expérimentaux qui utilisent des molécules dissoutes dans l'éthanol. Des spermatozoïdes de huit patients différents sont soumis à des concentrations de 0, 0,1, 0,5, 1 et 2% d'éthanol pendant 4h. Ensuite, le nombre de spermatozoïdes mobiles est décompté sous microscope. Plutôt que d'encoder une variable binaire qui prend 1 si un spermatozoïde est mobile et 0 dans le cas contraire, un tableau plus compact qui reprend le nombre de spermatozoïdes mobiles et le total des spermatozoïdes comptés pour chaque échantillon des huit donneurs à chaque concentration d'éthanol. Voici les résultats obtenus :
 
@@ -717,7 +716,7 @@ if (exists("assignment"))
 
 ```{r assign_B02Ga_models_III, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B02Ga_models", part = "II",
+  assignment2("B02Ga_models", part = "III",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
     course.ids = c(
       'S-BIOG-015' = !"B02Ga_{YY}M_models"),
