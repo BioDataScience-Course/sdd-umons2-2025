@@ -19,7 +19,7 @@ description: "Cours interactif pour la science des données avec R & SciViews-R 
 cover-image: "images/front-cover.png"
 ---
 
-# Préambule {.unnumbered}
+# Préambule {#preambule .unnumbered}
 
 ```{r setup, include=FALSE}
 knitr::write_bib(c(.packages(), 'bookdown', 'knitr', 'rmarkdown'), 'packages.bib')
@@ -57,7 +57,7 @@ Les cinq premiers modules du cours sont consacrés à la **modélisation**, plus
 
 Les cinq modules suivants s'intéresseront à l'**exploration des données**, encore appelée **analyse des données** qui vise à découvrir des caractéristiques intéressantes dans de très gros jeux de données. Ces techniques sont d'autant plus utiles que les données volumineuses deviennent de plus en plus courantes en biologie.
 
-## Matériel pédagogique {.unnumbered}
+## Matériel pédagogique {#pedagogie .unnumbered}
 
 Le matériel pédagogique, rassemblé dans ce syllabus interactif, est aussi varié que possible. Vous pourrez ainsi piocher dans l'offre en fonction de vos envies et de votre profil d'apprenant pour optimiser votre travail. Vous trouverez :
 
@@ -97,7 +97,7 @@ Pour annoter ou surligner, vous sélectionnez du texte et vous cliquez sur l'un 
 :::
 ```
 
-## Approche pédagogique {.unnumbered}
+## Approche pédagogique {#approchepedagogique .unnumbered}
 
 Ce livre en ligne ainsi que tout le matériel pédagogique cité plus haut a été développé pour être employé en pédagogie active en classe inversée. On peut résumer cette approche en deux phases. Vous apprenez d'abord à la maison, nous appliquons *ensuite* en présentiel.
 
@@ -144,9 +144,7 @@ L'évaluation est **continue** tout au long de l'année. Il n'y a pas d'examen e
 
 Le plan du cours est une forme de contrat entre les étudiants et les enseignants. Ce document structure les attentes de vos encadrants. Veuillez lire ce document attentivement.
 
--   [Plan du cours de Science des données biologiques II : années 2025-2026](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/2025-2026/docs/plan_de_cours/sdd2_plan_cours_2025-2026.pdf)
-
-`r !{"[Plan du cours de Science des données biologiques II : années {acad_year}](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/{acad_year}/docs/plan_de_cours/sdd2_plan_cours_{acad_year}.pdf)"}`
+-   `r !{"[Plan du cours de Science des données biologiques II : années {acad_year}](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/{acad_year}/docs/plan_de_cours/sdd2_plan_cours_{acad_year}.pdf)"}`
 
 ## Issues {#issues .unnumbered}
 
