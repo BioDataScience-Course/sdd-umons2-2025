@@ -32,7 +32,7 @@ Vous devez aussi maîtriser les bases de Git et de GitHub (avoir un compte GitHu
 
 L'ensemble de ces outils a été abordé dans le premier module et dans les annexes du cours précédents `r course_link("SDD I", course = 1, "outils")`.
 
-Outre les outils logiciels, ce cours s'appuie sur des notions que nous avons déjà abordées dans le premier cours comme la réalisation de `r course_link("graphiques en nuage de points", course = 1, "nuagedepoints")` et de `r course_link("graphiques quantile-quantile", course = 1, "quantilequantile")`, le `r course_link("test de Student", course = 1, "studentt")`, l'`r course_link("analyse de la variance à un facteur", course = 1, "anovaunfacteur.")` et `r course_link("à deux facteurs", course = 1, "anovadeuxfacteurs")` ou encore les `r course_link("associations entre les variables", course = 1, "correlation")`. **Assurez-vous de bien maîtriser ces différentes parties du cours 1 avant d'entamer le présent module.**
+Outre les outils logiciels, ce cours s'appuie sur des notions que nous avons déjà abordées dans le premier cours comme la réalisation de `r course_link("graphiques en nuage de points", course = 1, "nuagedepoints")` et de `r course_link("graphiques quantile-quantile", course = 1, "quantilequantile")`, le `r course_link("test de Student", course = 1, "studentt")`, l'`r course_link("analyse de la variance à un facteur", course = 1, "anovaunfacteur")` et `r course_link("à deux facteurs", course = 1, "anovadeuxfacteurs")` ou encore les `r course_link("associations entre les variables", course = 1, "correlation")`. **Assurez-vous de bien maîtriser ces différentes parties du cours 1 avant d'entamer le présent module.**
 
 ##### À vous de jouer ! {.unnumbered}
 
