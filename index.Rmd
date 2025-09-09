@@ -146,6 +146,7 @@ Le plan du cours est une forme de contrat entre les étudiants et les enseignant
 
 -   `r !'[Plan du cours de Science des données biologiques II : années {acad_year}](https://github.com/BioDataScience-Course/BioDataScience-Common/tree/{acad_year}/docs/plan_de_cours/sdd2_plan_cours_{acad_year}.pdf)'`
 
+
 ## Issues {#issues .unnumbered}
 
 Toutes les questions relatives aux exercices sont à poser dans les **"issues" GitHub** dédiées à ce cours.
