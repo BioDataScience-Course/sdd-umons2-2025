@@ -13,6 +13,7 @@
 # General configuration data
 learnitdown <- list(
   baseurl = "https://wp.sciviews.org", # The base URL for the site
+  connecturl = "https://sdd.umons.ac.be", # The URL for the Posit Connect server
   imgbaseurl =
     "https://filedn.com/lzGVgfOGxb6mHFQcRn9ueUb/sdd-umons2", # The base URL for external (big) images
   shiny_imgdir = "images/shinyapps",     # The Shiny image directory (screenshots)
@@ -65,7 +66,7 @@ rownames(learnitdown$mod) <- learnitdown$mod$id
 # Assignment URLS
 learnitdown$assign_url <- list(
   # Q1
-  B00Qa_issues         = "https://classroom.github.com/a/...",
+  B00Qa_issues         = "https://classroom.github.com/a/jqxThXQx",
   B01Ia_debug          = "https://classroom.github.com/a/...",
   B01Ib_abalone        = "https://classroom.github.com/a/...",
   B02Ia_achatina       = "https://classroom.github.com/a/...",
@@ -118,44 +119,6 @@ course_link <- function(label, course = 1, page, anchor = "", year = !"{YYYY}",
 }
 # ex.: course_link("diagnostic", 2, "outils-de-diagnostic-suite", "résumé-avec-summarysuite")
 
-
-# Examples:
-#!"svbox{svbox} is for academic year {acad_year}"
-#  -> svbox2024 is for academic year 2024-2025
-#microbenchmark::microbenchmark(!TRUE, .Primitive('!')(TRUE), .Primitive('!'))
-
-# Unary + binary + is nice too, but it slows down additions!
-# We use glue() often for variables replacement from learnitdown, so, we
-# redefine the unary and binary `+` operators for character objects
-#`+` <- function(e1, e2) {
-#  if (missing(e2)) {# Unary operator
-#    if (inherits(e1, "character")) {
-#      glue::glue_data(learnitdown, e1)
-#    } else {# Usual + operator
-#      .Primitive("+")(e1)
-#    }
-#      glue::glue_data(learnitdown, e1)
-#  } else {# Binary operator
-#    if (inherits(e1, "character")) {
-#      glue::as_glue(paste0(e1, glue::glue_data(learnitdown, e2)))
-#    } else {# Usual + operator
-#      .Primitive("+")(e1, e2)
-#    }
-#  }
-#}
-# Examples:
-#+"svbox{svbox} is for academic year {acad_year}"
-#  -> svbox2024 is for academic year 2024-2025
-#+"svbox{svbox}" + " is for" + " academic year {acad_year}"
-#  -> same result
-# With the new R 4.0 character strings syntax:
-#+r"("{courses[1]}" est le cours de {courses_names[1]})"
-#  -> "S-BIOG-015" est le cours de Science des Données Biologiques II à l'UMONS
-# Date are better defined according to the academic calendar. So, W[1]+1 is
-# monday of first week and W[15]+5 is friday of last Q1 week
-#+"Q1 starts {W[1]+1} 08:15:00 and ends {W[15]+5} 17:45:00"
-#  -> Q1 starts 2021-09-13 08:15:00 and ends 2021-12-24 17:45:00
-
 ## Big images (animated gifs, ...) are stored externally, refer them this way:
 #
 # `r img("sub_dir", "image_name.gif")`
@@ -175,20 +138,20 @@ course_link <- function(label, course = 1, page, anchor = "", year = !"{YYYY}",
 #  assignment("A01Ia_markdown", part = NULL,
 #    url = "https://github.com/BioDataScience-Course/A01Ia_markdown",
 #    course.ids = c(
-#      'S-BIOG-015'         = +"A01Ia_{YY}M_markdown",
-#      'S-BIOG-937-958-959' = +"A01Ia_{YY}C_markdown",
-#      'late_mons'          = +"A01Ia_{YY}M_markdown"),
+#      'S-BIOG-015'         = !"A01Ia_{YY}M_markdown",
+#      'S-BIOG-937-958-959' = !"A01Ia_{YY}C_markdown",
+#      'late_mons'          = !"A01Ia_{YY}M_markdown"),
 #    course.urls = c(
-#      'S-BIOG-015'         = "https://classroom.github.com/a/...",
-#      'S-BIOG-937-958-959' = "https://classroom.github.com/a/...",
-#      'late_mons'          = "https://classroom.github.com/a/..."),
+#      'S-BIOG-015'         = !"{assign_url$A01Ia_markdownM}",
+#      'S-BIOG-937-958-959' = !"{assign_url$A01Ia_markdownC}",
+#      'late_mons'          = !"{assign_url$A01Ia_markdownM}"),
 #    course.starts = c(
-#      'S-BIOG-015'         = +"{W[1]+1} 08:00:00",
+#      'S-BIOG-015'         = !"{class1_start(mod, 'A01')}",
 #      'S-BIOG-937-958-959' = NA, # Nondefined date, or just ignore it
-#      'sdd1late'           = +"{W[1]+1} 08:00:00"),
+#      'sdd1late'           = !"{class2_start(mod, 'A01')}"),
 #    course.ends = c(
-#      'S-BIOG-015'         = +"{W[3]+5} 23:59:59",
-#      'sdd1late'           = +"{W[5]+5} 23:59:59"),
+#      'S-BIOG-015'         = !"{n3_end(mod, 'A01')}",
+#      'sdd1late'           = !"{n3_end(mod, 'A02')}"),
 #    term = "Q1", level = 3,
 #    toc = "Réalisation d'un premier document en Markdown")
 #```
@@ -249,8 +212,8 @@ learnr <- function(id, title = NULL, toc = "", package = learnitdown$package,
   text = "Effectuez maintenant les exercices du tutoriel")
   learnitdown::learnr(id = id, title = title, package = package, toc = toc,
     text = text, toc.def = "Tutoriel {id}",
-    rstudio.url = paste(learnitdown$baseurl, learnitdown$rstudio, sep = "/"),
-    tuto.img = "images/list-tuto.png",
+    #rstudio.url = paste(learnitdown$baseurl, learnitdown$rstudio, sep = "/"),
+    connect.url = learnitdown$connecturl, tuto.img = "images/list-tuto.png",
     tuto.link = paste(learnitdown$baseurl, "tutorial", sep = "/"))
 
 # Note: use course.urls = c(`S-BIOG-015` = "classroom url1", `S-BIOG-937-` = "classroom url2"),
