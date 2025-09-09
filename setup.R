@@ -65,7 +65,7 @@ rownames(learnitdown$mod) <- learnitdown$mod$id
 # Assignment URLS
 learnitdown$assign_url <- list(
   # Q1
-  B00Qa_issues         = "https://classroom.github.com/a/...",
+  B00Qa_issues         = "https://classroom.github.com/a/jqxThXQx",
   B01Ia_debug          = "https://classroom.github.com/a/...",
   B01Ib_abalone        = "https://classroom.github.com/a/...",
   B02Ia_achatina       = "https://classroom.github.com/a/...",
