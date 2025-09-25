@@ -135,7 +135,7 @@ AIC(rlc_lm, rlc_nls)
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(46, height = 270, toc = "Bases de la régression non linéaire")`
+`r h5p(46, "B05Ha_base_nls", height = 270, toc = "Bases de la régression non linéaire")`
 
 ## Principe
 
@@ -171,7 +171,7 @@ La description détaillée et les développements mathématiques de ces algorith
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(45, height = 270, toc = "Minimisation de la fonction objective")`
+`r h5p(45, "B05Hb_algorithme", height = 270, toc = "Minimisation de la fonction objective")`
 
 Reprenons le calcul de notre RLC pour *P. oceanica*. L'argument `trace = TRUE` peut être ajouté à l'appel de `nls()` pour visionner les différentes étapes du calcul itératif. Voici ce que cela donne :
 
@@ -864,7 +864,7 @@ Vous pouvez soumettre vos résultats pendant une période de temps précise via 
 
 Ce cinquième module vous a permis de comprendre les régressions non linéaires. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("05")`
 
 ##### Progression {.unnumbered}
 

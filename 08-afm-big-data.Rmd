@@ -101,7 +101,7 @@ Un groupe est décrit dans la formule comme `n * type %as% nom` (donc avec les o
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(120, height = 270, toc = "Formule de l'AFM")`
+`r h5p(120, "B08Ha_formula", height = 270, toc = "Formule de l'AFM")`
 
 Dans notre cas concret ici, cela donne :
 
@@ -411,7 +411,7 @@ Le format de stockage conseillé pour les tableaux cas par variables est le [CSV
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(223, height = 270, toc = "Écriture de gros jeux de données")`
+`r h5p(223, "B08Hb_write", height = 270, toc = "Écriture de gros jeux de données")`
 
 Nous allons maintenant enregistrer le tableau d'origine `babynames` sur le disque. Une fois n'est pas coutume, nous sortirons du dépôt et créerons un dossier temporaire nommé `babynames_to_delete` qui, comme son nom l'indique, est voué à être effacé[^08-afm-big-data-5]. **Évitez d'exécuter ceci dans la machine SaturnCloud du cours**, car vous n'avez que 2GiB de disque disponible au total. Vous pouvez essayer cela dans une machine SaturnCloud créée dans votre espace personnelle en choisissant un espace disque de 10Go.
 
@@ -520,7 +520,7 @@ fs::dir_delete(testdir)
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(224, height = 270, toc = "Niveaux de compression")`
+`r h5p(224, "B08Hc_compress", height = 270, toc = "Niveaux de compression")`
 
 ### Gros jeux de données et git/GitHub
 
@@ -552,7 +552,7 @@ Ce mécanisme est très efficace pour contourner les limitations de git et GitHu
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(225, height = 270, toc = "Taille maximale de fichiers dans git/GitHub")`
+`r h5p(225, "B08Hd_file_size", height = 270, toc = "Taille maximale de fichiers dans git/GitHub")`
 
 ### Bases de données à la rescousse
 
@@ -588,7 +588,7 @@ Il existe deux grandes catégories de bases de données : les **bases de donné
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(226, height = 270, toc = "Bases de données et requêtes")`
+`r h5p(226, "B08He_sql", height = 270, toc = "Bases de données et requêtes")`
 
 L'exemple présenté plus haut est fictif. Dans un premier temps, vous pouvez vous concentrer sur la façon de vous connecter et de vous déconnecter de la base de données. Ensuite, le package {dbplyr} permet d'utiliser vos verbes {dplyr} familiers tels que `filter()`, `select()`, `mutate()`, `group_by()` ou `summarise()`. Pour cela, nous allons toujours utiliser notre jeu de données `babynames`, mais nous créerons une base de données [DuckDB](https://duckdb.org) en mémoire dans l'unique but de comprendre la logique de connexion et d'interrogation d'une base de données avec {dbplyr}. Nous approfondirons l'utilisation des bases de données dans le module suivant. Assurons-nous d'abord d'avoir `SciViews::R` et le jeu de données `babynames` chargés.
 
@@ -714,7 +714,7 @@ if (exists("assignment"))
 
 Ce module 8 vous a permis de découvrir l'AFM, et de traiter correctement des jeux de données volumineux. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("08")`
 
 ##### Progression {.unnumbered}
 

@@ -179,6 +179,10 @@ Une fois que vous avez rejoint le groupe **`r !"b{YY}"`**, il n'est plus nécess
 
 Vous pouvez aussi directement créer une issue depuis RStudio. Voyez le fichier `README.md` dans le dépôt des issues pour les explications.
 
+Enfin, vous avez à disposition un learnr de "feedback" qui vous permet de faire des suggestions sur le contenu de ce cours, module par module, ou de manière générale :
+
+`r learnr("B99La_feedback", title = "Learnr de feedback", toc = NULL, text = "Utilisez le document suivant pour vos suggestions sur le cours :")`
+
 ## Planning des séances {#planning .unnumbered}
 
 | Module             | Préparation pour le ... |  Fin N1-3            | Projet N4                   | Challenge                       | Interrogation.             |

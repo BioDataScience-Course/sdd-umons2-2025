@@ -38,7 +38,7 @@ vembedr::embed_youtube("q-IVQoh1nxA", width = 770, height = 433, query = "end=13
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(75, height = 270, toc = "Objectif des statistiques exploratoires")`
+`r h5p(75, "B06Ha_stat_explo", height = 270, toc = "Objectif des statistiques exploratoires")`
 
 ## Distance entre individus {#distance}
 
@@ -83,7 +83,7 @@ Par conséquent, seulement une portion de notre matrice de distance (soit le tri
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(76, height = 270, toc = "Objectif de la matrice de distance")`
+`r h5p(76, "B06Hb_matrice", height = 270, toc = "Objectif de la matrice de distance")`
 
 ```{block, type='note'}
 
@@ -122,7 +122,7 @@ Nous verrons plus loin comment nous pouvons utiliser l'information que cette mat
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(77, height = 270, toc = "Utilisation de la distance euclidienne")`
+`r h5p(77, "B06Hc_euclidienne", height = 270, toc = "Utilisation de la distance euclidienne")`
 
 ### Indices de (dis)similarité
 
@@ -198,7 +198,7 @@ Dans SciViews::R, nous utiliserons `dissimilarity(DF, method = "manhattan")`. Ic
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(78, height = 270, toc = "Choix des indices")`
+`r h5p(78, "B06Hd_indice", height = 270, toc = "Choix des indices")`
 
 ### Propriétés des indices
 
@@ -291,7 +291,7 @@ Vérifions en laissant R faire le calcul :
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(79, height = 270, toc = "Méthodes divisives ou agglomératives")`
+`r h5p(79, "B06He_methode", height = 270, toc = "Méthodes divisives ou agglomératives")`
 
 ### Dendrogramme
 
@@ -476,7 +476,7 @@ zoo6std_dist %>.%
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(80, height = 350, toc = "Ordre des étapes pour obtenir un dendrogramme")`
+`r h5p(80, "B06Hf_sequence", height = 350, toc = "Ordre des étapes pour obtenir un dendrogramme")`
 
 ### Étude complète
 
@@ -655,7 +655,7 @@ Les k-moyennes (ou *k-means* en anglais) représentent une autre façon de regro
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(93, height = 270, toc = "Avantages des k-moyennes")`
+`r h5p(93, "B06Hg_kmeans", height = 270, toc = "Avantages des k-moyennes")`
 
 Le principe des k-moyennes est assez simple[^06-cah-kmeans-div-3] :
 
@@ -827,7 +827,7 @@ Dans ce cas simple, cela ne change pas grand-chose. Mais avec un plus gros jeu d
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(94, height = 270, toc = "Les arguments de la fonction k_means()")`
+`r h5p(94, "B06Hh_kmeans2", height = 270, toc = "Les arguments de la fonction k_means()")`
 
 ### Classification du zooplancton
 
@@ -877,7 +877,7 @@ Le groupe 1 est également dominé par les annélides, les cladocères, les déc
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(95, height = 270, toc = "Transformation des données avant k_means()")`
+`r h5p(95, "B06Hi_kmeans3", height = 270, toc = "Transformation des données avant k_means()")`
 
 ##### Pour en savoir plus {.unnumbered}
 
@@ -1016,7 +1016,7 @@ bci_sub_e
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(121, height = 270, toc = "Indices de diversité alpha")`
+`r h5p(121, "B06Hj_alpha", height = 270, toc = "Indices de diversité alpha")`
 
 ### Diversité beta
 
@@ -1045,7 +1045,7 @@ dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(122, height = 270, toc = "Indice de Jaccard")`
+`r h5p(122, "B06Hk_jaccard", height = 270, toc = "Indice de Jaccard")`
 
 ##### Pour en savoir plus {.unnumbered}
 
@@ -1061,7 +1061,7 @@ dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
 
 Ce sixième module vous a permis de comprendre la classification hiérarchique, la méthode des k-moyennes et divers indices intéressants en biologie. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("06")`
 
 ##### Progression {.unnumbered}
 

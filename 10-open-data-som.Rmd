@@ -82,7 +82,7 @@ Dans ce cas, vous pouvez donc réutiliser et adapter ces données, y compris à 
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(123, height = 270, toc = "Choix de licence")`
+`r h5p(123, "B10Ha_license", height = 270, toc = "Choix de licence")`
 
 ##### Interopérable (*Interoperable*)
 
@@ -90,7 +90,7 @@ Les données doivent être utilisables, compréhensibles et *combinables avec d'
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(124, height = 270, toc = "Choix du format des données")`
+`r h5p(124, "B10Hb_interoperable", height = 270, toc = "Choix du format des données")`
 
 ##### Réutilisable (*Reusable*)
 
@@ -115,7 +115,7 @@ Dans le cadre de vos futures recherches, un outil comme [Zenodo](https://zenodo.
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(125, height = 270, toc = "Principe FAIR")`
+`r h5p(125, "B10Hc_fair", height = 270, toc = "Principe FAIR")`
 
 #### DMP
 
@@ -182,7 +182,7 @@ Pour clore ce cours, nous allons étudier une nouvelle technique multivariée qu
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(98, height = 270, toc = "Choix des méthodes")`
+`r h5p(98, "B10Hd_method", height = 270, toc = "Choix des méthodes")`
 
 La théorie et les calculs derrière les SOM sont complexes. Elles font appel aux **réseaux de neurones adaptatifs** et leur fonctionnement est inspiré de celui du cerveau humain. Tout comme notre cerveau, les SOM vont utiliser l'information en entrée pour aller assigner une zone de traitement de l'information (pour notre cerveau) ou une cellule dans la carte (pour les SOM). Étant donné la complexité du calcul, les développements mathématiques n'ont pas leur place dans ce cours. Ce qui importe, c'est de comprendre le concept et d'être ensuite capable d'utiliser les SOM à bon escient. Pour ceux d'entre vous qui désirent quand même comprendre les détails du calcul, vous pouvez lire [ici](https://towardsdatascience.com/understanding-self-organising-map-neural-network-with-python-code-7a77f501e985/) ou visionner la vidéo suivante **(facultative et en anglais)** :
 
@@ -221,7 +221,7 @@ Avant de pouvoir réaliser notre analyse, nous devons décider d'avance la topol
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(231, height = 270, toc = "Nombre de cellules")`
+`r h5p(231, "B10He_size", height = 270, toc = "Nombre de cellules")`
 
 La grille rectangulaire est celle qui vous vient probablement immédiatement à l'esprit. Il s'agit d'arranger les cellules en lignes horizontales et colonnes verticales. La fonction `somgrid()` du package {kohonen} permet de créer une telle grille.
 
@@ -260,7 +260,7 @@ Ici, nous n'avons que six voisins directs, mais trois directions dans lesquelles
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(232, height = 270, toc = "Topologie de la carte")`
+`r h5p(232, "B10Hf_grid", height = 270, toc = "Topologie de la carte")`
 
 Effectuons maintenant le calcul de notre SOM à l'aide de la fonction `som()` du package {kohonen}. Comme l'analyse fait intervenir le générateur pseudo-aléatoire, nous pouvons utiliser de manière optionnelle `set.seed()` avec un nombre entier **choisi au hasard** (et toujours différent à chaque utilisation) pour que cette analyse particulière là soit reproductible. Sinon, à chaque exécution, nous obtiendrons un résultat légèrement différent.
 
@@ -349,7 +349,7 @@ Nous pouvons plus facilement inspecter les zones d'influence de différentes var
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(233, height = 270, toc = "Graphique des SOM")`
+`r h5p(233, "B10Hg_count", height = 270, toc = "Graphique des SOM")`
 
 #### Regroupements
 
@@ -435,7 +435,7 @@ if (exists("assignment2"))
 
 Ce dixième module vous a permis de comprendre ce que sont des données ouvertes et comment partager ses propres données de manière optimale. Vous avez aussi appris à réaliser des cartes auto-adaptatives. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("10", finalize = TRUE)`
 
 ##### Progression {.unnumbered}
 

@@ -22,13 +22,13 @@ RStudio et (R) Markdown/Quarto ne doivent plus avoir de secrets pour vous. Les m
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(190, height = 270, toc = NULL)`
+`r h5p(190, "B01Aa_tools", height = 270, toc = NULL)`
 
 Vous devez aussi maîtriser les bases de Git et de GitHub (avoir un compte GitHub, savoir cloner un dépôt localement, travailler dans GitHub et l'onglet **Git** de RStudio pour faire vos "commits", "pulls" et "pushes"), gérer les conflits, etc.
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(191, height = 270, toc = NULL)`
+`r h5p(191, "B01Ab_git_summary", height = 270, toc = NULL)`
 
 L'ensemble de ces outils a été abordé dans le premier module et dans les annexes du cours précédents `r course_link("SDD I", course = 1, "outils")`.
 
@@ -36,7 +36,7 @@ Outre les outils logiciels, ce cours s'appuie sur des notions que nous avons dé
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(192, height = 270, toc = NULL)`
+`r h5p(192, "B01Ac_notions_sdd1", height = 270, toc = NULL)`
 
 Les tutoriels `learnr` auxquels vous êtes maintenant habitués seront là pour vous aider à autoévaluer votre progression. Pour le cours 2, ces tutoriels sont dans le package {BioDataScience2} qui est installé dans votre machine virtuelle.
 
@@ -68,7 +68,7 @@ La distinction entre *variable* et *paramètre* dans les équations précédente
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(193, height = 270, toc = "Paramètres et variables d'une équation")`
+`r h5p(193, "B01Ha_variables_parametres", height = 270, toc = "Paramètres et variables d'une équation")`
 
 ### Pourquoi modéliser ?
 
@@ -128,7 +128,7 @@ vembedr::embed_youtube("aOX0pIwBCvw", width = 770, height = 433)
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(194, height = 270, toc = "Association entre deux variables")`
+`r h5p(194, "B01Hb_association", height = 270, toc = "Association entre deux variables")`
 
 ### Entraînement et confirmation
 
@@ -179,7 +179,7 @@ plot(trees_corr, type = "lower")
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(195, height = 270, toc = "Les coefficients de corrélation")`
+`r h5p(195, "B01Hc_correlation", height = 270, toc = "Les coefficients de corrélation")`
 
 Cependant, n'oubliez pas qu'il est indispensable de visualiser le nuage de points pour ne pas tomber dans le piège mis en avant par le `r course_link("jeu de données artificiel appelé 'quartet d'Anscombe'", course = 1, "correlation", "importance-des-graphiques")` qui montre très bien comment des données très différentes peuvent avoir une même moyenne, une même variance et un même coefficient de corrélation. Un graphique de type matrice de nuages de points est tout indiqué ici.
 
@@ -288,7 +288,7 @@ chart(data = trees, volume ~ diameter) +
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(196, height = 270, toc = "Qualité d'ajustement d'un modèle")`
+`r h5p(196, "B01Hd_somme_residus", height = 270, toc = "Qualité d'ajustement d'un modèle")`
 
 ```{r, echo=FALSE, warning=FALSE}
 yhat4 <- model_predict(x = trees$diameter,
@@ -455,7 +455,7 @@ chart(data = trees, volume ~ diameter) +
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(197, height = 270, toc = "Écriture de l'équation du modèle")`
+`r h5p(197, "B01He_equation", height = 270, toc = "Écriture de l'équation du modèle")`
 
 ### La fonction `lm()`
 
@@ -520,7 +520,7 @@ S'il y a des conflits entre ces trois règles, traitez-les par priorité dans l'
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(198, height = 270, toc = "La fonction lm()")`
+`r h5p(198, "B01Hf_lm", height = 270, toc = "La fonction lm()")`
 
 ### Résumé avec `summary()`
 
@@ -565,7 +565,7 @@ En prime, on a l'équation du modèle (que l'on peut ne pas indiquer avec l'argu
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(199, height = 270, toc = "Analyse du résumé de l'objet lm.")`
+`r h5p(199, "B01Hg_std_error", height = 270, toc = "Analyse du résumé de l'objet lm.")`
 
 ### Paramétrisation du modèle
 
@@ -609,7 +609,7 @@ Avec une bonne régression, nous aurons une distribution équilibrée de part et
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(200, height = 270, toc = "Distribution homogène des résidus")`
+`r h5p(200, "B01Hh_resid", height = 270, toc = "Distribution homogène des résidus")`
 
 #### Graphique quantile-quantile
 
@@ -807,7 +807,7 @@ tabularise$glance(trees_lm, header = FALSE)
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(201, height = 270, toc = "Les fonctions tidy() et glance()")`
+`r h5p(201, "B01Hi_tidy", height = 270, toc = "Les fonctions tidy() et glance()")`
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -831,7 +831,7 @@ if (exists("assignment"))
 
 Ce premier module vous a permis de prendre connaissance des principes de bases de la modélisation et plus particulièrement de la régression linéaire simple par les moindres carrés. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("01")`
 
 ##### Progression {.unnumbered}
 

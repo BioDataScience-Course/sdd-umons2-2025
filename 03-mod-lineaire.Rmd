@@ -39,7 +39,7 @@ Par la suite, un encodage correct des variables sera *indispensable* afin de dis
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(217, height = 270, toc = "Types de variables")`
+`r h5p(217, "B03Ha_variable", height = 270, toc = "Types de variables")`
 
 ## ANOVA et régression linéaire {#anovareglin}
 
@@ -62,7 +62,7 @@ Le calcul est, en réalité, identique en interne. Il est donc possible de gén�
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(218, height = 270, toc = "ANOVA et régression linéaire")`
+`r h5p(218, "B03Hb_lm", height = 270, toc = "ANOVA et régression linéaire")`
 
 ### Modèle linéaire commun
 
@@ -116,7 +116,7 @@ L'encodage tel que présenté plus haut s'appelle un encodage en variable muette
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(219, height = 270, toc = "Recodage de variable")`
+`r h5p(219, "B03Hc_recode", height = 270, toc = "Recodage de variable")`
 
 ## Matrice de contraste {#contraste}
 
@@ -190,7 +190,7 @@ Sur le graphique, l'axe X nommé `index` correspond en réalité à la successio
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(220, height = 270, toc = "Matrice de contraste")`
+`r h5p(220, "B03Hd_contrast", height = 270, toc = "Matrice de contraste")`
 
 ```{block, type='note'}
 R utilise par défaut des **contrastes de traitement pour les facteurs non ordonnés** et des **contrastes polynomiaux pour des facteurs ordonnés**. Ces valeurs par défaut sont stockées dans l'option `"contrasts"` qu'on peut lire à l'aide de `getOption()`.
@@ -208,7 +208,7 @@ Avant l'apparition du modèle linéaire, une version particulière d'un mélange
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(221, height = 270, toc = "ANCOVA")`
+`r h5p(221, "B03He_ancova", height = 270, toc = "ANCOVA")`
 
 ### Oursins plus ou moins lourds
 
@@ -438,7 +438,7 @@ anova(babies2_lm2) |> tabularise()
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(222, height = 270, toc = "Coefficients d'un modèle linéaire")`
+`r h5p(222, "B03Hf_coef", height = 270, toc = "Coefficients d'un modèle linéaire")`
 
 Le graphique correspondant est l'ajustement de droites parallèles les unes aux autres pour les quatre sous-populations en fonction de `smoke`. Ce graphique est difficile à réaliser. Il faut ruser, et les détails du code vont au-delà de ce cours (il n'est pas nécessaire de les comprendre à ce stade).
 
@@ -625,7 +625,7 @@ if (exists("assignment2"))
 
 Ce troisième module vous a permis de comprendre le modèle linéaire et de découvrir l'ANCOVA. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("03")`
 
 ##### Progression {.unnumbered}
 

@@ -44,7 +44,7 @@ L'**Analyse en Composantes Principales** ou ACP (*Principal Component Analysis* 
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(104, height = 270, toc = "Principe de l'ACP")`
+`r h5p(104, "B07Ha_acp", height = 270, toc = "Principe de l'ACP")`
 
 ### Indiens diabétiques
 
@@ -124,7 +124,7 @@ Le second tableau `Loadings (eigenvectors, rotation matrix):` est la matrice de 
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(105, height = 270, toc = "Importance des variables initiales")`
+`r h5p(105, "B07Hb_eigenvectors", height = 270, toc = "Importance des variables initiales")`
 
 Le **graphique des éboulis** sert à visualiser la "chute" de la variance d'un axe principal à l'autre, et aide à choisir le nombre d'axes à conserver (espace à dimensions réduites avec perte minimale d'information). Deux variantes en diagramme en barres verticales `chart$screeplot()` ou `chart$scree()` ou sous forme d'une ligne brisée `chart$altscree()` sont disponibles :
 
@@ -140,7 +140,7 @@ La diminution est importante entre le premier et le second axe, mais plus progre
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(106, height = 270, toc = "Analyse du graphique des éboulis")`
+`r h5p(106, "B07Hc_scree", height = 270, toc = "Analyse du graphique des éboulis")`
 
 Deux types de représentations peuvent être réalisées à partir d'ici : la représentation dans **l'espace des variables**, et la représentation dans **l'espace des individus**. Ces deux représentations sont complémentaires et s'analysent conjointement. L'espace des variables représente les axes initiaux projetés (comme l'ombre portée d'un cadran solaire) dans le plan choisi de l'ACP. Il se réalise à l'aide de `chart$loadings()`. Par exemple pour PC1 et PC2 nous indiquons `choices = c(1, 2)` (ou rien du tout, puisque ce sont les valeurs par défaut) :
 
@@ -176,7 +176,7 @@ chart$loadings(pima_pca, choices = c(2, 3))
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(107, height = 270, toc = "Représentation dans l'espace des variables")`
+`r h5p(107, "B07Hd_loadings", height = 270, toc = "Représentation dans l'espace des variables")`
 
 La seconde représentation se fait dans **l'espace des individus**. Ici, nous allons projeter les points relatifs à chaque individu dans le plan de l'ACP choisi. Cela se réalise à l'aide de `chart$scores()` (l'aspect ratio est le rapport hauteur/largeur qui peut être adapté) :
 
@@ -776,7 +776,7 @@ Comme l'ACP s'intéresse à des corrélations linéaires entre variables quantit
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(108, height = 270, toc = "Rôle de l'AFC")`
+`r h5p(108, "B07He_afc", height = 270, toc = "Rôle de l'AFC")`
 
 Tout comme pour l'ACP, nous aborderons l'AFC au travers d'un exemple concret en utilisant la fonction `ca()` (issue du package {ca}) avec `SciViews::R("explore")`.
 
@@ -841,7 +841,7 @@ L'avertissement nous prévient qu'une approximation a dû être réalisée, mais
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(109, height = 270, toc = "Chi2 et l'AFC")`
+`r h5p(109, "B07Hf_afc2", height = 270, toc = "Chi2 et l'AFC")`
 
 -   **Étape 3 :** Si l'hypothèse nulle est rejetée, il faut analyser plus en profondeur. L'AFC va présenter la dépendance de manière claire. La fonction `ca()` accepte un jeu de données dans l'argument `data =` et une formule qui spécifie dans le terme de droite les deux variables à croiser séparées par un signe + (`~ fact1 + fact2`). Donc :
 
@@ -1044,6 +1044,7 @@ if (exists("challenge"))
       'S-BIOG-061' =  !"{mod['B07', 'challenge']} 09:45:00"),
     course.ends = c(
       'S-BIOG-061' = !"{mod['B07', 'challenge']} 12:30:00"),
+    term = "Q2",
     toc = "Challenge analyses multivariées")
 ```
 
@@ -1061,7 +1062,7 @@ Vous pouvez soumettre vos résultats pendant une période de temps précise via 
 
 Ce module 7 vous a permis de découvrir deux méthodes très utilisées dans les statistiques exploratoires : l' ACP et l'AFC. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("07")`
 
 ##### Progression {.unnumbered}
 

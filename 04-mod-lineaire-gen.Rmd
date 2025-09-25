@@ -54,7 +54,7 @@ Sans entrer dans les détails, une GLM définie de cette façon ajuste le modèl
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(234, height = 270, toc = "Fonction de lien")`
+`r h5p(234, "B04Ha_family", height = 270, toc = "Fonction de lien")`
 
 Maintenant que nous avons mis en place un modèle général, toute la difficulté tient dans la définition de fonctions de lien et de variance pertinentes par rapport à la distribution de $y$ et de $\epsilon$. Le tableau suivant reprend les situations les plus courantes prises en compte par la fonction `glm()` dans R qui calcule le modèle linéaire généralisé (la fonction de lien par défaut ne doit pas être précisée et la fonction de variance ne doit jamais être indiquée, car elle dépend directement de la famille sauf dans le cas `family = quasi(...)` non repris ici, voir `?family`).
 
@@ -91,7 +91,7 @@ La question de la surdispersion des données est encore bien plus complexe que c
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(235, height = 270, toc = "Variable réponse normale et glm()")`
+`r h5p(235, "B04Hb_gaussian", height = 270, toc = "Variable réponse normale et glm()")`
 
 ### GLM Poisson : ray-grass dans les dunes
 
@@ -443,7 +443,7 @@ La variable réponse est ici, en réalité, une variable binaire même si elle e
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(236, height = 270, toc = "Dépendance ou pas ?")`
+`r h5p(236, "B04Hc_dependence", height = 270, toc = "Dépendance ou pas ?")`
 
 ### Ajustement et analyse d'un GLMM
 
@@ -451,7 +451,7 @@ Nous ne pouvons pas ajuster un modèle mixte avec la fonction `glm()`. Nous devo
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(237, height = 270, toc = "Formulation du terme aléatoire")`
+`r h5p(237, "B04Hd_formula", height = 270, toc = "Formulation du terme aléatoire")`
 
 Nous devons encore comprendre comment indiquer dans la formule que nous n'avons pas une variable réponse binaire dans notre tableau, mais un contingentement des spermatozoïdes mobiles et du total. Cela s'indique par `cbind(mobile, total - mobile)`, c'est-à-dire, un tableau à deux colonnes avec la première, le nombre observé de niveaux 1, et la seconde, le nombre observé de niveau 0 de la variable binaire. Avec ceci, nous pouvons à présent écrire la formule de notre modèle complet, le calculer et imprimer le résumé des résultats (malheureusement, nous ne pouvons pas encore utiliser `tabularise()` ici, car une méthode spécifique à ces objets n'a pas encore été écrite) :
 
@@ -591,7 +591,7 @@ La normalité apparaît ici douteuse... **et ce n'est pas grave, car pour les mo
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(238, height = 270, toc = "GLMM et normalité des résidus")`
+`r h5p(238, "B04He_normal", height = 270, toc = "GLMM et normalité des résidus")`
 
 ### Prédictions à l'aide d'un GLMM
 
@@ -734,7 +734,7 @@ if (exists("assignment2"))
 
 Ce quatrième module vous a permis de comprendre le modèle linéaire généralisé et les modèles linéaires (généralisés) mixtes. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("04")`
 
 ##### Progression {.unnumbered}
 

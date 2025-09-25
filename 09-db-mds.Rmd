@@ -67,7 +67,7 @@ Ce code vous permet de vous connecter, interagir et vous déconnecter de la base
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(110, height = 270, toc = "Connexion à une base de données")`
+`r h5p(110, "B09Ha_dbConnect", height = 270, toc = "Connexion à une base de données")`
 
 ```{block, type='note'}
 Avec certains drivers (SQLite2, PostgreSQL ...) RStudio affiche la liste des tables et des variables disponibles dans la base de données dans l'onglet **Connexions** de manière assez similaire à l'affichage des objets R en mémoire dans l'onglet **Environnement**. Malheureusement, cette fonctionnalité n'est pas (encore) disponible pour DuckDB. Par contre, vous pouvez utiliser `dbListTables(con)` pour lister les tables disponibles et `dbListFields(con, "table_name")` pour lister les champs dans une table nommée `table_name`.
@@ -75,7 +75,7 @@ Avec certains drivers (SQLite2, PostgreSQL ...) RStudio affiche la liste des tab
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(111, height = 270, toc = "Stratégie d'utilisation d'une base de données")`
+`r h5p(111, "B09Hb_db", height = 270, toc = "Stratégie d'utilisation d'une base de données")`
 
 ### Base de données dans un fichier
 
@@ -602,7 +602,7 @@ Nous vous épargnons ici les développements mathématiques qui mènent à la d�
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(96, height = 270, toc = "Objectif du MDS")`
+`r h5p(96, "B09Hc_mds", height = 270, toc = "Objectif du MDS")`
 
 Dans R, il existe plus d'une dizaine de fonctions différentes pour réaliser le MDS. Afin de vous simplifier le travail et de pouvoir traiter votre MDS comme d'autres analyses similaires, nous vous proposons une interface simplifiée au travers de la fonction `mds()` qui est rendue disponible grâce à l'instruction suivante à utiliser systématiquement en tête de script ou de document Quarto ou R Markdown :
 
@@ -620,7 +620,7 @@ Notez que l'Analyse en Composantes Principales (ACP) que nous avons étudiée au
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(103, height = 270, toc = "Comparaison entre l'ACP et PCoA")`
+`r h5p(103, "B09Hd_acp_pcoa", height = 270, toc = "Comparaison entre l'ACP et PCoA")`
 
 Considérons un relevé de couverture végétale en 24 stations concernant 44 plantes répertoriées sur le site de l'étude, par exemple, `Callvulg` est [*Calluna vulgaris*](https://www.tela-botanica.org/bdtfx-nn-12262-synthese), `Empenigr` est [*Empetrum nigrum*](https://www.tela-botanica.org/bdtfx-nn-23935-synthese), etc. Les valeurs sont les couvertures végétales observées pour chaque plante sur le site, exprimées en pour cent. La première colonne nommée `rownames` à l'importation contient les identifiants des stations (chaînes de caractères). Nous la renommons donc pour un intitulé plus explicite : `station`.
 
@@ -704,7 +704,7 @@ Ici `GOF1` est la somme des valeurs propres obtenues lors du calcul. Retenez sim
 
 ##### À vous de jouer ! {.unnumbered}
 
-`r h5p(97, height = 270, toc = "Qualité d'ajustement d'un MDS")`
+`r h5p(97, "B09He_gof", height = 270, toc = "Qualité d'ajustement d'un MDS")`
 
 ```{block, type='note'}
 
@@ -820,7 +820,7 @@ if (exists("assignment2"))
 
 Ce neuvième module vous a permis de découvrir le travail sur les bases de données ainsi qu'une autre famille d'analyses multivariées : les MDS. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
-`r show_ex_toc()`
+`r show_ex_toc("09")`
 
 ##### Progression {.unnumbered}
 

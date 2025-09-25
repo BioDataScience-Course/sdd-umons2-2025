@@ -21,6 +21,7 @@ learnitdown <- list(
   rstudio = "start_rstudio2025.html",    # Run RStudio from the box
   package = "BioDataScience2",           # Associated package for the exercises
   institutions = "UMONS",                # Known institutions
+  sets = "25M",                        # The course set (in case there are several ones)
   courses = c(
     "S-BIOG-015",                        # SDD2 Q1
     "S-BIOG-061" #,                      # SDD2 Q2
@@ -31,6 +32,7 @@ learnitdown <- list(
     "Science des Données Biologiques II à l'UMONS (Q2 : analyse)" #,
     #"Bioinformatique et Science des Données II à Charleroi"
   ),
+  terms = c("Q1", "Q2"),                 # The term of each course
   acad_year = "2025-2026",               # The academic year
   YYYY = 2025,                           # The academic year long id
   YY = 25,                               # The academic year short id
@@ -172,22 +174,41 @@ img <- function(..., caption = "") {
   paste0("![", caption, "](", path, ")")
 }
 
-h5p <- function(id, toc = "", ...)
-  learnitdown::h5p(id, toc = toc, baseurl = learnitdown$baseurl,
+h5p <- function(id, name, toc = "",
+  icourse = if (as.integer(substring(id, 2, 3)) < 6L) !"{courses[1]}" else
+    !"{courses[2]}",
+  institution = !"{institutions[1]}", acad_year = !"{acad_year}",
+  term = if (as.integer(substring(id, 2, 3)) < 6L) !"{terms[1]}" else
+    !"{terms[2]}",
+  set = !"{sets[1]}", ...)
+  learnitdown::h5p(id, name = name, toc = toc, baseurl = learnitdown$baseurl,
     toc.def = "Exercice H5P {id}",
     h5p.img = "images/list-h5p.png",
-    h5p.link = paste(learnitdown$baseurl, "h5p", sep = "/"), ...)
+    h5p.link = paste(learnitdown$baseurl, "h5p", sep = "/"),
+    icourse = icourse, institution = institution, acad_year = acad_year,
+    term = term, set = set, ...)
 
-launch_shiny <- function(url, toc = "", fun = paste(learnitdown$package, "run_app", sep = "::"),
+launch_shiny <- function(url, toc = "", fun = paste(learnitdown$package,
+  "run_app", sep = "::"), app = sub("\\?.+$", "", basename(url)),
   #ENalt1 = "*Click to start the Shiny application*",
   alt1 = "*Cliquez pour lancer l'application Shiny.*",
   #ENalt2 = "*Click to start or [run `{run.cmd}`]({run.url}{run.arg}) in RStudio.*",
-  alt2 = "*Cliquez pour lancer ou [exécutez dans RStudio]({run.url}{run.arg}){{target=\"_blank\"}} `{run.cmd}`.*", ...)
+  alt2 = "*Cliquez pour lancer ou [exécutez dans RStudio]({run.url}{run.arg}){{target=\"_blank\"}} `{run.cmd}`.*",
+  baseurl = !"{baseurl}",
+  icourse = if (as.integer(substring(app, 2, 3)) < 6L)
+    !"{courses[1]}" else !"{courses[2]}",
+  institution = !"{institutions[1]}", acad_year = !"{acad_year}",
+  term = if (as.integer(substring(app, 2, 3)) < 6L)
+    !"{terms[1]}" else !"{terms[2]}",
+  set = !"{sets[1]}", ...)
   learnitdown::launch_shiny(url = url, toc = toc, imgdir = learnitdown$shiny_imgdir,
     fun = fun, alt1 = alt1, alt2 = alt2, toc.def = "Application Shiny {app}",
+    baseurl = baseurl,
     run.url = paste(learnitdown$baseurl, "/", learnitdown$rstudio,  "?runrcode=", sep = ""),
     app.img = "images/list-app.png",
-    app.link = paste(learnitdown$baseurl, "shiny_app", sep = "/"), ...)
+    app.link = paste(learnitdown$baseurl, "shiny_app", sep = "/"),
+    icourse = icourse, institution = institution, acad_year = acad_year,
+    term = term, set = set, ...)
 
 launch_report <- function(module, course = "S-BIOG-015", toc = NULL, fun = NULL,
   #ENalt1 = "*Click to see the progress report.*",
@@ -209,75 +230,87 @@ launch_learnr <- function(url, toc = "", fun = paste(learnitdown$package, "run",
   launch_shiny(url = url, toc = toc, fun = fun, ...)
 
 learnr <- function(id, title = NULL, toc = "", package = learnitdown$package,
-  text = "Effectuez maintenant les exercices du tutoriel")
+text = "Effectuez maintenant les exercices du tutoriel",
+icourse = if (as.integer(substring(id, 2, 3)) < 6L) !"{courses[1]}" else
+  !"{courses[2]}",
+institution = !"{institutions[1]}", acad_year = !"{acad_year}",
+term = if (as.integer(substring(id, 2, 3)) < 6L) !"{terms[1]}" else
+  !"{terms[2]}", set = !"{sets[1]}")
   learnitdown::learnr(id = id, title = title, package = package, toc = toc,
     text = text, toc.def = "Tutoriel {id}",
     #rstudio.url = paste(learnitdown$baseurl, learnitdown$rstudio, sep = "/"),
     connect.url = learnitdown$connecturl, tuto.img = "images/list-tuto.png",
-    tuto.link = paste(learnitdown$baseurl, "tutorial", sep = "/"))
+    tuto.link = paste(learnitdown$baseurl, "tutorial", sep = "/"),
+    icourse = icourse, institution = institution, acad_year = acad_year,
+    term = term, set = set)
 
 # Note: use course.urls = c(`S-BIOG-015` = "classroom url1", `S-BIOG-937-` = "classroom url2"),
 # and url = link to Github template repository for the assignment
 assignment <- function(name, url, course.ids = NULL, course.urls = NULL,
 course.starts = NULL, course.ends = NULL, part = NULL, toc = "", clone = TRUE,
-level = 3, n = 1, type = "ind. github", acad_year = !"{acad_year}",
-term = "Q1", texts = learnitdown::assignment_fr())
+level = 3, n = 1, type = "ind. github", institution = !"{institutions[1]}",
+acad_year = !"{acad_year}", term = "Q1",  set = !"{sets[1]}",
+  texts = learnitdown::assignment_fr())
   learnitdown::assignment(name = name, url = url, course.ids = course.ids,
     course.urls = course.urls, course.starts = course.starts,
     course.ends = course.ends, part = part,
     course.names = stats::setNames(learnitdown$courses_names,
       learnitdown$courses), toc = toc, clone = clone, level = level, n = n,
-    type = type, acad_year = acad_year, term = term, texts = texts,
-    assign.img = "images/list-assign.png",
+    type = type, institution = institution, acad_year = acad_year, term = term,
+    set = set, texts = texts, assign.img = "images/list-assign.png",
     assign.link = paste(learnitdown$baseurl, "github_assignment", sep = "/"),
     template = "assignment_fr.html", baseurl = learnitdown$baseurl)
 
 assignment2 <- function(name, url, course.ids = NULL, course.urls = NULL,
 course.starts = NULL, course.ends = NULL, part = NULL, toc = "", clone = TRUE,
-level = 4, n = 2, type = "group github", acad_year = !"{acad_year}",
-term = "Q1", texts = learnitdown::assignment2_fr())
+level = 4, n = 2, type = "group github", institution = !"{institutions[1]}",
+acad_year = !"{acad_year}", term = "Q1",  set = !"{sets[1]}",
+  texts = learnitdown::assignment2_fr())
   learnitdown::assignment2(name = name, url = url, course.ids = course.ids,
     course.urls = course.urls, course.starts = course.starts,
     course.ends = course.ends, part = part,
     course.names = stats::setNames(learnitdown$courses_names,
       learnitdown$courses), toc = toc, clone = clone, level = level, n = n,
-    type = type, acad_year = acad_year, term = term, texts = texts,
-    assign.img = "images/list-assign2.png",
+    type = type, institution = institution, acad_year = acad_year, term = term,
+    set = set, texts = texts, assign.img = "images/list-assign2.png",
     assign.link = paste(learnitdown$baseurl, "github_assignment", sep = "/"),
     template = "assignment_fr.html", baseurl = learnitdown$baseurl)
 
 challenge <- function(name, url, course.ids = NULL, course.urls = NULL,
 course.starts = NULL, course.ends = NULL, part = NULL, toc = "", clone = TRUE,
-level = 3, n = 1, type = "ind. challenge", acad_year = !"{acad_year}",
-term = "Q1", texts = learnitdown::challenge_fr())
+level = 3, n = 1, type = "ind. challenge", institution = !"{institutions[1]}",
+acad_year = !"{acad_year}", term = "Q1",  set = !"{sets[1]}",
+  texts = learnitdown::challenge_fr())
   learnitdown::challenge(name = name, url = url, course.ids = course.ids,
     course.urls = course.urls, course.starts = course.starts,
     course.ends = course.ends, part = part,
     course.names = stats::setNames(learnitdown$courses_names,
       learnitdown$courses), toc = toc, clone = clone, level = level, n = n,
-    type = type, acad_year = acad_year, term = term, texts = texts,
-    assign.img = "images/list-challenge.png",
+    type = type, institution = institution, acad_year = acad_year, term = term,
+    set = set, texts = texts, assign.img = "images/list-challenge.png",
     assign.link = paste(learnitdown$baseurl, "github_challenge", sep = "/"),
     template = "assignment_fr.html", baseurl = learnitdown$baseurl)
 
 challenge2 <- function(name, url, course.ids = NULL, course.urls = NULL,
 course.starts = NULL, course.ends = NULL, part = NULL, toc = "", clone = TRUE,
-level = 4, n = 2, type = "group challenge", acad_year = !"{acad_year}",
-term = "Q1", texts = learnitdown::challenge2_fr())
+level = 4, n = 2, type = "group challenge", institution = !"{institutions[1]}",
+acad_year = !"{acad_year}", term = "Q1",  set = !"{sets[1]}",
+  texts = learnitdown::challenge2_fr())
   learnitdown::challenge2(name = name, url = url, course.ids = course.ids,
     course.urls = course.urls, course.starts = course.starts,
     course.ends = course.ends, part = part,
     course.names = stats::setNames(learnitdown$courses_names,
       learnitdown$courses), toc = toc, clone = clone, level = level, n = n,
-    type = type, acad_year = acad_year, term = term, texts = texts,
-    assign.img = "images/list-challenge2.png",
+    type = type, institution = institution, acad_year = acad_year, term = term,
+    set = set, texts = texts, assign.img = "images/list-challenge2.png",
     assign.link = paste(learnitdown$baseurl, "github_challenge", sep = "/"),
     template = "assignment_fr.html", baseurl = learnitdown$baseurl)
 
 # Note: use `r learnitdown::clean_ex_toc()` at the beginning of index.Rmd to
 # make sure the ex dir is clean when the book compiles.
-show_ex_toc <- function(header = "", clear.it = TRUE)
-  learnitdown::show_ex_toc(header = header, clear.it = clear.it)
+show_ex_toc <- function(id, header = "", clear.it = TRUE, finalize = FALSE)
+  learnitdown::show_ex_toc(id = id, header = header, clear.it = clear.it,
+    finalize = finalize)
 
 # Include javascript and css code for {learnitdown} additional features
 # in style.css and header.html, respectively
