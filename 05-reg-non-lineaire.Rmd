@@ -102,7 +102,7 @@ rlc_nls <- nls(data = rlc, etr ~ pgh_model(par, etr_max, alpha, beta),
 # Note : tabularise() ne peut pas encore traiter les modèles non "self-start"
 # (vous verrez ce que cela signifie plus loin) pour les équations. Donc,
 # nous demandons le tableau SANS l'équation du modèle
-summary(rlc_nls) |> tabularise(equation = FALSE)
+summary_(rlc_nls) |> tabularise(equation = FALSE)
 # Une autre solution est de fournir l'équation en LaTeX à tabularise()
 #summary(rlc_nls) |> tabularise(equation = "ETR = ETR_{max} \\cdot (1 - e^{-PAR \\cdot \\alpha/ETR_{max}}) \\cdot e^{-PAR \\cdot \\beta/ETR_{max}}")
 ```
@@ -687,7 +687,7 @@ Ajustons maintenant un modèle de Gompertz (modèle **selfStart**, notez qu'ici 
 
 ```{r, warning=FALSE}
 urchins_gomp <- nls(data = urchins, diameter ~ SSgompertz(age, Asym, b2, b3))
-summary(urchins_gomp) |> tabularise()
+summary_(urchins_gomp) |> tabularise()
 ```
 
 Utilisons maintenant l'astuce de `stat_function()` combinée à `as.function.nls()` pour ajouter la courbe sur le graphique.
@@ -701,7 +701,7 @@ L'ajustement de cette fonction semble très bon, à l'œil. Voyons ce qu'il en e
 
 ```{r, warning=FALSE}
 urchins_logis <- nls(data = urchins, diameter ~ SSlogis(age, Asym, xmid, scal))
-summary(urchins_logis) |> tabularise()
+summary_(urchins_logis) |> tabularise()
 ```
 
 Et voici le graphique avec les deux modèles superposés :
@@ -725,7 +725,7 @@ Comme on peut le voir clairement sur le graphique, la courbe logistique donne un
 
 ```{r, warning=FALSE}
 urchins_weib <- nls(data = urchins, diameter ~ SSweibull(age, Asym, Drop, lrc, pwr))
-summary(urchins_weib) |> tabularise()
+summary_(urchins_weib) |> tabularise()
 ```
 
 Ajoutons ce nouveau modèle sur le graphique :
@@ -768,7 +768,7 @@ urchins_rich <- nls(data = urchins, diameter ~ richards(age, Asym, lrc, c0, m),
   start = c(Asym = 55, lrc = -0.7, c0 = 0, m = 1))
 # N'étant pas une fonction selfStart, tabularise() ne peut pas déterminer
 # l'équation du modèle toute seule. Donc, nous ne l'affichons pas.
-summary(urchins_rich) |> tabularise(equation = FALSE)
+summary_(urchins_rich) |> tabularise(equation = FALSE)
 ```
 
 Ajoutons ce dernier modèle sur notre graphique (avec des traits un peu plus fins pour mieux distinguer les modèles les uns des autres) :

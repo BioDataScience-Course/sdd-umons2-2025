@@ -522,12 +522,12 @@ S'il y a des conflits entre ces trois règles, traitez-les par priorité dans l'
 
 `r h5p(198, "B01Hf_lm", height = 270, toc = "La fonction lm()")`
 
-### Résumé avec `summary()`
+### Résumé avec `summary_()`
 
-Avec `summary()` nous obtenons un résumé condensé des informations les plus utiles pour chaque objet dans R. Dans le cas de l'objet **lm**, l'information renvoyée est très utile pour interpréter notre régression linéaire.
+Avec `summary_()` nous obtenons un résumé condensé des informations les plus utiles pour chaque objet dans R. notez que R de base utilise la fonction `summary()` (sans `_`). La différence entre les deux est que `summary_()` conserve aussi l'information sur l'objet qui est résumé, contrairement à `summary()`. Dans le cas de l'objet **lm**, l'information renvoyée est très utile pour interpréter notre régression linéaire.
 
 ```{r}
-summary(trees_lm)
+summary_(trees_lm)
 ```
 
 -   Call :
@@ -552,12 +552,12 @@ coef(trees_lm)
 
 Nous retrouvons également les écarts-types calculés sur ces valeurs (*Std. Error*) qui donnent une indication de la précision de leur estimation, les valeurs des distributions *t* de Student sur ces estimations (*t value*) et enfin les valeurs *p* (*PR(\>\|t\|)*) liées à un test *t* de Student pour déterminer si le paramètre correspondant est significativement différent de zéro (avec $H_0: p = 0$ et $H_a: p \neq 0$).
 
-*Pour l'instant, nous nous contenterons d'interpréter et d'utiliser les informations issues de `summary()` dans sa partie supérieure. Le contenu des trois dernières lignes sera détaillé dans le module suivant.*
+*Pour l'instant, nous nous contenterons d'interpréter et d'utiliser les informations issues de `summary_()` dans sa partie supérieure. Le contenu des trois dernières lignes sera détaillé dans le module suivant.*
 
-Comme la sortie de `summary()` pour un objet **lm**, bien que très utile, fait brut de décoffrage dans un rapport, vous pouvez utiliser ici aussi `tabularise()` pour mettre cela en forme :
+Comme la sortie de `summary_()` pour un objet **lm**, bien que très utile, fait brut de décoffrage dans un rapport, vous pouvez utiliser ici aussi `tabularise()` pour mettre cela en forme :
 
 ```{r, warning=FALSE}
-summary(trees_lm) |>
+summary_(trees_lm) |>
   tabularise(warn = FALSE)
 ```
 
@@ -591,7 +591,7 @@ Nous allons maintenant devoir diagnostiquer ces possibles problèmes. L'**analys
 
 ### Analyse des résidus
 
-Le tableau numérique obtenu à l'aide de `summary()` peut faire penser que l'étude d'une régression linéaire se limite à examiner quelques valeurs numériques et divers tests d'hypothèses associés. Ce sont effectivement des indicateurs utiles, mais c'est oublier que la technique est **essentiellement visuelle**. Le graphique du nuage de points avec la droite superposée est un premier outil diagnostique visuel indispensable, mais il n'est pas le seul ! Plusieurs graphiques spécifiques existent pour mettre en évidence diverses propriétés des résidus qui peuvent révéler des problèmes. Leur inspection est indispensable et s'appelle l'**analyse des résidus**.
+Le tableau numérique obtenu à l'aide de `summary_()` peut faire penser que l'étude d'une régression linéaire se limite à examiner quelques valeurs numériques et divers tests d'hypothèses associés. Ce sont effectivement des indicateurs utiles, mais c'est oublier que la technique est **essentiellement visuelle**. Le graphique du nuage de points avec la droite superposée est un premier outil diagnostique visuel indispensable, mais il n'est pas le seul ! Plusieurs graphiques spécifiques existent pour mettre en évidence diverses propriétés des résidus qui peuvent révéler des problèmes. Leur inspection est indispensable et s'appelle l'**analyse des résidus**.
 
 #### Graphique résidus *versus* valeurs prédites
 

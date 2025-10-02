@@ -237,7 +237,7 @@ chart(data = sfilter(urchin, weight >= 30), skeleton ~ weight %col=% origin) +
 Le résumé du modèle nous donne des informations utiles :
 
 ```{r}
-summary(urchin_lm)
+summary_(urchin_lm)
 ```
 
 Le *R*^2^ de 0.935 est élevé. La valeur *p* de l'ANOVA est inférieure à 5% et le modèle est significatif. Avec une matrice de type traitement, le modèle est ajusté d'abord sur la sous-population correspondant au premier niveau de la variable **factor** `origin`, c'est-à-dire `"Culture"`.
@@ -265,7 +265,7 @@ Dans un cas comme celui-ci, nous pouvons simplifier le modèle en éliminant le 
 
 ```{r}
 urchin_lm2 <- lm(data = urchin, skeleton ~ weight + weight:origin, subset = weight >= 30)
-summary(urchin_lm2)
+summary_(urchin_lm2)
 ```
 
 Nous voyons qu'effectivement, le terme non significatif a disparu et il ne reste plus que les termes significatifs au seuil $\alpha$ de 5%.
@@ -285,7 +285,7 @@ Les interactions sont significatives dans notre modèle linéaire, qu'on le simp
 Jusqu'ici, nous avons repris les sorties "brutes" de R pour les tableaux et nous avons écrit des équations à la main. Mais nous pouvons aussi utiliser `tabularise()` et `eq_()` pour des équations en ligne ou `eq__()` pour des équations sur leur propre ligne, avec éventuellement `use_coefs = TRUE` et `coef_digits =` pour la version paramétrisée. Voici ce que cela donne pour notre modèle simplifié :
 
 ```{r, warning=FALSE}
-summary(urchin_lm2) |> tabularise()
+summary_(urchin_lm2) |> tabularise()
 ```
 
 $$`r eq__(urchin_lm2, use_coefs = TRUE, coef_digits = c(2, 2, 3))`$$
@@ -371,7 +371,7 @@ Avec les graphiques, nous ne voyons pas d'effet marquant. Peut-être la conditio
 ```{r, warning=FALSE}
 # Modèle linéaire de type (anciennement) ANCOVA
 babies2_lm <- lm(data = babies2, wt ~ smoke * wt1)
-summary(babies2_lm) |> tabularise()
+summary_(babies2_lm) |> tabularise()
 anova(babies2_lm) |> tabularise()
 ```
 
@@ -389,7 +389,7 @@ Pour vérifier tout cela, nous pouvons considérer le modèle de base comme une 
 
 ```{r, warning=FALSE}
 lm(data = babies2, wt ~ wt1, subset = smoke == "never") |>
-  summary() |> tabularise()
+  summary_() |> tabularise()
 ```
 
 Nous voyons en effet que les pentes et ordonnées à l'origine sont ici parfaitement identiques au modèle linéaire complet (mais pas les tests associés). Notez que $\beta$ dans cette régression simple correspond à $\beta_4$ dans le modèle de l'ANCOVA.
@@ -398,12 +398,12 @@ Faisons de même pour la régression entre `wt` et `wt1` pour la sous-population
 
 ```{r, warning=FALSE}
 lm(data = babies2, wt ~ wt1, subset = smoke == "before") |>
-  summary() |> tabularise()
+  summary_() |> tabularise()
 ```
 
 Nous avons une ordonnée à l'origine qui vaut 2,965 et une pente qui vaut 0.00929, exactement comme calculées plus haut (aux arrondis près). L'estimation de l'ordonnée à l'origine correspond donc bien, dans l'ANCOVA, à $\alpha$ + $\beta_1$ = 3,000 - -0.0355 = 2,965. De même, la pente de notre droite pour la sous-population `smoke == "before"` est égale à $\beta_4$ + $\beta_5$ = 0.00812 + 0.00118 = 0.00930 (équivalent à 0.00929 aux arrondis près). Cela se vérifie aussi pour les deux autres droites pour `smoke == "until"` et `smoke == "during"`.
 
-Donc, notre modèle complet ne fait rien d'autre que d'ajuster les quatre droites correspondant aux relations linéaires entre `wt` et `wt1`, **mais en décompose les effets, niveau par niveau de la variable qualitative `smoke`** en fonction de la matrice de contraste que l'on a choisie. En bonus, nous avons la possibilité de tester si chacune des composantes (tableau coefficient de `summary()`) ou si globalement chacune des variables (tableau obtenu avec `anova()`) a un effet significatif ou non dans le modèle.
+Donc, notre modèle complet ne fait rien d'autre que d'ajuster les quatre droites correspondant aux relations linéaires entre `wt` et `wt1`, **mais en décompose les effets, niveau par niveau de la variable qualitative `smoke`** en fonction de la matrice de contraste que l'on a choisie. En bonus, nous avons la possibilité de tester si chacune des composantes (tableau coefficient de `summary_()`) ou si globalement chacune des variables (tableau obtenu avec `anova()`) a un effet significatif ou non dans le modèle.
 
 Le graphique correspondant est le même que si nous avions ajusté les quatre régressions linéaires indépendamment l'une de l'autre (mais les tests et les enveloppes de confiance diffèrent).
 
@@ -430,7 +430,7 @@ Ce résultat est en contradiction avec le tableau de l'ANOVA qui indique que les
 ```{r, warning=FALSE}
 # Modèle linéaire sans interactions (+ au lieu de * dans la formule)
 babies2_lm2 <- lm(data = babies2, wt ~ smoke + wt1)
-summary(babies2_lm2) |> tabularise()
+summary_(babies2_lm2) |> tabularise()
 anova(babies2_lm2) |> tabularise()
 ```
 
@@ -458,7 +458,7 @@ Le graphique montre une tendance claire, comme le tableau du résumé du modèle
 ```{r}
 babies2_lm2_compa <- multcomp::glht(babies2_lm2,
   linfct = multcomp::mcp(smoke = "Tukey")) |> confint()
-summary(babies2_lm2_compa)
+summary_(babies2_lm2_compa)
 .oma <- par(oma = c(0, 5.1, 0, 0)); plot(babies2_lm2_compa); par(.oma); rm(.oma)
 ```
 
@@ -469,7 +469,7 @@ Il semble évident maintenant qu'il n'est pas utile de préciser si la mère a f
 ```{r, warning=FALSE}
 babies2_lm3 <- lm(data = babies2, wt ~ smoke + wt1,
   contrasts = list(smoke = "contr.helmert"))
-summary(babies2_lm3) |> tabularise()
+summary_(babies2_lm3) |> tabularise()
 anova(babies2_lm3) |> tabularise()
 ```
 
@@ -489,7 +489,7 @@ helm
 
 ```{r, warning=FALSE}
 lm(data = babies2, wt ~ smoke + wt1) |>
-  summary() |> tabularise()
+  summary_() |> tabularise()
 ```
 
 Les conclusions sont les mêmes, mais les valeurs estimées pour $\alpha$, $\beta_1$, $\beta_2$ et $\beta_3$ diffèrent. Par exemple, dans ce dernier cas, $\beta_1$ est estimé au double de la valeur avec les contrastes Helmert, ce qui est logique puisque la référence est ici la droite ajustée pour la sous-population `smoke == "never"` là où dans le modèle avec les contrastes de Helmert, le décalage est mesuré par rapport au modèle moyen (donc à "mi-chemin" entre les deux droites pour `smoke == "never"` et `smoke == "before"`).
@@ -499,7 +499,7 @@ Naturellement, nous pouvons aussi considérer la variable `smoke` comme une vari
 ```{r, warning=FALSE}
 smutate(babies2, smoke = as.ordered(smoke)) |>
   lm(data = _, wt ~ smoke + wt1) |>
-  summary() |>
+  summary_() |>
   tabularise()
 ```
 
@@ -514,7 +514,7 @@ babies2 %>.%
   smutate(., smokepreg = factor(smokepreg, levels = c("0", "1"))) ->
   babies2
 babies2_lm4 <- lm(data = babies2, wt ~ smokepreg + wt1)
-summary(babies2_lm4) |> tabularise()
+summary_(babies2_lm4) |> tabularise()
 anova(babies2_lm4) |> tabularise()
 ```
 
@@ -581,7 +581,7 @@ dtx(X = c(0, 3, 0, 3), Y = c(2, 6, 3, 5), F = c("A", "A", "B", "B")) %>.%
     geom_line()
 ```
 
-En pratique, et surtout en cas de doute, vous pouvez commencer par ajuster le modèle complet. Ensuite vous analysez les différentes lignes du tableau issu de `summary()` appliqué à votre modèle. Vous déterminer si le test *t* de Student qui est réalisé sur chaque paramètre du modèle (H~0~: le paramètre vaut zéro, H~1~: le paramètre est différent de zéro) rejette l'hypothèse nulle de manière significative au seuil alpha choisi. Si pas, cela signifie que ce paramètre peut probablement être ignoré dans le modèle (c'est-à-dire, forcé à zéro dans l'équation) et vous pouvez alors passer sur une forme plus concise, soit le modèle sans interactions à droites parallèles, soit le modèle avec uniquement les interactions pour des droites qui se croisent à l'origine de l'axe des abscisses.
+En pratique, et surtout en cas de doute, vous pouvez commencer par ajuster le modèle complet. Ensuite vous analysez les différentes lignes du tableau issu de `summary_()` appliqué à votre modèle. Vous déterminer si le test *t* de Student qui est réalisé sur chaque paramètre du modèle (H~0~: le paramètre vaut zéro, H~1~: le paramètre est différent de zéro) rejette l'hypothèse nulle de manière significative au seuil alpha choisi. Si pas, cela signifie que ce paramètre peut probablement être ignoré dans le modèle (c'est-à-dire, forcé à zéro dans l'équation) et vous pouvez alors passer sur une forme plus concise, soit le modèle sans interactions à droites parallèles, soit le modèle avec uniquement les interactions pour des droites qui se croisent à l'origine de l'axe des abscisses.
 
 ##### À vous de jouer ! {.unnumbered}
 

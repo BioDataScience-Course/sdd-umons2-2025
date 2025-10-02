@@ -137,7 +137,7 @@ Ce genre de graphique est assez classique pour des données d'abondance en fonct
 
 ```{r, warning=FALSE}
 dune_glm <- glm(data = dune, Lolipere ~ A1, family = poisson)
-summary(dune_glm) |> tabularise()
+summary_(dune_glm) |> tabularise()
 ```
 
 Il n'y a pas ici d'ANOVA pour déterminer si le modèle est significatif, mais le critère d'Akaike est renseigné (AIC = 85.75, pratique pour comparer différents modèles ajustés dans les mêmes données). Les tests *t* sur les paramètres qui les comparent à des distributions de Student dans le modèle linéaire sont ici remplacés par des **tests *z* par rapport à des distributions normales**. Le principe est le même. Pour un paramètre $\alpha$ ou $\beta_i$ H~0~: $\beta_i = 0$ et H~1~: $\beta_i \neq 0$. L'ordonnée à l'origine et la pente sont toutes les deux significativement différentes de zéro au seuil $\alpha$ de 5%.
@@ -146,7 +146,7 @@ Ensuite, il est précisé que le paramètre de dispersion $\phi$ est fixé à 1 
 
 ```{r, warning=FALSE}
 dune_glm_quasi <- glm(data = dune, Lolipere ~ A1, family = quasipoisson)
-summary(dune_glm_quasi) |> tabularise()
+summary_(dune_glm_quasi) |> tabularise()
 ```
 
 Cette fois-ci, la dispersion $\phi$ est estimée à 1.7 et c'est cette valeur qui est utilisée pour modéliser la variance en fonction des valeurs prédites dans les calculs. Notez que les estimateurs des paramètres ont changé complètement. Notez aussi que les valeurs *p* des tests *z* sont plus élevées. En fait le modèle quasi-poisson est moins robuste que le modèle poisson. Cela signifie qu'il détectera moins facilement si un paramètre est significativement différent de zéro ou non. C'est particulièrement ennuyeux lorsque nous avons peu de données à disposition comme ici. Enfin, le maximum de vraisemblance n'est pas calculable, et donc l'AIC. C'est aussi embêtant.
@@ -156,7 +156,7 @@ En cas de surdispersion ou sousdispersion, il est plutôt conseillé de revoir l
 ```{r, warning=FALSE}
 dune_glm2 <- glm(data = dune, Lolipere ~ A1 +  Management + Moisture,
   family = poisson)
-summary(dune_glm2) |> tabularise()
+summary_(dune_glm2) |> tabularise()
 ```
 
 La dispersion observée est de 14.17/14 = 1.01 ≈ 1. Nous avons maintenant bien la valeur attendue. Concernant l'AIC, elle vaut 66.5 contre 85.8 dans notre premier modèle. Donc notre dernier modèle est incontestablement meilleur (pour rappel, plus l'AIC est faible, mieux c'est). Pour analyser les paramètres, nous devons nous rappeler que les matrices de contraste fonctionnent aussi en GLM. `Management` étant une variable facteur, les contrastes par défaut sont des contrastes traitement. Le modèle est ajusté pour le premier niveau qui est `conservation` (les zones protégées). Le paramètre $\beta_2$ indique le décalage pour les sites en culture. Ce décalage est positif, mais comment l'interpréter ? Résoudre l'équation du modèle nous aide à comprendre (ceci n'est pas l'équation générale du modèle, mais une version qui correspond au dernier modèle étudié).
@@ -256,7 +256,7 @@ La GLM binomiale peut être utilisée ici avec une fonction de lien logit qui aj
 ```{r, warning=FALSE}
 ovo_glm <- glm(data = ovo, prop ~ hypo,
   family = binomial, weights = ovo$tot)
-summary(ovo_glm) |> tabularise()
+summary_(ovo_glm) |> tabularise()
 ```
 
 Il n'y a pas surdispersion (déviance résiduelle/degrés de liberté = 5.58/5 = 1.1 ≈ 1). Tous les paramètres sont significatifs au seuil $\alpha$ de 5%. Notez que nous avons des proportions calculées sur des totaux différents pour chaque concentration. Le modèle en tient compte si nous indiquons ces totaux dans l'argument `weights =`. Une autre façon de renseigner cela au modèle est une forme un peu particulière. On lui donne une matrice de deux colonnes qui reprend le nombre de cas positifs et le total. Le modèle obtenu est le même.
@@ -264,7 +264,7 @@ Il n'y a pas surdispersion (déviance résiduelle/degrés de liberté = 5.58/5 =
 ```{r, warning=FALSE}
 ovo_glm_bis <- glm(data = ovo, cbind(mat, tot) ~ hypo,
   family = binomial)
-summary(ovo_glm) |> tabularise()
+summary_(ovo_glm) |> tabularise()
 ```
 
 Pour obtenir le graphique de ce modèle, nous pouvons utiliser `stat_smooth()`.
@@ -306,7 +306,7 @@ Qu'est-ce qu'on peut bien faire avec des données ayant ce genre de répartition
 ```{r, warning=FALSE}
 mite_glm <- glm(data = mite, Oribatl1 ~ WatrCont * Topo,
   family = binomial)
-summary(mite_glm) |> tabularise()
+summary_(mite_glm) |> tabularise()
 ```
 
 Nous vérifions la dispersion $\phi$ observée qui doit être proche de un avec ce modèle en divisant la déviance résiduelle par les degrés de liberté, soit 67.7/66 = 1.03 ≈ 1. Nous avons une AIC de 75.7. Les paramètres $\alpha$ (ordonnées à l'origine) et $\beta_1$ (teneur en eau) sont significatifs au seuil $\alpha$ de 5%. Simplifions notre modèle en considérant que la topographie n'aurait aucun effet.
@@ -314,7 +314,7 @@ Nous vérifions la dispersion $\phi$ observée qui doit être proche de un avec 
 ```{r, warning=FALSE}
 mite_glm2 <- glm(data = mite, Oribatl1 ~ WatrCont,
   family = binomial)
-summary(mite_glm2) |> tabularise()
+summary_(mite_glm2) |> tabularise()
 ```
 
 Les paramètres de ce second modèle simplifié sont tous également significatifs au seuil $\alpha$ de 5%. Par contre, la dispersion observée augmente (74.6/68 = 1.1) sans être dramatique, mais l'AIC a augmenté à 78.6. Comparons également à l'aide d'un test $\chi^2$ .
@@ -328,7 +328,7 @@ La différence significative au seuil $\alpha$ de 5% est aussi en faveur de cons
 ```{r, warning=FALSE}
 mite_glm3 <- glm(data = mite, Oribatl1 ~ WatrCont + Topo,
   family = binomial)
-summary(mite_glm3) |> tabularise()
+summary_(mite_glm3) |> tabularise()
 ```
 
 C'est beaucoup mieux avec une bonne dispersion et l'AIC de 74.2 le plus petit des trois. Tous les paramètres sont significativement différents de zéro au seuil $\alpha$ de 5%.
@@ -458,7 +458,7 @@ Nous devons encore comprendre comment indiquer dans la formule que nous n'avons 
 ```{r}
 spe_m1 <- lme4::glmer(data = spe, cbind(mobile, total - mobile) ~ conc + (conc | donor),
   family = binomial(link = "logit"))
-summary(spe_m1)
+summary_(spe_m1)
 ```
 
 La première ligne nous indique que le modèle n'est pas ajusté par régression par les moindres carrés des résidus, mais par une autre approche (maximum de vraisemblance, *maximum likelihood* en anglais). Un peu plus bas, nous observons un tableau qui donne le coefficient d'Akaike AIC, et d'autres statistiques générales sur le modèle ajusté. Ceci remplace le *R*^2^ d'une régression linéaire qui n'a pas de sens ici. Ensuite, nous avons une idée de la distribution des résidus, et puis deux tableaux distincts nommés **Random effects** et **Fixed effects**. Les deux types d'effets doivent être traités différemment.
@@ -494,7 +494,7 @@ anova(spe_m1, spe_m2)
 Nous ne rejetons pas H~0~au seuil $\alpha$ de 5%. Nous pouvons donc considérer les deux modèles comme expliquant de manière similaire les données et décider d'utiliser le modèle plus simple `spe_m2`. En voici le résumé :
 
 ```{r}
-summary(spe_m2)
+summary_(spe_m2)
 ```
 
 Dans le tableau des effets aléatoires, nous n'avons plus qu'une seule variance estimée, celle correspondant à un décalage de l'ordonnée à l'origine par donneur, dont la variance vaut 0.18. Ce modèle signifie que nous considérons que la variation d'un donneur à l'autre se manifeste sous la forme d'un taux de mobilité spermatique initial (à concentration 0 en éthanol) différent d'une personne à l'autre. Par contre, le modèle considère aussi que l'effet de l'augmentation en éthanol est proportionnel à ce taux initial, quel que soit le donneur. Le graphique correspondant est le suivant :

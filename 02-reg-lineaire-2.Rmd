@@ -20,16 +20,16 @@ Le module précédent est une entrée en matière indispensable qui est complét
 
 La régression linéaire est une matière complexe et de nombreux outils existent pour vous aider à déterminer si le modèle que vous ajustez tient la route ou non. Il est très important de le vérifier avant d'utiliser un modèle. **Ajuster un modèle quelconque dans des données est à la portée de tout le monde, mais choisir un modèle pertinent et pouvoir expliquer pourquoi est nettement plus difficile !**
 
-### Résumé avec `summary()`(suite)
+### Résumé avec `summary_()`(suite)
 
-Reprenons la sortie renvoyée par `summary()` appliquée à un objet `lm` (notez ici que nous analysons la sortie de `summary()` "brute", mais vous savez comment la transformer en un tableau plus présentable dans un rapport avec `tabularise()`).
+Reprenons la sortie renvoyée par `summary_()` appliquée à un objet `lm` (notez ici que nous analysons la sortie de `summary_()` "brute", mais vous savez comment la transformer en un tableau plus présentable dans un rapport avec `tabularise()`).
 
 ```{r}
 SciViews::R("model", lang = "fr") # Configuration du système
 
 trees <- read("trees", package = "datasets") # Importation des données
 trees_lm <- lm(data = trees, volume ~ diameter) # Régression
-summary(trees_lm) # Résumé du modèle
+summary_(trees_lm) # Résumé du modèle
 ```
 
 Nous n'avons pas encore étudié la signification des trois dernières lignes de ce résumé. Voici de quoi il s'agit.
@@ -96,17 +96,17 @@ Le tableau complet de l'ANOVA pour le modèle peut être obtenu à l'aide de `an
 anova(trees_lm)
 ```
 
-Nous y retrouvons les mêmes informations, fortement résumées en une ligne à la fin de la sortie de `summary()`. Ici elles sont présentées sous une forme plus classique de tableau de l'analyse de la variance. N'oubliez pas `tabularise()` si vous avez besoin d'un tableau propre pour un rapport, aussi bien pour `anova()` :
+Nous y retrouvons les mêmes informations, fortement résumées en une ligne à la fin de la sortie de `summary_()`. Ici elles sont présentées sous une forme plus classique de tableau de l'analyse de la variance. N'oubliez pas `tabularise()` si vous avez besoin d'un tableau propre pour un rapport, aussi bien pour `anova()` :
 
 ```{r, warning=FALSE}
 anova(trees_lm) |>
   tabularise()
 ```
 
-... que pour `summary()` :
+... que pour `summary_()` :
 
 ```{r, warning=FALSE}
-summary(trees_lm) |>
+summary_(trees_lm) |>
   tabularise()
 ```
 
@@ -127,7 +127,7 @@ chart(trees_lm2)
 Le résumé de la régression donne ceci :
 
 ```{r, warning=FALSE}
-summary(trees_lm2) |>
+summary_(trees_lm2) |>
   tabularise()
 ```
 
@@ -158,7 +158,7 @@ La bonne nouvelle, c'est que tous les calculs, les métriques et les tests d'hyp
 
 ```{r, warning=FALSE}
 trees_lm3 <- lm(data = trees, volume ~ diameter + height)
-summary(trees_lm3) |>
+summary_(trees_lm3) |>
   tabularise()
 ```
 
@@ -207,7 +207,7 @@ anova(trees_lm, trees_lm3) |>
   tabularise()
 ```
 
-Notez que dans le cas de l'ajout d'*un seul* terme, la valeur *p* de cette ANOVA est identique à la valeur *p* de test de significativité du paramètre de ce nouveau terme (ici, cette valeur *p* est de 0,0156 dans les deux cas). Donc, le choix peut se faire directement à partir de `summary()` pour ce terme unique. La conclusion est similaire : l'ANOVA donne un résultat seulement moyennement significatif entre les deux modèles. Dans un cas plus complexe, la fonction `anova()` de comparaison pourra être utile. Enfin, tous les modèles ne sont pas nécessairement imbriqués. Dans ce cas, il nous faudra un autre moyen de les départager... mais avant d'aborder cela, étudions une variante intéressante de la régression multiple : la régression polynomiale.
+Notez que dans le cas de l'ajout d'*un seul* terme, la valeur *p* de cette ANOVA est identique à la valeur *p* de test de significativité du paramètre de ce nouveau terme (ici, cette valeur *p* est de 0,0156 dans les deux cas). Donc, le choix peut se faire directement à partir de `summary_()` pour ce terme unique. La conclusion est similaire : l'ANOVA donne un résultat seulement moyennement significatif entre les deux modèles. Dans un cas plus complexe, la fonction `anova()` de comparaison pourra être utile. Enfin, tous les modèles ne sont pas nécessairement imbriqués. Dans ce cas, il nous faudra un autre moyen de les départager... mais avant d'aborder cela, étudions une variante intéressante de la régression multiple : la régression polynomiale.
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -226,7 +226,7 @@ Un polynôme d'ordre 2 (terme jusqu'au $x^2$) correspond à une parabole dans le
 ```{r, warning=FALSE}
 trees <- smutate(trees,
   diameter2 = labelise(diameter^2, "Diamètre^2", units = "m^2"))
-summary(lm(data = trees, volume ~ diameter + diameter2)) |>
+summary_(lm(data = trees, volume ~ diameter + diameter2)) |>
   tabularise()
 ```
 
@@ -238,7 +238,7 @@ Devoir calculer les différentes puissances des variables au préalable devient 
 
 ```{r, warning=FALSE}
 trees_lm4 <- lm(data = trees, volume ~  diameter + I(diameter^2))
-summary(trees_lm4) |> tabularise()
+summary_(trees_lm4) |> tabularise()
 chart(trees_lm4)
 ```
 
@@ -253,7 +253,7 @@ chart$residuals(trees_lm4)
 Revenons un instant sur le résumé de ce modèle.
 
 ```{r, warning=FALSE}
-summary(trees_lm4) |>
+summary_(trees_lm4) |>
   tabularise()
 ```
 
@@ -271,7 +271,7 @@ Ceci étant précisé, voyons ce que donne la simplification de notre modèle (l
 
 ```{r, warning=FALSE}
 trees_lm5 <- lm(data = trees, volume ~  I(diameter^2) + 0)
-summary(trees_lm5) |>
+summary_(trees_lm5) |>
   tabularise()
 ```
 
@@ -281,7 +281,7 @@ Le modèle `trees_lm5` revient aussi (autre point de vue) à transformer d'abord
 
 ```{r, warning=FALSE}
 trees_lm5bis <- lm(data = trees, volume ~  diameter2 + 0)
-summary(trees_lm5bis) |>
+summary_(trees_lm5bis) |>
   tabularise()
 ```
 
@@ -291,7 +291,7 @@ Faites bien attention de ne pas comparer le *R*^2^ avec ordonnée à l'origine f
 
 ```{r, warning=FALSE}
 trees_lm6 <- lm(data = trees, volume ~  diameter + I(diameter^2) + height)
-summary(trees_lm6) |>
+summary_(trees_lm6) |>
   tabularise()
 ```
 
@@ -401,7 +401,7 @@ trees <- smutate(trees, radius2 = labelise((diameter/2)^2, "Rayon^2", units = "m
 trees_lm7 <- lm(data = trees, volume ~ radius2 * height) # Forme compacte
 # Forme développée, équivalente à la forme compacte
 trees_lm7 <- lm(data = trees, volume ~ radius2 + height + radius2:height)
-summary(trees_lm7) |>
+summary_(trees_lm7) |>
   tabularise()
 ```
 
@@ -417,7 +417,7 @@ $$volume = \beta \cdot radius^2 \cdot height + \epsilon$$
 
 ```{r, warning=FALSE}
 trees_lm8 <- lm(data = trees, volume ~ radius2:height + 0)
-summary(trees_lm8) |>
+summary_(trees_lm8) |>
   tabularise()
 AIC(trees_lm8)
 rmse(trees_lm8, trees)
@@ -427,7 +427,7 @@ Vous aurez certainement noté un problème dans l'affichage de l'équation. C'es
 
 ```{r, warning=FALSE}
 trees_lm8 <- lm(data = trees, volume ~ 0*radius2 + 0*height + radius2:height + 0)
-summary(trees_lm8) |>
+summary_(trees_lm8) |>
   tabularise(equation = "\\operatorname{Volume\\ de\\ bois \\ [m^{3}]} =
   \\alpha + \\beta_{}(\\operatorname{Rayon^{2} \\ [m^{2}]} \\times
   \\operatorname{Hauteur \\ [m]}) + \\epsilon")
