@@ -73,7 +73,7 @@ learnitdown$assign_url <- list(
   B01Ib_abalone        = "https://classroom.github.com/a/j-TzW9Ms",
   B02Ia_achatina       = "https://classroom.github.com/a/179dfmUZ",
   B02Ga_models         = "https://classroom.github.com/a/kaCKEi-H",
-  B03Ia_who            = "https://classroom.github.com/a/...",
+  B03Ia_who            = "https://classroom.github.com/a/hH-yrrIc",
   B04Ia_lungcap        = "https://classroom.github.com/a/...",
   B05Ia_abies_balsamea = "https://classroom.github.com/a/...",
   B05Ca_models         = "https://classroom.github.com/a/...",
