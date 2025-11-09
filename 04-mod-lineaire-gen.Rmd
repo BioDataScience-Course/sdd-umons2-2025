@@ -6,7 +6,7 @@ SciViews::R("model", lang = "fr")
 
 ##### Objectifs {.unnumbered}
 
--   Découvrir le modèle linéaire généralisé
+-   Découvrir le modèle linéaire généralisé (GLM)
 
 -   Être capable d'utiliser la régression logistique et d'autres formes de GLM
 
@@ -20,7 +20,7 @@ Les trois premiers modules du présent cours permettent progressivement de compr
 
 ## Modèle linéaire généralisé {#modlingen}
 
-Le modèle linéaire nous a permis de combiner différents types de **variables indépendantes ou explicatives** dans un même modèle. Cependant, la **variable dépendante ou réponse** à la gauche de l'équation doit *absolument* être numérique et une distribution normale est exigée pour la composante statistique du modèle exprimée dans les résidus $\epsilon$. Donc, si nous voulons modéliser une variable dépendante qui ne répond pas à ces caractéristiques, nous sommes dans l'impasse avec la fonction `lm()`. Dans certains cas, une transformation des données peut résoudre le problème. Par exemple, prendre le logarithme d'une variable qui a une distribution log-normale au départ la normalise. Dans d'autres cas, il semble qu'il n'y ait pas de solution... C'est ici que le **modèle linéaire *généralisé*** vient nous sauver la mise.
+Le modèle linéaire nous a permis de combiner différents types de **variables indépendantes ou explicatives** dans un même modèle. Cependant, la **variable dépendante ou réponse** à la gauche de l'équation doit *absolument* être numérique et une distribution normale est exigée pour la composante statistique du modèle exprimée dans les résidus $\epsilon$. Donc, si nous voulons modéliser une variable dépendante qui ne répond pas à ces caractéristiques, nous sommes dans l'impasse avec la fonction `lm()`. Dans certains cas, une transformation des données peut résoudre le problème. Par exemple, prendre le logarithme d'une variable qui a une distribution log-normale au départ la normalise, mais seulement à la condition que la normalité des résidus et leur homoscédasticité soient également meilleurs après transformation. Dans d'autres cas, il semble qu'il n'y ait pas de solution... C'est ici que le **modèle linéaire *généralisé*** vient nous sauver la mise.
 
 Le modèle linéaire généralisé se représente comme suit :
 
@@ -36,7 +36,7 @@ $$
 \operatorname{var}y = \phi\ V(\hat{y}) 
 $$
 
-avec : - $V$ la fonction de variance - $\phi$ (phi) une constante ≥ 0 appelée **paramètre de dispersion** qui permet de contrôler la variance de la distribution de $y$. Ceparamètre de dispersion est fixé à 1 dans certains cas (voir ci-dessous).
+avec : - $V$ la fonction de variance - $\phi$ (phi) une constante ≥ 0 appelée **paramètre de dispersion** qui permet de contrôler la variance de la distribution de $y$. Ce paramètre de dispersion est fixé à 1 dans certains cas (voir ci-dessous).
 
 Dans le cas du modèle linéaire, nous aurons l'**identité** comme fonction de lien $g(y) = y$ (aucune transformation) et une **constante** comme fonction de variance $V(\hat{y}) = 1$ (homoscédasticité) avec $\phi = /sigma^2$ (concrètement, on utilisera $s^2$ la variance observée dans l'échantillon comme estimateur $\hat{\sigma^2}$ de la variance $\sigma^2$), ce qui nous mène à la distribution de $y$ :
 
@@ -50,7 +50,7 @@ $$
 \epsilon = y - \hat{y} \sim \mathcal{N}(\hat{y},\ \sigma^2) - \hat{y} \sim \mathcal{N}(0,\ \sigma^2)
 $$
 
-Sans entrer dans les détails, une GLM définie de cette façon ajuste le modèle par **maximum de vraisemblance** (un concept que nous avions déjà rencontré avec le critère d'Akaike au module 2, mais sans le détailler). Nous n'irons pas plus loin dans la théorie, mais sachez que le maximum de vraisemblance ajustera le modèle de telle sorte que la distribution observée dans l'échantillon soit la plus proche possible de la distribution définie dans le modèle. Concrètement, dans le cas particulier de la fonction de lien identité et fonction de variance égale à 1, les estimateurs des paramètres $\alpha$ et $\beta_i$ seront les mêmes que ceux obtenus avec la fonction `lm()`. On parlera aussi de **déviance des résidus** en GLM à la place de la **somme des carrés des résidus** dans le modèle linéaire classique (notions équivalentes, mais pas exactement identiques, d'où les noms différents).
+Ce résultat final est bien la distribution des résidus dans le modèle linéaire ajusté par la méthode des moindres carrés. Sans entrer dans les détails, une GLM définie par extension en utilisant $g(y)$ et $\operatorname{var}y = \phi\ V(\hat{y})$ ajuste le modèle par **maximum de vraisemblance** (un concept que nous avions déjà rencontré avec le critère d'Akaike au module 2, mais sans le détailler). Nous n'irons pas plus loin dans la théorie, mais sachez que le maximum de vraisemblance ajustera le modèle de telle sorte que la distribution observée dans l'échantillon soit la plus proche possible de la distribution définie dans le modèle. Concrètement, dans le cas particulier de la fonction de lien identité et fonction de variance égale à 1, les estimateurs des paramètres $\alpha$ et $\beta_i$ seront les mêmes que ceux obtenus avec la fonction `lm()`. On parlera aussi de **déviance des résidus** en GLM à la place de la **somme des carrés des résidus** dans le modèle linéaire classique (notions équivalentes, mais pas exactement identiques, d'où les noms différents).
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -87,7 +87,7 @@ Les versions "quasi" sont des modèles estimés différemment et qui sont à app
 
 ##### Pour aller plus loin {.unnumbered}
 
-La question de la surdispersion des données est encore bien plus complexe que ce qui a été traité ici. Voyez par exemple <https://r.qcbs.ca/workshop06/book-fr/que-faire-avec-des-données-dabondance.html> pour des informations plus détaillées sur le traitement de la surdispersion avec des données d'abondance d'espèces.
+La question de la surdispersion des données est, en réalité, bien plus complexe que ce qui a été traité ici. Voyez par exemple <https://r.qcbs.ca/workshop06/book-fr/que-faire-avec-des-données-dabondance.html> pour des informations plus détaillées sur le traitement de la surdispersion avec des données d'abondance d'espèces.
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -95,7 +95,7 @@ La question de la surdispersion des données est encore bien plus complexe que c
 
 ### GLM Poisson : ray-grass dans les dunes
 
-Comme premier exemple, nous traiterons de l'abondance du ray-grass *Lolium perenne* L., 1753 dans 20 sites différents de dunes en Hollande ainsi que des caractéristiques environnementales associées (jeux de données `dune` et `dune.env` du package {vegan}). Nous voulons établir une relation entre l'abondance de cette graminée et les caractéristiques du sol (épaisseur de la couche `A1` de sable sous la couche organique du profil pédologique en cm et `Moisture`, l'humidité du sol sous forme d'une variable qualitative ordonnée avec les niveaux 1 \< 2 \< 4 \< 5) ou de gestion des dunes (variable `Management` que nous remanions en deux modalités `conservation` et `culture`), voir `?vegan::dune` pour plus de détails.
+Comme premier exemple, nous traiterons de l'abondance d'une graminée, le ray-grass *Lolium perenne* L., 1753 dans 20 sites différents de dunes en Hollande ainsi que des caractéristiques environnementales associées (jeux de données `dune` et `dune.env` du package {vegan}). Nous voulons établir une relation entre l'abondance de cette graminée et les caractéristiques du sol (épaisseur de la couche `A1` de sable sous la couche organique du profil pédologique en cm et `Moisture`, l'humidité du sol sous forme d'une variable qualitative ordonnée avec les niveaux 1 \< 2 \< 4 \< 5) ou de gestion des dunes (variable `Management` que nous remanions en deux modalités `conservation` et `culture`), voir `?vegan::dune` pour plus de détails.
 
 ```{r}
 dune <- sbind_cols(
@@ -140,7 +140,7 @@ dune_glm <- glm(data = dune, Lolipere ~ A1, family = poisson)
 summary_(dune_glm) |> tabularise()
 ```
 
-Il n'y a pas ici d'ANOVA pour déterminer si le modèle est significatif, mais le critère d'Akaike est renseigné (AIC = 85.75, pratique pour comparer différents modèles ajustés dans les mêmes données). Les tests *t* sur les paramètres qui les comparent à des distributions de Student dans le modèle linéaire sont ici remplacés par des **tests *z* par rapport à des distributions normales**. Le principe est le même. Pour un paramètre $\alpha$ ou $\beta_i$ H~0~: $\beta_i = 0$ et H~1~: $\beta_i \neq 0$. L'ordonnée à l'origine et la pente sont toutes les deux significativement différentes de zéro au seuil $\alpha$ de 5%.
+Il n'y a pas ici d'ANOVA pour déterminer si le modèle est significatif, mais le critère d'Akaike est renseigné (AIC = 85.75, pratique pour comparer différents modèles ajustés dans les mêmes données). Les tests *t* sur les paramètres qui les comparent à des distributions de Student dans le modèle linéaire sont ici remplacés par des **tests *z* par rapport à des distributions normales**. Le principe est le même. Pour un paramètre $\alpha$ ou $\beta_i$ H~0~: $\beta_i = 0$ et H~1~: $\beta_i \neq 0$. L'ordonnée à l'origine et la pente sont toutes les deux significativement différentes de zéro au seuil $\alpha$ de 5%, puisque les valeurs *p* respectives sont largement inférieures à $\alpha$.
 
 Ensuite, il est précisé que le paramètre de dispersion $\phi$ est fixé à 1 dans une GLM avec famille poisson. Vérifions ce que nous obtenons avec nos données en divisant la *déviance résiduelle* par ses *degrés de liberté* = 41.44 / 18 = 2.3 \>\> 1. **Nous sommes dans une situation de surdispersion.** Ajustons alors un modèle quasi-poisson à la place pour tenir compte de cette surdispersion.
 
@@ -183,7 +183,7 @@ $$
 
 Vous voyez maintenant pourquoi les modèles avec fonctions de lien log sont considérés comme **multiplicatifs**, parce qu'une fois transformés, ils font apparaître la multiplication des termes au lieu de leur addition. Si un paramètre $\beta_i$ vaut zéro alors $e^{\beta_i}$ vaut un et le terme ne joue plus puisqu'il multiplie la valeur par un. Aussi, nous devons considérer l'exponentielle des paramètres. Donc, l'effet culture se marque comme $e^{\beta_2} = e^{1.92} = 6.82$. Donc, en culture, l'abondance de *L. perenne* est 6.82 fois plus abondante.
 
-Pour interpréter $\beta_3$ à $\beta_5$, nous devons nous souvenir que `Moisture` est un facteur ordonné et que les matrices de contraste pour ce type de variable sont polynomiales faisant ressortir un effet linéaire ($\beta_3$), conique ($\beta_4$) et quadratique ($\beta_5$). Ici, des trois, seul l'effet linéaire est significatif au seuil $\alpha$ de 5%. Le paramètre est estimé à -1.07 et donc l'effet est de $e^{-1.07} = 0.34$. Notez au passage que des paramètres négatifs mènent à des multiplications par des nombres positifs inférieurs à un, soit à des **divisions**. Ainsi, cela signifie que l'abondance de *L. perenne* **diminue** avec le niveau d'humidité, ce qui nous mène à diviser son abondance par un terme qui est exponentiellement proportionnel avec le niveau d'humidité (oui, je sais, ce n'est pas facile... vous avez intérêt à relire la dernière phrase len-te-ment !).
+Pour interpréter $\beta_3$ à $\beta_5$, nous devons nous souvenir que `Moisture` est un facteur ordonné et que les matrices de contraste pour ce type de variable sont polynomiales faisant ressortir un effet linéaire ($\beta_3$, noté Moisture~.L~), conique ($\beta_4$, noté Moisture~.C~) et quadratique ($\beta_5$, noté Moisture~.Q~). Ici, des trois, seul l'effet linéaire est significatif au seuil $\alpha$ de 5%. Le paramètre est estimé à -1.07 et donc l'effet est de $e^{-1.07} = 0.34$. Notez au passage que des paramètres négatifs mènent à des multiplications par des nombres positifs inférieurs à un, soit à des **divisions**. Ainsi, cela signifie que l'abondance de *L. perenne* **diminue** avec le niveau d'humidité, ce qui nous mène à diviser son abondance par un terme qui est exponentiellement proportionnel avec le niveau d'humidité (oui, je sais, ce n'est pas facile... vous avez intérêt à relire la dernière phrase len-te-ment !).
 
 Enfin, $\beta_1$ est également significatif au seuil $\alpha$ de 5% et est négatif. Cela signifie que l'abondance de *L. perenne* diminue avec l'augmentation de la couche A1 comme $e^{-0.34} = 0.71$. Nous l'avions déjà remarqué sur le graphique. L'ordonnée à l'origine $\alpha$ n'est, par contre, plus significativement différente de zéro ici.
 
@@ -217,7 +217,7 @@ new_sites$pred <- predict(dune_glm2,
 new_sites
 ```
 
-Le modèle prédit pour une culture avec un sol ayant une épaisseur A1 de 3 cm et une humidité de 1 environ sept plants par quadrats. Pour les mêmes caractéristiques, il en prédit un seul en site de conservation. Pour finir, voici un graphique qui permet de mieux comprendre. Comparez les prédictions avec les valeurs observées dans ce graphique :
+Le modèle prédit pour une culture avec un sol ayant une épaisseur A1 de 3 cm et une humidité de 1 environ sept plants par quadrat. Pour les mêmes caractéristiques, il en prédit un seul en site de conservation. Pour finir, voici un graphique qui permet de mieux comprendre. Comparez les prédictions avec les valeurs observées dans ce graphique :
 
 ```{r}
 chart(data = dune, Lolipere ~ A1 %size=% Moisture %col=% Management) +
@@ -226,7 +226,7 @@ chart(data = dune, Lolipere ~ A1 %size=% Moisture %col=% Management) +
        y = "Abondance [nbr de plants/quadrat]")
 ```
 
-Nous voyons bien que le ray-grass n'est abondant (ou même présent) qu'en zone de culture et que l'humidité faible et l'épaisseur faible de la couche A1 sont nécessaires pour qu'on le trouve en quantité. Les données restent un peu limitées pour bien mettre en évidence les différents effets et il faudrait mesurer plus de sites pour confirmer ces résultats.
+Nous voyons bien que le ray-grass n'est abondant (ou même présent) qu'en zone de culture et que l'humidité faible et l'épaisseur faible de la couche A1 sont nécessaires pour qu'on le trouve en quantité. Les données restent un peu limitées pour bien mettre en évidence les différents effets et il faudrait mesurer plus de sites pour confirmer ces résultats, mais notre modèle permet quand même de tirer des conclusions interessantes avec seulement 20 quadrats mesurés.
 
 ### GLM binomiale avec proportions : maturation d'ovocytes
 
@@ -251,7 +251,7 @@ chart(data = ovo, prop ~ hypo) +
        y = "Fraction d'ovocytes matures")
 ```
 
-La GLM binomiale peut être utilisée ici avec une fonction de lien logit qui ajustera une courbe logistique en forme de S dans ces données.
+La GLM binomiale peut être utilisée avec une fonction de lien logit qui ajustera une courbe logistique en forme de S dans ces données, même si cette forme en S est peu marquée semble-t-il ici.
 
 ```{r, warning=FALSE}
 ovo_glm <- glm(data = ovo, prop ~ hypo,
@@ -278,9 +278,11 @@ chart(data = ovo, prop ~ hypo) +
        y = "Fraction d'ovocytes matures")
 ```
 
+La forme en S du modèle est ici bien visible, et elle s'ajuste relativement bien dans les données.
+
 ### GLM binomiale avec variable binaire : acariens
 
-Comme troisième exemple, nous allons travailler sur des données de présence/absence (variable binaire, donc qualitative à deux niveaux) de larves d'acariens dans des sols. Les jeux de données `mite` et `mite.env` du package {vegan} répertorient divers acariens dans des sols, ainsi que quelques-unes des propriétés de ces sols. Nous tranformons `Oribatl1`, les larves d'acariens *Oribatidae* en présence/absence et conservons `WatrCont` la teneur en eau en g/L ainsi que la topologie du sol (`Topo`, une variable qualitative à deux modalités `Blanket` ou `Hummock`) comme variables explicatives.
+Comme troisième exemple, nous allons travailler sur des données de présence/absence (variable binaire, donc qualitative à deux niveaux) de larves d'acariens dans des sols. Les jeux de données `mite` et `mite.env` du package {vegan} répertorient divers acariens dans des sols, ainsi que quelques-unes des propriétés de ces sols. Nous transformons `Oribatl1`, les larves d'acariens *Oribatidae* en présence/absence et conservons `WatrCont` la teneur en eau en g/L ainsi que la topologie du sol (`Topo`, une variable qualitative à deux modalités `Blanket` ou `Hummock`, que vous pouvez interpréter comme terrain plat ou accidenté) comme variables explicatives.
 
 ```{r}
 mite <- sbind_cols(
@@ -375,6 +377,8 @@ mutate(mite, Ori = as.numeric(Oribatl1 == "present")) %>.%
   labs(x = "Teneur en eau [g/L]", y = "Probabilité de présence")
 ```
 
+Les courbes ne sont pas proches des points. Comment pouvons-nous comprendre cela ? Rappelons-nous que ces courbes représentent, en fait, la **probabilité** d'être "1" (présence) en fonction de la teneur en eau du sédiment sur l'axe X. les points représentent les observations de type présence/absence encodées comme "1" ou "0". Sur l'axe Y, on a la probabilité de présence. Donc, si la courbe prend une valeur Y de 0.75, cela signifie qu'à cette valeur d'humidité sur X, on s'attend à voir les 3/4 des points comme "1", présence et 1/4 des points comme "0", absence. Vous pouvez refaire le même raisonnement tout au long de l'évolution des courbes.
+
 ##### À vous de jouer ! {.unnumbered}
 
 `r learnr("B04La_glm", title = "Modèle linéaire généralisé", toc = "Modèle linéaire généralisé")`
@@ -384,7 +388,9 @@ mutate(mite, Ori = as.numeric(Oribatl1 == "present")) %>.%
 
 Dans le cours `r course_link("SDD I module 10", course = 1, "effetsaleatoires")`, nous avons découvert les **effets aléatoires** dans les modèles comme étant une variable ayant une distribution statistique connue (souvent normale) dont on tire un échantillon aléatoire dans notre jeu de données. Cela se produit lorsque les modalités de la variable facteur utilisée sont très nombreuses et que seulement un petit nombre tiré au hasard est étudié. L'exemple que nous avions donné était le cas d'antibiotiques testés dans différentes boîtes de Pétri. Nous avions un nombre **restreint et fixe** d'antibiotiques, mais les boîtes de Pétri utilisées représentent en quelque sort un **échantillon** parmi la population statistique de boîtes de Pétri. De plus, l'effet "boîte de Pétri" n'est pas le sujet principal de l'étude. Comme nous suspections que la boîte de Pétri pouvait aussi avoir un impact sur le résultat, nous l'avons incluse dans notre modèle, mais comme **effet aléatoire**. Lorsque nous mélangeons un ou plusieurs effets aléatoires avec des effets fixes, nous obtenons alors un **modèle linéaire mixte** (LMM) ou un **modèle linéaire généralisé mixte** (GLMM) en fonction de la variable réponse $y$ utilisée et la fonction de lien.
 
-Prenons un exemple concret. Des scientifiques veulent mesurer l'effet d'une concentration croissante en éthanol dans le liquide séminal de l'homme sur la mobilité des spermatozoïdes. La question est évidemment en relation avec la consommation d'alcool et la fertilité, mais aussi avec des protocoles expérimentaux qui utilisent des molécules dissoutes dans l'éthanol. Des spermatozoïdes de huit patients différents sont soumis à des concentrations de 0, 0,1, 0,5, 1 et 2% d'éthanol pendant 4h. Ensuite, le nombre de spermatozoïdes mobiles est décompté sous microscope. Plutôt que d'encoder une variable binaire qui prend 1 si un spermatozoïde est mobile et 0 dans le cas contraire, un tableau plus compact qui reprend le nombre de spermatozoïdes mobiles et le total des spermatozoïdes comptés pour chaque échantillon des huit donneurs à chaque concentration d'éthanol. Voici les résultats obtenus :
+Prenons un exemple concret. Des scientifiques veulent mesurer l'effet d'une concentration croissante en éthanol dans le liquide séminal de l'homme sur la mobilité des spermatozoïdes. La question est évidemment en relation avec la consommation d'alcool et la fertilité, mais aussi avec des protocoles expérimentaux qui utilisent des molécules dissoutes dans l'éthanol. Des spermatozoïdes de huit patients différents sont soumis à des concentrations de 0, 0,1, 0,5, 1 et 2% d'éthanol pendant 4h. Ensuite, le nombre de spermatozoïdes mobiles est dénombré sous microscope. Plutôt que d'encoder une variable binaire qui prend 1 si un spermatozoïde est mobile et 0 dans le cas contraire, un tableau plus compact qui reprend le nombre de spermatozoïdes mobiles et le total des spermatozoïdes dénombrés pour chaque échantillon des huit donneurs à chaque concentration d'éthanol. Voici les résultats obtenus :
+
+<!-- TODO: ajouter la ref pour ces données -->
 
 ```{r}
 spe <- dtbl_rows(
@@ -439,7 +445,7 @@ spe <- smutate(spe, mob_frac = mobile / total, donor = as.factor(donor), conc = 
 head(spe)
 ```
 
-La variable réponse est ici, en réalité, une variable binaire même si elle est encodée autrement. Pour chaque spermatozoïde observé, on peut avoir un résultat 0 (immobile) ou 1 (mobile), et la distribution peut être considérée comme une binomiale avec le nombre d'essais égal *n* égal à 1 (voir cours `r course_link("SDD I module 7", course = 1, "distribution-binomiale")`). On parle aussi de distribution de Bernouilli dans le cas particulier d'une distribution binomiale à un seul essai. La mesure est **répétée** un nombre de fois spécifié dans notre tableau dans la colonne `total` pour chaque échantillon traité (8 donneurs x 5 concentrations d'éthanol = 40 échantillons). Donc, nous sommes dans une situation différente du jeu de données `mite` parce qu'il **n'y a pas indépendance entre les observations pour chaque spermatozoïde**. Plusieurs dizaines à centaines d'entre eux sont dénombrés à chaque fois dans le **même échantillon**. Les mesures répétées pour un même sujet d'expérience et lorsque le sujet de l'expérience est lui-même un facteur aléatoire sont automatiquement prises en compte correctement dans un modèle mixte.
+La variable réponse est ici, en réalité, une variable binaire même si elle est encodée autrement. Pour chaque spermatozoïde observé, on peut avoir un résultat 0 (immobile) ou 1 (mobile), et la distribution peut être considérée comme une binomiale avec le nombre d'essais *n* égal à 1 (voir cours `r course_link("SDD I module 7", course = 1, "distribution-binomiale")`). On parle aussi de distribution de Bernouilli dans le cas particulier d'une distribution binomiale à un seul essai. La mesure est **répétée** un nombre de fois spécifié dans notre tableau dans la colonne `total` pour chaque échantillon traité (8 donneurs x 5 concentrations d'éthanol = 40 échantillons). Donc, nous sommes dans une situation différente du jeu de données `mite` parce qu'il **n'y a pas indépendance entre les observations pour chaque spermatozoïde**. Plusieurs dizaines à centaines d'entre eux sont dénombrés à chaque fois dans le **même échantillon**. Les mesures répétées pour un même sujet d'expérience et lorsque le sujet de l'expérience est lui-même un facteur aléatoire sont automatiquement prises en compte correctement dans un modèle mixte.
 
 ##### À vous de jouer ! {.unnumbered}
 
@@ -512,22 +518,22 @@ Les pentes sont donc bien ici toutes identiques cette fois, et nous avons montr�
 
 ### Intervalles de confiance des paramètres
 
-Nous pouvons aussi calculer l'intervalle de confiance sur ces paramètres avec la fonction `confint()`.
+Nous pouvons calculer l'intervalle de confiance sur ces paramètres avec la fonction `confint()`.
 
 ```{r}
 confint(spe_m2)
 ```
 
-L'intervalle de confiance (à 95% par défaut, aussi noté IC ici) nous donne une information complémentaire sur l'estimation des paramètres. Ainsi la pente `conc` qui caractérise la diminution de mobilité spermatique en fonction de la concentration en éthanol a été estimée dans `spe_m2` (voir le résumé plus haut) à -0.30. Son intervalle de confiance à 95% indique que la vraie valeur se trouve en réalité entre - 0.39 et -0.22 avec un degré de significativité $\alpha$ de 5%. Nous pouvons aussi utiliser cette information pour déterminer si le paramètre est significativement différent de zéro. Il le sera, en effet, lorsque l'IC ne contiendra pas zéro, ce qui est le cas ici. Nous pouvons donc en conclure que l'éthanol a un effet négatif sur la mobilité spermatique chez l'homme.
+L'intervalle de confiance (à 95% par défaut, aussi noté IC) nous donne une information complémentaire sur l'estimation des paramètres. Ainsi la pente `conc` qui caractérise la diminution de mobilité spermatique en fonction de la concentration en éthanol a été estimée dans `spe_m2` (voir le résumé plus haut) à -0.30. Son intervalle de confiance à 95% indique que la vraie valeur se trouve en réalité entre - 0.39 et -0.22 avec un degré de significativité $\alpha$ de 5%. Nous pouvons aussi utiliser cette information pour déterminer si le paramètre est significativement différent de zéro. Il le sera, en effet, lorsque l'IC ne contiendra pas zéro, ce qui est le cas ici. Nous pouvons donc en conclure que l'éthanol a un effet négatif sur la mobilité spermatique chez l'homme.
 
 Dans le tableau des intervalles de confiance, `.sig01` correspond à la première variance (et seule ici) estimée pour le facteur aléatoire `donor` dont la valeur était estimée à 0,18 et donc, l'écart type est de 0,42 (racine carrée de la variance). L'IC 95% sur cet écart type est calculé comme compris entre 0.27 et 0.77. Il est donc lui-même également significatif puisqu'il ne comprend pas zéro.
 
 ```{block, type='warning'}
 Deux pièges ici :
 
-1. Si le terme relatif à `donor` n'était pas significatif, nous pourrions être tentés de simplifier le modèle en l'éliminant et en effectuant alors une modèle linéaire généralisé classique entre `cbind(mobile; total - mobile)` et `conc`. Mais nous ne pouvons pas faire une telle simplification car le facteur fixe permet aussi de prendre en compte la **répétition** des mesures dans les mêmes échantillons. Si nous simplifions le modèle, nous considérerions alors que chaque mesure est indépendante des autres, sans prendre en compte que nous n'avons que huit donneurs en réalité. Ce serait faire de la **pseudo-réplication !**
+1. Si le terme relatif à `donor` n'était pas significatif, nous pourrions être tentés de simplifier le modèle en l'éliminant et en effectuant alors une modèle linéaire généralisé classique entre `cbind(mobile, total - mobile)` et `conc`. Mais nous ne pouvons pas faire une telle simplification car le facteur fixe permet aussi de prendre en compte la **répétition** des mesures dans les mêmes échantillons. Si nous simplifions le modèle, nous considérerions alors que chaque mesure est indépendante des autres, sans prendre en compte que nous n'avons que huit donneurs en réalité. Ce serait faire de la **pseudo-réplication !**
 
-2. D'un autre côté, les modèles mixtes n'aiment pas les paramètres (en particulier ceux des effets aléatoires) qui sont proches de la marge, c'est-à-dire, proches des valeurs limites. Ainsi, si une variance tend vers zéro, l'ajustement du modèle pourra produire des messages d'avis indiquant la présence de **singularités**, il ne pourra pas converger, ou il tombera sur d'autres erreurs encore. Les modèles mixtes sont effectivement plus difficiles à ajustés que leur homologues classiques. Dans ce cas, tentez un modèle plus simple, si vous le pouvez, ou jonglez avec les paramètres d'ajustement expliqués dans la page d'aide de `?lme4::glmer`.
+2. D'un autre côté, les modèles mixtes n'aiment pas les paramètres (en particulier ceux des effets aléatoires) qui sont proches de la marge, c'est-à-dire, proches des valeurs limites. Ainsi, si une variance tend vers zéro, l'ajustement du modèle pourra produire des messages d'avis indiquant la présence de **singularités**, il ne pourra pas converger, ou il butera sur d'autres erreurs encore. Les modèles mixtes sont effectivement plus difficiles à ajustés que leur homologues classiques. Dans ce cas, tentez un modèle plus simple, si vous le pouvez, ou jonglez avec les paramètres d'ajustement expliqués dans la page d'aide de `?lme4::glmer`.
 ```
 
 ### Difficultés d'ajustement
@@ -655,7 +661,7 @@ Donc, si nous voulons déterminer de combien la mobilité des spermatozoïdes di
 mobi[1] - mobi[4]
 ```
 
-La diminution estimée est de 6,5%.
+La diminution estimée est de 5,6%.
 
 ```{=html}
 <!--
