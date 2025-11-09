@@ -29,7 +29,7 @@ Pour étudier le rendement de sa photosynthèse, c'est-à-dire la part du rayonn
 
 ![Diving PAM en action.](https://bionef.fr/wp-content/uploads/2021/01/diving-pam-II_02xl-14fe3e4b-768x480.jpg)
 
-Cet appareil est capable de déterminer le taux de transfert des électrons (ETR en µmol électrons/m^2^/s) par l'analyse de la fluorescence réémise par la plante lorsque ses photosites sont excités par une lumière monochromatique pulsée [@diving_pam2018]. Une façon de déterminer la réponse de la plante en rendement photosynthétique en fonction de l'intensité de la lumière reçue est de mesurer successivement l'ETR pour différentes intensités de lumière. En anglais cela s'appelle la "Rapid Light Curve" ou RLC en abrégé. Comme toutes les longueurs d'ondes lumineuses ne sont pas utilisables par la chlorophylle, l'intensité lumineuse est exprimée dans une unité particulière, le "PAR" ou "Photosynthetically Active Radiation" en µmol photons/m^2^/s qui ne prend en compte que les rayons utilisables. Une RLC représente donc la variation de l'ETR en fonction des PAR[^05-reg-non-lineaire-1]. Une RLC typique commence par une relation quasi linéaire aux faibles intensités, pour s'infléchir et atteindre un plateau de rendement maximum. Au-delà, si l'intensité lumineuse augmente encore, des phénomènes de photoinhibition apparaissent et le rendement diminue dans une troisième phase. Voici une RLC mesurée à l'aide du diving PAM sur une feuille de *P. oceanica*.
+Cet appareil est capable de déterminer le taux de transfert des électrons (ETR en µmol électrons/m^2^/s) par l'analyse de la fluorescence émise par la plante lorsque ses photosites sont excités par une lumière monochromatique pulsée [@diving_pam2018]. Une façon de déterminer la réponse de la plante en rendement photosynthétique en fonction de l'intensité de la lumière reçue est de mesurer successivement l'ETR pour différentes intensités de lumière. En anglais cela s'appelle la "Rapid Light Curve" ou RLC en abrégé. Comme toutes les longueurs d'ondes lumineuses ne sont pas utilisables par la chlorophylle, l'intensité lumineuse est exprimée dans une unité particulière, le "PAR" ou "Photosynthetically Active Radiation" en µmol photons/m^2^/s qui ne prend en compte que les rayons utilisables. Une RLC représente donc la variation de l'ETR en fonction des PAR[^05-reg-non-lineaire-1]. Une RLC typique commence par une relation quasi linéaire aux faibles intensités, pour s'infléchir et atteindre un plateau de rendement maximum. Au-delà, si l'intensité lumineuse augmente encore, des phénomènes de photoinhibition apparaissent et le rendement diminue dans une troisième phase. Voici une RLC mesurée à l'aide du diving PAM sur une feuille de *P. oceanica*.
 
 [^05-reg-non-lineaire-1]: Techniquement, l'ETR nécessite d'effectuer des mesures après stabilisation de la photosynthèse, ce qui prend plusieurs minutes. Donc, une courbe *rapide* est discutable de ce point de vue, mais reste un outil utile en écophysiologie où la comparaison de différentes RLCs indique un changement de capacité photosynthétique de la plante.
 
@@ -51,8 +51,8 @@ rlc <- labelise(rlc,
     etr = "ETR",
     par = "PAR"),
   units = list(
-    etr = "µmol électrons/m^2/s",
-    par = "µmol photons/m^2/s")
+    etr = "µmol électrons/m²/s",
+    par = "µmol photons/m²/s")
 )
 chart(data = rlc, etr ~ par) +
   geom_point()
@@ -65,7 +65,7 @@ rlc_lm <- lm(data = rlc, etr ~  par + I(par^2) + I(par^3))
 chart(rlc_lm)
 ```
 
-La régression polynomiale tente maladroitement de s'ajuster dans les données, mais est incapable de retranscrire les trois phases correctement. En particulier, la troisième est incorrecte puisque le modèle semble indiquer une reprise du rendement aux intensités les plus élevées. **Une représentation incorrecte est à craindre lorsque le modèle mathématique utilisé ne représente pas les différentes caractéristiques du phénomène étudié. L'utilisation d'un modèle adéquat est possible ici seulement par régression non linéaire.** En effet, aucune transformation monotone croissante ou décroissante ne peut linéariser ce type de données.
+La régression polynomiale tente maladroitement de s'ajuster dans les données, mais est incapable de retranscrire les trois phases correctement. En particulier, la troisième est incorrecte puisque le modèle semble indiquer une reprise du rendement aux intensités les plus élevées. **Une représentation incorrecte est à craindre lorsque le modèle mathématique utilisé ne représente pas les différentes caractéristiques du phénomène étudié. L'utilisation d'un modèle mécaniste adéquat est possible ici seulement par régression non linéaire.** En effet, aucune transformation monotone croissante ou décroissante ne peut linéariser ce type de données.
 
 ```{block, type='info'}
 **Quand passer à la régression non linéaire ?**
@@ -264,7 +264,7 @@ Au final, l'ajustement d'un modèle non linéaire par les moindres carrés est u
 
 Dans certains cas, il existe des petites astuces de calcul pour converger directement vers la solution, ou du moins, pour calculer des valeurs de départ très proches de la solution recherchée de sorte que l'algorithme de recherche pourra converger très rapidement. Par exemple, lorsqu'il est possible de linéariser le modèle en transformant les données. Dans ce cas, une bonne estimation des valeurs de départ des paramètres peut être obtenue en linéarisant la relation et en calculant les paramètres par régression linéaire. Ensuite, les paramètres obtenus sont retransformés dans leur forme initiale, et ils sont utilisés comme valeurs de départ.
 
-Par exemple, si nous décidons d'ajuster un modèle allométrique de Huxley, de type $y = a x^b$[^05-reg-non-lineaire-4], nous pouvons linéariser la relation en transformant les deux variables en logarithmes. En effet, $\log(y) = \log(a x^b)$, ce qui est équivalent à une droite en développant: $\log(y) = b \log(x) + \log(a)$. Le paramètre $b$ devient donc la pente de la droite, et $\log(a)$ devient l'ordonnée à l'origine dans le modèle linéaire transformé. Une fois la droite ajustée, on a directement la valeur de $b$, et il suffit de calculer l'exponentielle de l'ordonnée à l'origine pour obtenir $a$. Toutefois, comme les résidus sont différents dans la relation non transformée initiale, il ne s'agit pas de la solution recherchée, mais d'un bon point de départ très proche de cette solution. On prendra les valeurs de $a$ et de $b$ ainsi calculées par la droite en double logarithme comme point de départ, et on laissera l'algorithme de recherche du minimum terminer le travail en mode non linéaire et donc, non transformé. En fait, c'est exactement de cette façon que les modèles dits **selfStart** fonctionnent dans R. Plus qu'une fonction, il s'agit en réalité d'un programme complet qui contient :
+Par exemple, si nous décidons d'ajuster un modèle allométrique de Huxley, de type $y = a x^b$[^05-reg-non-lineaire-4], nous pouvons linéariser la relation en transformant les deux variables en logarithmes. En effet, $\log(y) = \log(a x^b)$, ce qui est équivalent à une droite en développant : $\log(y) = b \log(x) + \log(a)$. Le paramètre $b$ devient donc la pente de la droite, et $\log(a)$ devient l'ordonnée à l'origine dans le modèle linéaire transformé. Une fois la droite ajustée, on a directement la valeur de $b$, et il suffit de calculer l'exponentielle de l'ordonnée à l'origine pour obtenir $a$. Toutefois, comme les résidus sont différents dans la relation non transformée initiale, il ne s'agit pas de la solution recherchée, mais d'un bon point de départ très proche de cette solution. On prendra les valeurs de $a$ et de $b$ ainsi calculées par la droite en double logarithme comme point de départ, et on laissera l'algorithme de recherche du minimum terminer le travail en mode non linéaire et donc, non transformé. En fait, c'est exactement de cette façon que les modèles dits **selfStart** fonctionnent dans R. Plus qu'une fonction, il s'agit en réalité d'un programme complet qui contient :
 
 [^05-reg-non-lineaire-4]: Un modèle **selfStart** est disponible pour cette fonction dans le package {vegan}, voir `?vegan::SSarrhenius()`.
 
@@ -279,7 +279,7 @@ Toutes les fonctions **selfStart** ont un nom commençant par `SS`. Nous pouvons
 apropos("^SS", ignore.case = FALSE)
 ```
 
-Ensuite, nous recherchons l'aide relative à ces fonctions, par exemple via `?SSasymp` (note : il peut y avoir des faux positifs, comme `SSD` ici qui n'a rien à voir avec les fonctions **selfStart**).
+Ensuite, nous recherchons l'aide relative à ces fonctions, par exemple `?SSasymp` (note : il peut y avoir des faux positifs, comme `SSD` ici qui n'a rien à voir avec les fonctions **selfStart**).
 
 ## Modèles courants en biologie {#modelesbio}
 
@@ -373,7 +373,7 @@ Il existe aussi un modèle bi-exponentiel qui combine deux signaux exponentiels 
 
 ### Courbe logistique
 
-Le modèle exponentiel décrit une croissance infinie sans aucune contrainte. Ce n'est pas une hypothèse réaliste. En pratique, la croissance est limitée par les ressources disponibles. Verhulst (1838), en travaillant aussi sur la croissance de populations, propose un modèle qui contient un terme d'auto-limitation $[y_\infty – y (t)] / y_\infty$ qui représente une quelconque limite théorique des ressources disponibles :
+Le modèle exponentiel décrit une croissance infinie sans aucune contrainte. Ce n'est pas une hypothèse réaliste. En pratique, la croissance est limitée par les ressources disponibles. Verhulst (1838), en travaillant aussi sur la croissance de populations, a développé un modèle qui contient un terme d'auto-limitation $[y_\infty – y (t)] / y_\infty$ qui représente une quelconque limite théorique des ressources disponibles :
 
 $$\frac{dy(t)}{dt} = k \ \frac{y_\infty - y(t)}{y_\infty} \ y(t) = - \frac{k}{y_\infty} \ y(t)^2 + k \ y(t)$$
 
@@ -381,7 +381,7 @@ Lorsque l'on résout et simplifie cette équation différentielle, on obtient :
 
 $$y(t) = \frac{y_\infty}{1 + e^{-k \ (t - t_0)}}$$
 
-Ceci est une des formes de la courbe logistique. Cette fonction a deux asymptotes horizontales en $y(t) = 0$ et $y(t) = y_\infty$ (voir schéma ci-dessous) et c'est une sigmoïde symétrique autour du point d'inflexion (les deux branches du S sont identiques). Le modèle **selfStart** correspondant dans R s'appelle `SSlogis()`. Ses paramètres sont `Asym` (= $y_\infty$), `xmid` (= $t_0$), et `scal` (= $k$).
+Ceci est une des formes de la *courbe logistique*. Cette fonction a deux asymptotes horizontales en $y(t) = 0$ et $y(t) = y_\infty$ (voir schéma ci-dessous) et c'est une sigmoïde symétrique autour du point d'inflexion (les deux branches du S sont identiques). Le modèle **selfStart** correspondant dans R s'appelle `SSlogis()`. Ses paramètres sont `Asym` (= $y_\infty$), `xmid` (= $t_0$), et `scal` (= $k$).
 
 Voici le graphique d'une courbe logistique avec $y_\infty = 0,95$, $t_0 = 5$ et $k = 1$.
 
@@ -470,7 +470,7 @@ chart(data = gomp_data, y ~ t) +
 
 ### Modèles de von Bertalanffy
 
-Le modèle de von Bertalanffy, parfois appelé Brody-Bertalanffy (d'après les travaux de von Bertalanffy et Brody) ou modèle de Pütter (dans Ricker, 1979 notamment), est la première courbe de croissance qui a été élaborée spécifiquement pour décrire la croissance somatique individuelle. Il est basé sur une analyse bioénergétique simple. Un individu est vu comme un réacteur biochimique dynamique où les entrées (anabolisme) sont en compétition avec les sorties (catabolisme). Le résultat de ces deux flux étant la croissance. L'anabolisme est plus ou moins proportionnel à la respiration et cette dernière est proportionnelle à une surface pour beaucoup d'animaux (la surface développée des poumons ou des branchies), soit encore, les 2/3 de la masse. Le catabolisme est toujours proportionnel à la masse. Ces relations mécanistiques sont rassemblées dans l'équation différentielle suivante où $y(t)$ mesure l'évolution d'un volume ou d'un poids au cours du temps :
+Le modèle de von Bertalanffy, parfois appelé Brody-Bertalanffy (d'après les travaux de von Bertalanffy et Brody) ou modèle de Pütter (dans Ricker, 1979 notamment), est la première courbe de croissance qui a été élaborée spécifiquement pour décrire la croissance somatique individuelle. Il est basé sur une analyse bioénergétique simple. Un individu est vu comme un réacteur biochimique dynamique où les entrées (anabolisme) sont en compétition avec les sorties (catabolisme). Le résultat de ces deux flux étant la croissance. L'anabolisme est plus ou moins proportionnel à la respiration et cette dernière est proportionnelle à une surface pour beaucoup d'animaux (la surface développée des poumons ou des branchies), soit encore, les 2/3 de la masse. Le catabolisme est toujours proportionnel à la masse. Ces relations mécanistes sont rassemblées dans l'équation différentielle suivante où $y(t)$ mesure l'évolution d'un volume ou d'un poids au cours du temps :
 
 $$\frac{dy(t)}{dt} = a \ y(t)^{2/3} - b \ y(t)$$
 
@@ -489,9 +489,9 @@ Un graphique des deux modèles est présenté ci-dessous. Le modèle de von Bert
 -   `SSAsymp()` est définie comme $y(t) = y_\infty + (R_0 - y_\infty) \ e^{-e^{lrc} \cdot t}$. Par rapport à la forme habituelle, outre l'astuce de $e^{lrc}$ à la place de $k$, $t_0$ est également reparamétré en $R_0$ qui représente la taille initiale au temps $t = 0$. Cela met l'accent sur cette "taille à la naissance".
 
 ```{block, type='info'}
-**Reparamétriser un modèle** consiste à exprimer la fonction mathématique qui le représente d'une façon différente. Étant donné que l'interprétation biologique des paramètres fait partie des objectifs de la méthode. On parle d'approche **mécanistique**, qui vise à décrypter le mécanisme sous-jacent *versus* une approche purement **empirique** basée sur les données uniquement avec un modèle polynomial tout venant, par exemple.
+**Reparamétriser un modèle** consiste à exprimer la fonction mathématique qui le représente d'une façon différente. Étant donné que l'interprétation biologique des paramètres fait partie des objectifs de la méthode. On parle d'approche **mécaniste**, qui vise à décrypter le mécanisme sous-jacent *versus* une approche purement **empirique** basée sur les données uniquement avec un modèle polynomial tout venant, par exemple.
 
-Ainsi, L'équation du modèle de von Bertalanffy présentée au début montre une paramétrisation "classique", implémentée dans `SSasympOff()` alors que `SSasymp()` met la taille initiale en évidence via le paramètre $R_0$.
+Ainsi, L'équation du modèle de von Bertalanffy présentée au début montre une paramétrisation "classique", implémentée dans `SSasympOff()` alors que `SSasymp()` met la taille initiale en évidence au travers du paramètre $R_0$.
 ```
 
 -   `SSasympOrig()` force le modèle à passer par l'origine des axes {0, 0}. Il n'y a donc plus que deux paramètres `Asym` = $y_\infty$ et `lrc` tel que $k = e^{lrc}$. Ce modèle simplifié est souvent utile en pratique. Il a l'avantage d'être simple, avec seulement deux paramètres. Il est l'équivalent d'une droite forcée à zéro pour le modèle von Bertalanffy. Si `R0` dans `SSasymp()` ou `c0` dans `SSasympOff()` ne sont pas significativement différents de zéro (test *t* de Student dans le tableau des paramètres), vous pouvez envisager de simplifier le modèle vers `SSasympOrig()`.
@@ -681,7 +681,7 @@ urchins_plot <- chart(data = urchins, diameter ~ age) +
 urchins_plot
 ```
 
-Nous avons ici également représenté les points de manière semi-transparente avec `alpha = 0.2` (transparence de 20%) pour encore mieux mettre en évidence les points de mesures qui se superposent.
+Nous avons ici également représenté les points de manière semi-transparente avec `alpha = 0.2` (transparence de 80%) pour encore mieux mettre en évidence les points de mesures qui se superposent.
 
 Ajustons maintenant un modèle de Gompertz (modèle **selfStart**, notez qu'ici `tabularise()` est capable de calculer l'équation du modèle tout seul) :
 
@@ -713,7 +713,7 @@ urchins_plot +
   labs(color = "Modèle")
 ```
 
-Notez qu'ici, la couleur a été incluse dans le "mapping" (argument `mapping =`) de `stat_function()` en l'incluant dans `aes()`. Cela change fondamentalement la façon dont la couleur est perçue par {ggplot2}. Dans ce cas-ci, la valeur est interprétée non comme une couleur à proprement parler, mais comme un niveau (une couche) à inclure dans le graphique et à reporter via une légende. Ensuite, à l'aide de `labs()` on change le titre de la légende relatif à la couleur par un nom plus explicite : "Modèle".
+Notez qu'ici, la couleur a été incluse dans le "mapping" (argument `mapping =`) de `stat_function()` en l'incluant dans `aes()`. Cela change fondamentalement la façon dont la couleur est perçue par {ggplot2}, le moteur graphique utilisé par `chart()`. Dans ce cas-ci, la valeur est interprétée non comme une couleur à proprement parler, mais comme un niveau (une couche) à inclure dans le graphique et à reporter dans une légende. Ensuite, à l'aide de `labs()` on change le titre de la légende relative à la couleur par un nom plus explicite : "Modèle".
 
 Nous pouvons comparer ces modèles à l'aide du critère d'Akaike.
 
@@ -732,9 +732,9 @@ Ajoutons ce nouveau modèle sur le graphique :
 
 ```{r}
 urchins_plot +
-  stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), size = 1) +
-  stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), size = 1) +
-  stat_function(fun = as.function(urchins_weib), aes(color = "Weibull"), size = 1) +
+  stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), linewidth = 1) +
+  stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), linewidth = 1) +
+  stat_function(fun = as.function(urchins_weib), aes(color = "Weibull"), linewidth = 1) +
   labs(color = "Modèle")
 ```
 
@@ -775,10 +775,10 @@ Ajoutons ce dernier modèle sur notre graphique (avec des traits un peu plus fin
 
 ```{r}
 urchins_plot +
-  stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), size = 0.7) +
-  stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), size = 0.7) +
-  stat_function(fun = as.function(urchins_weib), aes(color = "Weibull"), size = 0.7) +
-  stat_function(fun = as.function(urchins_rich), aes(color = "Richards"), size = 0.7) +
+  stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), linewidth = 0.7) +
+  stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), linewidth = 0.7) +
+  stat_function(fun = as.function(urchins_weib), aes(color = "Weibull"), linewidth = 0.7) +
+  stat_function(fun = as.function(urchins_rich), aes(color = "Richards"), linewidth = 0.7) +
   labs(color = "Modèle")
 ```
 
