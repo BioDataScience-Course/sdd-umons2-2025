@@ -11,9 +11,10 @@ SciViews::R("model", lang = "fr")
 #' title: "SDD I module 1 : Régression linéaire I"
 #' author: "Ph. Grosjean et G. Engels"
 #' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
 #' ---
-#' 
-#' Transcript du code R de résolution de l'exemple du module.
 ```
 
 ##### Objectifs {.unnumbered}
@@ -868,6 +869,11 @@ if (exists("assignment"))
 Ce premier module vous a permis de prendre connaissance des principes de bases de la modélisation et plus particulièrement de la régression linéaire simple par les moindres carrés. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("01")`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/01-reg-lineaire.html)
+-  [Script R](more/01-reg-lineaire.R){target="top"}
 
 ##### Progression {.unnumbered}
 

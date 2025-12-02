@@ -1,24 +1,27 @@
-# Purl-knit SDD I
+# Purl-spin SDD I
 
 # - Extract important R code from the R Markdown files using purl in an R script
 # - Knit it to PDF using purl
-# - Place these files in ...
+# - Place these files in /more subdirectory of the website
 
 files_noext <- c("01-reg-lineaire")
+output_dir <- "../wp.sciviews.org/htdocs/sdd-umons2-2025/more"
+fs::dir_create(output_dir)
 
 for (f in files_noext) {
-  rmdfile <- paste0(f, ".Rmd")
-  rfile <- paste0(f, "-b.R")
-  mdfile <- paste0(f, "-b.md")
-  htmlfile <- paste0(f, "-b.html")
+  origrmdfile <- paste0(f, ".Rmd")
+  fout <- fs::path(output_dir, f)
+  rfile <- paste0(fout, ".R")
+  rmdfile <- paste0(fout, ".Rmd")
+  pdffile <- paste0(fout, ".pdf")
 
   # Make sure old files are removed
   unlink(rfile)
-  unlink(mdfile)
-  unlink(htmlfile)
+  unlink(rmdfile)
+  unlink(pdffile)
 
   # Extract R code using purl
-  knitr::purl(rmdfile, output = rfile, documentation = 0L)
+  knitr::purl(origrmdfile, output = rfile, documentation = 0L)
 
   # Eliminate multiple empty lines in this R script
   rlines <- readLines(rfile)
@@ -27,6 +30,7 @@ for (f in files_noext) {
   writeLines(rlines_clean, rfile)
 
   # Knit with spin to PDF
-  knitr::spin(rfile, precious = FALSE)
-  unlink(mdfile)
+  knitr::spin(rfile, knit = FALSE)
+  rmarkdown::render(rmdfile, output_format = "html_document")
+  unlink(rmdfile)
 }
