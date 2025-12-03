@@ -1,8 +1,25 @@
 # Régression linéaire II {#lm2}
 
-```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 SciViews::R("model", lang = "fr")
 ```
+
+```{r purlheader, echo=FALSE}
+#' ---
+#' title: "SDD II module 2 : Régression linéaire II"
+#' author: "Ph. Grosjean et G. Engels"
+#' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
+#' ---
+#' 
+#' Document complémentaire au [module 2 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/lm2.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+```
+
 
 ##### Objectifs {.unnumbered}
 
@@ -25,11 +42,15 @@ La régression linéaire est une matière complexe et de nombreux outils existen
 Reprenons la sortie renvoyée par `summary_()` appliquée à un objet `lm` (notez ici que nous analysons la sortie de `summary_()` "brute", mais vous savez comment la transformer en un tableau plus présentable dans un rapport avec `tabularise()`).
 
 ```{r}
-SciViews::R("model", lang = "fr") # Configuration du système
+# Dialecte SciViews::R avec la section dédiée à la modélisation
+SciViews::R("model", lang = "fr")
 
-trees <- read("trees", package = "datasets") # Importation des données
-trees_lm <- lm(data = trees, volume ~ diameter) # Régression
-summary_(trees_lm) # Résumé du modèle
+# Importation des données depuis le package {datasets}
+trees <- read("trees", package = "datasets")
+# Régression (même modèle que dans le module 1)
+trees_lm <- lm(data = trees, volume ~ diameter)
+# Résumé du modèle
+summary_(trees_lm)
 ```
 
 Nous n'avons pas encore étudié la signification des trois dernières lignes de ce résumé. Voici de quoi il s'agit.
@@ -62,7 +83,7 @@ $$R^2 = \frac{SC(rég)}{SC(total)} = 1 - \frac{SC(résidus)}{SC(total)}$$
 
 La valeur du *R*^2^ est comprise entre 0 (lorsque le modèle est très mauvais et n'explique rien) et 1 (lorsque le modèle est parfait et "capture" toute la variance des données ; dans ce dernier cas, tous les résidus valent zéro, donc, tous les points sont sur la droite). **Plus le coefficient *R*^2^ se rapproche de 1, plus le modèle explique bien les données et aura un bon pouvoir de prédiction** pour autant que l'on ne cherche pas à extrapoler des valeurs en dehors du domaine étudié.
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 
 Dans R, le *R*^2^ multiple se réfère simplement au *R*^2^ (ou au *r*^2^ pour les régressions linéaires simples) calculé de cette façon. L'adjectif **multiple** indique que le calcul est valable pour une régression **multiple** tel que nous verrons plus loin.
 
@@ -93,12 +114,14 @@ Il s'agit de la valeur *p* associée à la statistique *F* observée, donc à l'
 Le tableau complet de l'ANOVA pour le modèle peut être obtenu à l'aide de `anova()` :
 
 ```{r}
+# Tableau de l'ANOVA pour notre modèle
 anova(trees_lm)
 ```
 
 Nous y retrouvons les mêmes informations, fortement résumées en une ligne à la fin de la sortie de `summary_()`. Ici elles sont présentées sous une forme plus classique de tableau de l'analyse de la variance. N'oubliez pas `tabularise()` si vous avez besoin d'un tableau propre pour un rapport, aussi bien pour `anova()` :
 
 ```{r, warning=FALSE}
+# Version formatée à l'aide de tabularise()
 anova(trees_lm) |>
   tabularise()
 ```
@@ -106,6 +129,7 @@ anova(trees_lm) |>
 ... que pour `summary_()` :
 
 ```{r, warning=FALSE}
+# Résumé du modèle formaté avec tabuslarise()
 summary_(trees_lm) |>
   tabularise()
 ```
@@ -120,6 +144,7 @@ summary_(trees_lm) |>
 Vous pouvez à présent comparer ces résultats avec une régression réalisée sans la valeur supérieure à 0,5m de diamètre. **Attention ! On ne peut supprimer une valeur sans raison valable.** La suppression de points aberrants doit être justifiée (par exemple, vous pouvez montrer qu'il y a eu une erreur de mesure, ou que l'individu mesuré est anormal ou malade, ou qu'il y a un autre problème dans le jeu de données, problème explicable). La raison de la suppression de ce point ici est liée au fait qu'il n'y a qu'un seul arbre mesuré dont le diamètre soit supérieur à 0.5m. Dès lors, nous pourrions souhaiter réduire l'étendue du jeu de données à des arbres plus petits (mais par la même occasion, nous réduisons aussi la portée du modèle, bien sûr). Le nettoyage du jeu de donnée peut se faire avant l'appel de `lm()`, ou plus simple, nous pouvons utiliser l'argument `subset=` de la fonction.
 
 ```{r}
+# Second modèle ajusté sur un sous-ensemble des données
 trees_lm2 <- lm(data = trees, volume ~ diameter, subset = diameter < 0.5)
 chart(trees_lm2)
 ```
@@ -127,6 +152,7 @@ chart(trees_lm2)
 Le résumé de la régression donne ceci :
 
 ```{r, warning=FALSE}
+# Résumé de notre second modèle
 summary_(trees_lm2) |>
   tabularise()
 ```
@@ -134,6 +160,7 @@ summary_(trees_lm2) |>
 Sans oublier l'analyse des résidus.
 
 ```{r}
+# Analyse des résidus (4 graphiques principaux)
 chart$residuals(trees_lm2)
 ```
 
@@ -157,6 +184,7 @@ $$y = \alpha + \beta_1 \ x_1 + \beta_2 \ x_2 + ... + \beta_n \ x_n + \epsilon $$
 La bonne nouvelle, c'est que tous les calculs, les métriques et les tests d'hypothèses relatifs à la régression linéaire simple se généralisent, tout comme nous sommes passés dans le cours SDD 1 de l'ANOVA à un facteur à un modèle plus complexe à deux ou plusieurs facteurs. Voyons tout de suite ce que cela donne si nous utilisons *à la fois* le diamètre et la hauteur des cerisiers noirs pour prédire leur volume de bois :
 
 ```{r, warning=FALSE}
+# Régression multiple utilisant deux variable indépendantes
 trees_lm3 <- lm(data = trees, volume ~ diameter + height)
 summary_(trees_lm3) |>
   tabularise()
@@ -170,12 +198,12 @@ Notons que la pente relative à la hauteur (0,031) n'est pas significativement d
 
 La représentation de cette régression nécessite un graphique à trois dimensions (diamètre, hauteur et volume) et le modèle représente en fait le meilleur **plan** dans cet espace à trois dimensions. Pour un modèle comportant plus de deux variables indépendantes, il n'est plus possible de représenter graphiquement la régression.
 
-```{r}
+```{r, purl=FALSE}
 library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 car::scatter3d(data = trees, volume ~ diameter + height,
   fit = "linear", residuals = TRUE, bg = "white", axis.scales = TRUE,
   grid = TRUE, ellipsoid = FALSE)
@@ -187,6 +215,7 @@ Utilisez la souris pour zoomer (molette) et pour retourner le graphique (cliquez
 Les graphes d'analyse des résidus sont toujours disponibles :
 
 ```{r}
+# Analyse des résidus synthétique du troisième modèle
 chart$residuals(trees_lm3) 
 ```
 
@@ -203,6 +232,7 @@ Ce modèle est-il préférable à celui n'utilisant que le diamètre ? Le *R*^2
 Dans le cas particulier de modèles **imbriqués** (un modèle *contient* l'autre, mais rajoute un ou plusieurs termes), une ANOVA est possible en décomposant la variance selon les composantes reprises respectivement par chacun des deux modèles. La fonction `anova()` est programmée pour faire ce calcul en lui indiquant chacun des deux objets contenant les modèles à comparer :
 
 ```{r, warning=FALSE}
+# Comparaison de deux modèles imbriqués par ANOVA
 anova(trees_lm, trees_lm3) |>
   tabularise()
 ```
@@ -223,7 +253,7 @@ $$
 
 Un polynôme d'ordre 2 (terme jusqu'au $x^2$) correspond à une parabole dans le plan *xy*. Que se passe-t-il si nous calculons une variable `diameter2` qui est le carré du diamètre et que nous prétendons faire une régression multiple en utilisant à la fois `diameter` et `diameter2` ?
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 trees <- smutate(trees,
   diameter2 = labelise(diameter^2, "Diamètre^2", units = "m^2"))
 summary_(lm(data = trees, volume ~ diameter + diameter2)) |>
@@ -237,6 +267,7 @@ Il semble que R ait pu réaliser cette régression. Cette fois-ci, nous n'avons 
 Devoir calculer les différentes puissances des variables au préalable devient rapidement fastidieux. Heureusement, R autorise de glisser ce calcul *directement dans la formule*, mais à condition de lui indiquer qu'il ne s'agit pas du nom d'une variable `diameter^2`, mais d'un calcul effectué sur `diameter` en utilisant la fonction d'identité `I()`. Ainsi, sans rien calculer au préalable, nous pouvons utiliser la formule `volume ~ diameter + I(diameter^2)`. Le code ci-dessous qui construit le modèle `trees_lm4` l'utilise (seul petit bémol : le code n'est pas encore capable de recalculer les labels et les unités correctement et il présente alors juste le nom de la variable élevée au carré, ce qui n'est déjà pas si mal ; préférez un pré-calcul de `diameter2` comme plus haut pour résoudre le problème en spécifiant vous-même le label et l'unité).
 
 ```{r, warning=FALSE}
+# Modèle polynomial d'ordre 2
 trees_lm4 <- lm(data = trees, volume ~  diameter + I(diameter^2))
 summary_(trees_lm4) |> tabularise()
 chart(trees_lm4)
@@ -247,12 +278,13 @@ Remarquez sur le graphique comment, à présent, la courbe s'ajuste bien mieux d
 L'analyse des résidus nous montre aussi un comportement plus sain.
 
 ```{r}
+# Analyse des résidus synthétique du modèle polynomial
 chart$residuals(trees_lm4)
 ```
 
 Revenons un instant sur le résumé de ce modèle.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 summary_(trees_lm4) |>
   tabularise()
 ```
@@ -270,6 +302,7 @@ De plus, considérez ici la simplification d'un modèle polynomial d'ordre deux 
 Ceci étant précisé, voyons ce que donne la simplification de notre modèle (la formule devient `volume ~ I(diameter^2) - 1` ou `volume ~ I(diameter^2) + 0`, ce qui a une signification identique dans R) :
 
 ```{r, warning=FALSE}
+# Modèle simplifié
 trees_lm5 <- lm(data = trees, volume ~  I(diameter^2) + 0)
 summary_(trees_lm5) |>
   tabularise()
@@ -279,7 +312,7 @@ Notez bien que, quand on réajuste un modèle simplifié, les paramètres restan
 
 Le modèle `trees_lm5` revient aussi (autre point de vue) à transformer d'abord le diamètre en diamètre^2^ et à effectuer ensuite une régression linéaire simple entre deux variables, `volume` et `diametre2`. Nous ne sommes donc plus, ici, dans une régression polynomiale et c'est la raison pour laquelle une simplification de la régression polynomiale d'ordre deux est envisageable exceptionnellement alors qu'elle n'est pas conseillée pour un ordre supérieur :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 trees_lm5bis <- lm(data = trees, volume ~  diameter2 + 0)
 summary_(trees_lm5bis) |>
   tabularise()
@@ -290,6 +323,7 @@ Notez que nous obtenons bien évidemment exactement les mêmes résultats si nou
 Faites bien attention de ne pas comparer le *R*^2^ avec ordonnée à l'origine fixée à zéro ici dans notre modèle `trees_lm5` avec les *R*^2^ des modèles `trees_lm` ou `trees_lm4` qui ont ce paramètre estimé. Rappelez-vous que le *R*^2^ est calculé différemment dans les deux cas ! Donc, nous voilà une fois de plus face à un nouveau modèle pour lequel il nous est difficile de décider s'il est meilleur que les précédents. Avant de comparer, élaborons un tout dernier modèle, le plus complexe, qui reprend à la fois notre régression polynomiale d'ordre deux sur le diamètre **et** la hauteur. Autrement dit, une régression à la fois multiple et polynomiale.
 
 ```{r, warning=FALSE}
+# Modèle multiple et polynomial
 trees_lm6 <- lm(data = trees, volume ~  diameter + I(diameter^2) + height)
 summary_(trees_lm6) |>
   tabularise()
@@ -302,6 +336,7 @@ Ah ha, ceci est bizarre ! Le *R*^2^ ajusté nous indique que le modèle serait 
 Le *R*^2^ (ajusté) n'est pas la seule mesure de la qualité d'ajustement d'un modèle. Il existe d'autres indicateurs. Par exemple, l'**erreur quadratique moyenne**, (*root mean square error*, ou RMSE en anglais) est la racine carrée de la moyenne des résidus au carré. Elle représente en quelque sorte la distance "typique" des résidus. Comme cette distance est exprimée dans les mêmes unités que l'axe *y*, cette mesure est particulièrement parlante. Nous pouvons l'obtenir par exemple comme ceci :
 
 ```{r}
+# Calcul du RMSE pour le modèle linéaire simple
 rmse(trees_lm, trees)
 ```
 
@@ -326,6 +361,7 @@ Dès lors que ce critère peut être calculé (et R le fait pour pratiquement to
 Calculons maintenant les critères d'Akaike pour nos six modèles `trees_lm` à `trees_lm6`...
 
 ```{r}
+# Comparaison de modèles par le critère d'Akaike
 AIC(trees_lm) # Linéaire diamètre
 AIC(trees_lm3) # Multiple diamètre et hauteur
 AIC(trees_lm4) # Polynomial d'ordre 2 diamètre
@@ -342,12 +378,14 @@ D'après ce critère, le modèle linéaire est le moins bon, et le dernier modè
 Dans l'hypothèse où nous déciderions de conserver le modèle `trees_lm6`, en voici l'analyse des résidus qui est bonne dans l'ensemble :
 
 ```{r}
+# Analyse des résidus du modèle multiple et polynomial
 chart$residuals(trees_lm6)
 ```
 
 Naturellement, même si c'est le cas ici, ce n'est pas le modèle le plus complexe qui "gagne" toujours. Même ici, nous pourrions nous demander si le modèle polynomial utilisant uniquement le diamètre ne serait pas plus intéressant en pratique, car son ajustement est tout de même relativement bon (même si son critère d'Akaike est nettement moins en sa faveur), mais d'un point de vue pratique, il nous dispense de devoir mesurer la hauteur des arbres pour prédire le volume de bois. Ce n'est peut-être pas négligeable comme gain, pour une erreur de prédiction légèrement plus élevée si on compare les valeurs de RMSE.
 
 ```{r}
+# Calcul du RMSE pour les deux modèles finalistes
 rmse(trees_lm6, trees) # Multiple et polynomial
 rmse(trees_lm4, trees) # Polynomial ordre 2 diamètre
 ```
@@ -366,7 +404,7 @@ L'erreur moyenne d'estimation du volume de bois passe de 0,07 m^3^ pour le modè
 
 `r learnr("B02Lb_reg_poly", title = "Régression linéaire polynomiale", toc = "Régression linéaire polynomiale")`
 
-```{r assign_B02Ia_achatina, echo=FALSE, results='asis'}
+```{r assign_B02Ia_achatina, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B02Ia_achatina", part = NULL,
     url = "https://github.com/BioDataScience-Course/B02Ia_achatina",
@@ -396,7 +434,7 @@ $$volume = \frac{1}{3} \cdot \pi \cdot rayon^2 \cdot hauteur$$
 
 Avec notre diamètre au carré et notre hauteur, nous n'étions pas loin, à ceci près que les deux variables sont additionnées, et non multipliées dans notre modèle. La régression linéaire, et comme nous le verrons au chapitre suivant, le modèle linéaire sont fondamentalement des modèles additifs où les différents termes s'additionnent. Cependant, nous pouvons faire intervenir un terme qui multiplie nos deux variables explicatives par l'intermédiaire des **interactions** comme pour l'ANOVA à deux facteurs, voir `r course_link("section 11.3 de SDD I", course = 1, "anovacomplete")`. Afin de nous rapprocher de la formule du volume d'un cône, calculons à présent le carré du rayon et ajustons un modèle linéaire multiple **avec interactions** :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 trees <- smutate(trees, radius2 = labelise((diameter/2)^2, "Rayon^2", units = "m^2"))
 trees_lm7 <- lm(data = trees, volume ~ radius2 * height) # Forme compacte
 # Forme développée, équivalente à la forme compacte
@@ -415,7 +453,7 @@ $$volume = \beta \cdot radius^2 \cdot height + \epsilon$$
 
 ... qui est mathématiquement équivalent à la formule qui calcule le volume d'un cône. Cela donne :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 trees_lm8 <- lm(data = trees, volume ~ radius2:height + 0)
 summary_(trees_lm8) |>
   tabularise()
@@ -425,7 +463,7 @@ rmse(trees_lm8, trees)
 
 Vous aurez certainement noté un problème dans l'affichage de l'équation. C'est clairement un bug. Actuellement, le code qui crée l'équation du modèle n'est pas capable de le faire lorsque les termes qui apparaissent dans des interactions n'apparaissent pas également sous forme classique dans l'équation. Nous sommes donc ici obligés de fournir le code LaTeX de l'équation dans l'argument `equation=` de `tabularise()` pour avoir l'équation correcte (une astuce consiste à examiner et retravailler la sortie de `equation(trees_lm7)` à la console R) :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 trees_lm8 <- lm(data = trees, volume ~ 0*radius2 + 0*height + radius2:height + 0)
 summary_(trees_lm8) |>
   tabularise(equation = "\\operatorname{Volume\\ de\\ bois \\ [m^{3}]} =
@@ -439,7 +477,7 @@ Avec ce dernier modèle, nous avons une équation très simple pour laquelle un 
 
 Avec ce modèle, nous obtenons le critère d'Akaiké et l'erreur quadratique moyenne les plus faibles aussi. Tout indique que c'est le meilleur modèle, et en plus, il est **mécaniste** en ce sens qu'il fait intervenir la géométrie pour expliquer un volume à partir de deux dimensions dont l'une est élevée au carré. D'ailleurs, une **analyse dimensionnelle** (comparaison des unités intervenant à gauche et à droite dans l'équation) montre aussi qu'il est cohérent de ce point de vue : un volume en **m^3^** s'obtient bien par la multiplication d'une dimension en **m^2^** (le rayon au carré) par une dimension en **m** (la hauteur). Voici pour finir à quoi ressemblent les graphiques d'analyse des résidus de ce dernier modèle :
 
-```{r}
+```{r, purl=FALSE}
 chart$residuals(trees_lm8)
 ```
 
@@ -449,7 +487,7 @@ Clairement, nous aurions pu nous économiser de nombreux essais si nous étions 
 
 Le projet suivant est un travail par groupe de quatre. Attendez les instructions de vos enseignants qui vont nommer des capitaines d'équipes pour créer les différents "teams" avant toute chose.
 
-```{r assign_B02Ga_models_I, echo=FALSE, results='asis'}
+```{r assign_B02Ga_models_I, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment2"))
   assignment2("B02Ga_models", part = "I",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
@@ -470,6 +508,11 @@ if (exists("assignment2"))
 Ce deuxième module vous a permis de prendre connaissance de différents outils de diagnostic pour sélectionner le meilleur modèle et de découvrir la régression linéaire multiple et polynomiale. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("02")`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/02-reg-lineaire-2.html)
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/02-reg-lineaire-2.R){target="top"}
 
 ##### Progression {.unnumbered}
 

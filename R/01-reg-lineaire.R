@@ -1,11 +1,16 @@
 #' ---
-#' title: "SDD I module 1 : Régression linéaire I"
+#' title: "SDD II module 1 : Régression linéaire I"
 #' author: "Ph. Grosjean et G. Engels"
 #' date: "2025-2026"
 #' output:
 #'   html_document:
 #'     highlight: kate
 #' ---
+#' 
+#' Document complémentaire au [module 1 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/lm.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
 
 # Dialecte SciViews::R avec la section dédiée à la modélisation
 SciViews::R("model", lang = "fr")

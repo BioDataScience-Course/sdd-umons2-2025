@@ -4,21 +4,24 @@
 # - Knit it to PDF using purl
 # - Place these files in /more subdirectory of the website
 
-files_noext <- c("01-reg-lineaire")
+files_noext <- c("01-reg-lineaire", "02-reg-lineaire-2")
 output_dir <- "../wp.sciviews.org/htdocs/sdd-umons2-2025/more"
 fs::dir_create(output_dir)
+fs::dir_create("R")
 
 for (f in files_noext) {
   origrmdfile <- paste0(f, ".Rmd")
   fout <- fs::path(output_dir, f)
-  rfile <- paste0(fout, ".R")
-  rmdfile <- paste0(fout, ".Rmd")
-  pdffile <- paste0(fout, ".pdf")
+  rfile <- fs::path("R", paste0(f, ".R")) # In R subdir
+  rmdfile <- fs::path("R", paste0(f, ".Rmd"))
+  htmlfile <-  fs::path("R", paste0(f, ".html"))
+  htmlfilefinal <- paste0(fout, ".html")
 
   # Make sure old files are removed
   unlink(rfile)
   unlink(rmdfile)
-  unlink(pdffile)
+  unlink(htmlfile)
+  unlink(htmlfilefinal)
 
   # Extract R code using purl
   knitr::purl(origrmdfile, output = rfile, documentation = 0L)
@@ -30,7 +33,8 @@ for (f in files_noext) {
   writeLines(rlines_clean, rfile)
 
   # Knit with spin to PDF
-  knitr::spin(rfile, knit = FALSE)
+  knitr::spin(rfile, knit = FALSE, format = "Rmd")
   rmarkdown::render(rmdfile, output_format = "html_document")
+  fs::file_move(htmlfile, htmlfilefinal)
   unlink(rmdfile)
 }
