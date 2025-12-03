@@ -873,7 +873,7 @@ Ce premier module vous a permis de prendre connaissance des principes de bases d
 ##### Code des exemples {.unnumbered}
 
 -  [Document HTML](more/01-reg-lineaire.html)
--  [Script R](more/01-reg-lineaire.R){target="top"}
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/01-reg-lineaire.R){target="top"}
 
 ##### Progression {.unnumbered}
 
