@@ -1,9 +1,29 @@
 # Modèle linéaire {#mod-lineaire}
 
-```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 SciViews::R("model", lang = "fr")
 library(equatiomatic)
 ```
+
+```{r purlheader, echo=FALSE}
+#' ---
+#' title: "SDD II module 3 : Modèle linéaire"
+#' author: "Ph. Grosjean et G. Engels"
+#' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
+#' ---
+#' 
+#' Document complémentaire au [module 3 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/mod-lineaire.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+#' 
+#' [Installer un environnement R](https://github.com/SciViews/svbox/tree/main/svbox2025-native)
+#' adéquat pour reproduire cette analyse. 
+```
+
 
 ##### Objectifs {.unnumbered}
 
@@ -33,7 +53,7 @@ Donc, la principale différence entre ANOVA et régression linéaire telles que 
 
 -   variables qualitatives non ordonnées prenant également un petit nombre de valeurs possibles, mais sans ordre particulier (**factor** dans R).
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 Par la suite, un encodage correct des variables sera *indispensable* afin de distinguer ces différentes situations. En effet, R considérera automatiquement comment mener l'analyse en fonction de la classe des variables fournies. Donc, si la classe est incorrecte, l'analyse le sera aussi ! Si vous avez des doutes concernant les types de variables, relisez la section `r course_link("types de variables", course = 1, "types-de-variables")` avant de continuer ce module.
 ```
 
@@ -104,7 +124,7 @@ $$
 
 Cette dernière formulation est strictement équivalente au modèle de la régression linéaire simple dans laquelle la variable $x$ a été remplacée par notre variable indicatrice $I_2$. Ceci se généralise pour une variable indépendante à $k$ niveaux, avec $k - 1$ variables indicatrices au final.
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 En prenant soin de réencoder le modèle de l'ANOVA relatif aux variables indépendantes qualitatives, nous pouvons à présent mélanger les termes des deux modèles en un seul : notre fameux modèle linéaire. Nous aurons donc, quelque chose du genre (avec les $x_i$ correspondant aux variables quantitatives et les $I_j$ des variables indicatrices pour les différents niveaux des variables qualitatives) :
 
 $$
@@ -132,7 +152,7 @@ $$
 
 Cela revient à considérer le premier niveau comme **niveau de référence** et à établir tous les contrastes par rapport à ce niveau de référence. C'est une situation qu'on rencontre fréquemment lorsque nos testons l'effet de différents médicaments ou de différents traitements par rapport à un **contrôle** (pas de traitement ou placebo). La matrice de contrastes correspondante dans un cas où on aurait trois traitements en plus du contrôle (donc, notre variable **factor** à quatre niveaux) s'obtient facilement dans R à l'aide de la fonction `contr.treatment()` :
 
-```{r}
+```{r, purl=FALSE}
 contr.treatment(4)
 ```
 
@@ -156,7 +176,7 @@ Les contrastes doivent être de préférence **orthogonaux par rapport à l'ordo
 
 -   Somme à zéro. Ces contrastes, toujours pour une variable à quatre niveaux, se définissent comme suit en utilisant la fonction `contr.sum()` dans R :
 
-```{r}
+```{r, purl=FALSE}
 contr.sum(4)
 ```
 
@@ -164,7 +184,7 @@ Ici nous avons bien des contrastes orthogonaux puisque toutes les sommes par col
 
 -   Matrice de contrastes de Helmert : chaque niveau est comparé à la moyenne des niveaux précédents. La matrice de contrastes correspondant pour une variable à quatre niveaux s'obtient à l'aide de la fonction R `contr.helmert()` :
 
-```{r}
+```{r, purl=FALSE}
 contr.helmert(4)
 ```
 
@@ -174,13 +194,13 @@ Cette matrice est également orthogonale avec toutes les sommes par colonnes qui
 
 Donc ici aussi une comparaison deux à deux de tous les niveaux n'est pas souhaitable, mais une progression d'un effet qui se propage de manière graduelle du plus petit niveau au plus grand. *A priori* cela parait difficile à matérialiser dans une matrice de contraste... et pourtant, c'est parfaitement possible ! Il s'agit de contrastes polynomiaux où nous ajustons de polynômes de degré croissant comme pondération des différents contrastes étudiés. La fonction `contr.poly()` permet d'obtenir ce type de contraste dans R. Pour une variable ordonnée à quatre niveaux, cela donne :
 
-```{r}
+```{r, purl=FALSE}
 contr.poly(4)
 ```
 
 Ici, les pondérations sont plus difficiles à expliquer rien qu'en observant la matrice de contrastes. De plus, les colonnes portent des noms particuliers `.L` pour un contraste linéaire (polynôme d'ordre 1), `.Q` pour un contraste quadratique (polynôme d'ordre 2), et `.C` pour un contraste conique (ou polynôme d'ordre 3). Les pondérations appliquées se comprennent mieux lorsqu'on augmente le nombre de niveaux et qu'on représente graphiquement la valeur des pondérations choisies. Par exemple, pour une variable facteur ordonnée à dix niveaux, nous représentons graphiquement les 3 premiers contrastes (linéaire, quadratique et conique) comme suit :
 
-```{r}
+```{r, purl=FALSE}
 plot(contr.poly(10)[, 1], type = "b")
 plot(contr.poly(10)[, 2], type = "b")
 plot(contr.poly(10)[, 3], type = "b")
@@ -192,13 +212,14 @@ Sur le graphique, l'axe X nommé `index` correspond en réalité à la successio
 
 `r h5p(220, "B03Hd_contrast", height = 270, toc = "Matrice de contraste")`
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 R utilise par défaut des **contrastes de traitement pour les facteurs non ordonnés** et des **contrastes polynomiaux pour des facteurs ordonnés**. Ces valeurs par défaut sont stockées dans l'option `"contrasts"` qu'on peut lire à l'aide de `getOption()`.
 
 Bien sûr, il est possible de changer ces contrastes, tant au niveau global qu'au niveau de la construction d'un modèle en particulier.
 ```
 
 ```{r}
+# Matrices de contraste par défaut
 getOption("contrasts")
 ```
 
@@ -215,10 +236,13 @@ Avant l'apparition du modèle linéaire, une version particulière d'un mélange
 Commençons avec un jeu de données que vous connaissez bien : les oursins d'élevage comparés aux oursins sauvages pêchés en Bretagne. Nous voulons déterminer si la masse squelettique `skeleton` par rapport à la masse totale `weight` dépend de leur environnement (variable `origin` ; artificiel pour `"Culture"` *versus* naturel pour `"Pêcherie"`). Nous nous intéressons ici essentiellement aux oursins adultes dont la masse totale est supérieure ou égale à 30g (oursins à taille commercialisable). Nous prenons soin d'éliminer les valeurs manquantes pour la variable `skeleton` avant toute chose avec `sdrop_na()`.
 
 ```{r}
+# Dialecte SciViews::R avec la section dédiée à la modélisation
 SciViews::R("model", lang = "FR")
+# Importation des données et élimination des données manquantes pour skeleton
 read("urchin_bio", package = "data.io") %>.%
   sdrop_na(., skeleton) ->
   urchin
+# Graphique de base
 chart(data = urchin, skeleton ~ weight %col=% origin) +
   geom_point() +
   geom_vline(xintercept = 30, col = "darkgray", lty = 2)
@@ -227,8 +251,9 @@ chart(data = urchin, skeleton ~ weight %col=% origin) +
 Sur le graphique, nous voyons très clairement une différence selon l'origine. Nous voyons aussi que les petits et les grands oursins semblent légèrement différer (à gauche et à droite du trait pointillé gris). Mais partout, les oursins pêchés ont un squelette plus lourd à masse totale équivalente. Nous pouvons imaginer ici des droites qui diffèrent par leurs pentes. Nous pouvons ajuster une droite différente pour chacune des deux sous-populations, mais comment déterminer si les deux pentes sont **significativement différentes** ? Le modèle linéaire permet de le faire. Tout comme pour l'ANOVA, utiliser `*` dans la formule permet de tester l'interaction entre les deux variables. Nous allons donc ajuster un modèle linéaire avec des interactions entre `weight` et `origin`. Si nous ne spécifions pas la matrice de contrastes à utiliser, c'est celle par défaut, soit les **contrastes de type traitement** qui seront utilisés. Notez aussi l'utilisation de l'argument `subset=` de `lm()` pour sélectionner un sous-ensemble des données (mais comme `subset=` n'existe pas dans `chart()`, nous avons recours à `sfilter()` pour le graphique).
 
 ```{r}
+# Modèle linéaire avec interactions, oursins de masse supérieure ou égale à 30g
 urchin_lm <- lm(data = urchin, skeleton ~ weight * origin, subset = weight >= 30)
-# Voici comment faire le graphique de ce modèle linéaire
+# Graphique de ce modèle linéaire
 chart(data = sfilter(urchin, weight >= 30), skeleton ~ weight %col=% origin) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ x)
@@ -237,12 +262,13 @@ chart(data = sfilter(urchin, weight >= 30), skeleton ~ weight %col=% origin) +
 Le résumé du modèle nous donne des informations utiles :
 
 ```{r}
+# Résumé du modèle
 summary_(urchin_lm)
 ```
 
 Le *R*^2^ de 0.935 est élevé. La valeur *p* de l'ANOVA (dernière ligne du résumé) est inférieure à 5% et le modèle est significatif. Avec une matrice de type traitement, le modèle est ajusté d'abord sur la sous-population correspondant au premier niveau de la variable **factor** `origin`, c'est-à-dire `"Culture"`.
 
-```{r}
+```{r, purl=FALSE}
 class(urchin$origin)
 levels(urchin$origin)
 ```
@@ -258,12 +284,14 @@ $$skeleton_{Pêcherie} = 1.78 + 0.30 \cdot weight_{Pêcherie}$$
 Maintenant, regardons les tests *t* de Student pour chaque paramètre (colonnes `t value` et `Pr(>|t|))` pour la valeur *p* du test (rappelez-vous que pour ce test, nous avons : H~0~ le paramètre vaut zéro et H~1~ le paramètre est différent de zéro). Tous les paramètres (on dit aussi coefficients) sont significativement différents de zéro, sauf le décalage de l'ordonnée à l'origine `originePêcherie`. Le tableau de l'ANOVA du modèle linéaire confirme que les deux variables ont un effet significatif, ainsi que leurs interactions (mais il ne dit rien concernant le décalage de l'ordonnée à l'origine... il n'apparaît jamais dans ce tableau) :
 
 ```{r}
+# ANOVA du modèle linéaire
 anova(urchin_lm)
 ```
 
 Dans un cas comme celui-ci, nous pouvons simplifier le modèle en éliminant le décalage de l'ordonnée à l'origine. Mais comment faire ? Nous devons nous rappeler que la formule `skeleton ~ weight * origin` est en fait une abréviation pour `skeleton ~ weight + origin + weight:origin`. Retenez que, dans cette dernière formule, le terme `origin` indique que nous voulons un décalage de l'origine pour chaque niveau, et le terme `weight:origin` indique qu'un décalage de pentes est souhaité. Donc, pour éliminer le décalage d'origine du modèle, il suffit d'écrire `skeleton ~ weight + weight:origin`.
 
 ```{r}
+# Second modèle linéaire sans décalage d'origine
 urchin_lm2 <- lm(data = urchin, skeleton ~ weight + weight:origin, subset = weight >= 30)
 summary_(urchin_lm2)
 ```
@@ -271,6 +299,7 @@ summary_(urchin_lm2)
 Nous voyons qu'effectivement, le terme non significatif a disparu et il ne reste plus que les termes significatifs au seuil $\alpha$ de 5%.
 
 ```{r}
+# Anova du second modèle
 anova(urchin_lm2)
 ```
 
@@ -285,8 +314,15 @@ Les interactions sont significatives dans notre modèle linéaire, qu'on le simp
 Jusqu'ici, nous avons repris les sorties "brutes" de R pour les tableaux et nous avons écrit des équations à la main. Mais nous pouvons aussi utiliser `tabularise()` et `eq_()` pour des équations en ligne ou `eq__()` pour des équations sur leur propre ligne, avec éventuellement `use_coefs = TRUE` et `coef_digits =` pour la version paramétrisée. Voici ce que cela donne pour notre modèle simplifié :
 
 ```{r, warning=FALSE}
+# Tableau formaté du résumé du modèle simplifié
 summary_(urchin_lm2) |> tabularise()
 ```
+
+```{r purleq, echo=FALSE}
+# Pour obtenir l'équation du modèle dans un document R Markdown ou Quarto:
+#' $$`r eq__(urchin_lm2, use_coefs = TRUE, coef_digits = c(2, 2, 3))`$$
+```
+
 
 $$`r eq__(urchin_lm2, use_coefs = TRUE, coef_digits = c(2, 2, 3))`$$
 
@@ -299,6 +335,7 @@ $$`r eq__(urchin_lm, use_coefs = TRUE, coef_digits = c(2, 2, 2, 3))`$$ Ici, la v
 Nous n'avons pas encore réalisé l'analyse des résidus qui reste à faire également pour la partie régression linéaire de notre modèle. Voici l'analyse pour le modèle simplifié.
 
 ```{r}
+# Analyse des résidus du modèle simplifié
 chart$residuals(urchin_lm2)
 ```
 
@@ -310,7 +347,7 @@ Un modèle linéaire constitué d'une variable dépendante numérique (*Y*) et d
 
 -   Les deux nuages de points sont parallèles l'un à l'autre. Les deux droites diffèrent donc seulement par un **décalage de l'ordonnée à l'origine**. La formule à considérer dans R est alors `Y ~ X + F`.
 
-```{r echo=FALSE}
+```{r echo=FALSE, purl=FALSE}
 dtx(X = c(0, 3, 0, 3), Y = c(2, 5, 3, 6), F = c("A", "A", "B", "B")) %>.%
   chart(data = ., Y ~ X %col=% F) +
     geom_line()
@@ -318,7 +355,7 @@ dtx(X = c(0, 3, 0, 3), Y = c(2, 5, 3, 6), F = c("A", "A", "B", "B")) %>.%
 
 -   Les deux nuages de points s'allongent linéairement le long de **droites ayant des pentes différentes, mais qui se croisent en *X* = 0**. Les droites diffèrent donc **par leurs pentes,** mais pas par leurs ordonnées à l'origine. Cela s'exprime par des **interactions entre *X* et *F*** dans le modèle qui se notent `X:F` dans une formule. Nous écrirons donc notre modèle comme `Y = X + X:F`.
 
-```{r echo=FALSE}
+```{r echo=FALSE, purl=FALSE}
 dtx(X = c(0, 3, 0, 3), Y = c(2, 5, 2, 6), F = c("A", "A", "B", "B")) %>.%
   chart(data = ., Y ~ X %col=% F) +
     geom_line()
@@ -326,7 +363,7 @@ dtx(X = c(0, 3, 0, 3), Y = c(2, 5, 2, 6), F = c("A", "A", "B", "B")) %>.%
 
 -   Les deux droites se croisent en un point quelconque différent de *X* = 0. Les droites diffèrent *à la fois* par leurs pentes et par leurs ordonnées à l'origine. Le **modèle complet** sera alors utilisé. Dans R nous écrirons : `Y = X + F + X:F`. Une forme abrégée synonyme existe aussi : `Y = X * F`. Ces deux formules décrivent strictement le même modèle et sont interchangeables.
 
-```{r echo=FALSE}
+```{r echo=FALSE, purl=FALSE}
 dtx(X = c(0, 3, 0, 3), Y = c(2, 6, 3, 5), F = c("A", "A", "B", "B")) %>.%
   chart(data = ., Y ~ X %col=% F) +
     geom_line()
@@ -336,10 +373,18 @@ En pratique, et surtout en cas de doute, vous pouvez commencer par ajuster le mo
 
 ### Bébés à la naissance
 
+```{r purlex2, echo=FALSE}
+#'
+#' ### Second exemple plus compliqué : bébés à la naissance
+#'
+```
+
 Afin d'explorer d'autres aspects du modèle linéaire, nous étudions maintenant un autre jeu de données. Analysons des données de masse de nouveaux nés en fonction du poids de la mère et du fait qu'elle fume ou non. Cette étude provient de @verzani2005.
 
 ```{r, warning=FALSE}
+# Configuration de l'environnement SciViews::R en français
 SciViews::R("model", lang = "fr")
+# Importation des données
 babies <- read("babies", package = "UsingR")
 tabularise$headtail(babies[, c("wt", "wt1", "smoke")])
 ```
@@ -351,6 +396,7 @@ Nous avons une variable dépendante `wt`, la masse des bébés qui est quantitat
 Nous allons maintenant remanier tout cela correctement.
 
 ```{r, warning=FALSE}
+# Remaniement des données :
 # wt = masse du bébé à la naissance en onces et 999 = valeur manquante
 # wt1 = masse de la mère à la naissance en livres et 999 = valeur manquante
 # smoke = 0 (non), = 1 (oui), = 2 (jusqu'à grossesse),
@@ -374,12 +420,14 @@ tabularise$headtail(babies2)
 Description des données :
 
 ```{r}
+# Tableaux de description des données
 skimr::skim(babies2)
 ```
 
 L'idéal pour la variable `smoke` serait d'avoir autant d'individus dans chaque niveau. Ce n'est pas le cas ici, mais nous ne pouvons pas faire grand-chose, sauf à éliminer des données dans les niveaux les plus abondants, ce qui serait dommage. Nous allons maintenant réaliser quelques graphiques pertinents dans le contexte de notre analyse pour visualiser les données.
 
 ```{r}
+# Graphique du poids du bébé en fonction du poids de la mère et de smoke
 chart(data = babies2, wt ~ wt1 %col=% smoke) +
   geom_point() +
   xlab("wt1 : masse de la mère [kg]") +
@@ -387,12 +435,14 @@ chart(data = babies2, wt ~ wt1 %col=% smoke) +
 ```
 
 ```{r}
+# Boite à moustaches du poids du bébé en fonction de smoke
 chart(data = babies2, wt ~ smoke) +
   geom_boxplot() +
   ylab("wt : masse du bébé [kg]")
 ```
 
 ```{r}
+# Boite à moustaches du poids de la mère en fonction de smoke
 chart(data = babies2, wt1 ~ smoke) +
   geom_boxplot() +
   ylab("wt1 : masse de la mère [kg]")
@@ -421,7 +471,7 @@ Bien. Mais maintenant, est-ce que ces décalages d'ordonnées à l'origine et de
 
 Pour vérifier tout cela, nous pouvons considérer le modèle de base comme une droite de régression ajustée entre `wt` et `wt1` pour la sous-population de référence `smoke == "never"`. Ainsi, si nous faisons :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 lm(data = babies2, wt ~ wt1, subset = smoke == "never") |>
   summary_() |> tabularise()
 ```
@@ -430,7 +480,7 @@ Nous voyons en effet que les pentes et ordonnées à l'origine sont ici parfaite
 
 Faisons de même pour la régression entre `wt` et `wt1` pour la sous-population `smoke == "before"` :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 lm(data = babies2, wt ~ wt1, subset = smoke == "before") |>
   summary_() |> tabularise()
 ```
@@ -449,7 +499,7 @@ chart(data = babies2, wt ~ wt1 %col=% smoke) +
   ylab("wt : masse du bébé [kg]")
 ```
 
-```{r}
+```{r, purl=FALSE}
 chart(data = babies2, wt ~ wt1 | smoke) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ x) +
@@ -477,6 +527,7 @@ anova(babies2_lm2) |> tabularise()
 Le graphique correspondant est l'ajustement de droites parallèles les unes aux autres pour les quatre sous-populations en fonction de `smoke`. Ce graphique est difficile à réaliser. Il faut ruser, et les détails du code vont au-delà de ce cours (il n'est pas nécessaire de les comprendre à ce stade).
 
 ```{r}
+# Graphique du dernier modèle (difficile à réaliser)
 offsets <- c(0, 0.03549, 0.02267, -0.23794)
 cols <- scales::hue_pal()(4)
 chart(data = babies2, wt ~ wt1) +
@@ -490,6 +541,7 @@ chart(data = babies2, wt ~ wt1) +
 Le graphique montre une tendance claire, comme le tableau du résumé du modèle. Voyons ce que donne l'analyse *post hoc* des comparaisons multiples.
 
 ```{r}
+# Analyse post-hoc du dernier modèle
 babies2_lm2_compa <- multcomp::glht(babies2_lm2,
   linfct = multcomp::mcp(smoke = "Tukey")) |> confint()
 summary_(babies2_lm2_compa)
@@ -501,6 +553,7 @@ Ici, comme nous testons tous les contrastes, nous pouvons dire que la population
 Il semble évident maintenant qu'il n'est pas utile de préciser si la mère a fumé ou non avant sa grossesse. L'élément déterminant est uniquement le fait de fumer *pendant* la grossesse ou non. Nous pouvons le montrer également en utilisant des contrastes de Helmert :
 
 ```{r, warning=FALSE}
+# Nouveau modèle utilisant les contrastes de Helmert
 babies2_lm3 <- lm(data = babies2, wt ~ smoke + wt1,
   contrasts = list(smoke = "contr.helmert"))
 summary_(babies2_lm3) |> tabularise()
@@ -510,6 +563,7 @@ anova(babies2_lm3) |> tabularise()
 Ici les valeurs estimées pour $\beta_1$, $\beta_2$ et $\beta_3$ sont relatives à `smoke1` `smoke2` et `smoke3` qui représentent les **trois contrastes utilisés dans la matrice de Helmet** (rien à voir avec les niveaux initiaux dans les données brutes `babies`, attention), soit :
 
 ```{r}
+# Matrice de Helmert correspondant à notre modèle
 helm <- contr.helmert(4)
 rownames(helm) <- c('smoke == "never"', 'smoke == "before"',
                     'smoke == "until"', 'smoke == "during"')
@@ -521,7 +575,7 @@ helm
 -   `smoke2` est le décalage de l'ordonnée à l'origine pour `smoke == "until"` *par rapport au modèle ajusté sur `smoke == "never"`, `smoke == "before"` et `smoke == "until"` avec des pondérations respectives de -1, -1, et 2* (non significatif au seuil alpha de 5%),
 -   `smoke3` est le décalage de l'ordonnée à l'origine par rapport au modèle ajusté sur l'ensemble des autres observations et des pondérations respectives comme dans la dernière colonne de la matrice de contraste. Donc, ce dernier contraste est celui qui nous intéresse, car il compare les cas où la mère n'a pas fumé pendant la grossesse avec le cas `smoke == "during"` où la mère a fumé pendant la grossesse. Ce contraste est significatif au seuil alpha de 5%. L'interprétation des valeurs estimées est plus complexe ici. Comparez ce résultat avec le modèle ajusté avec les contrastes de traitement par défaut :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
 lm(data = babies2, wt ~ smoke + wt1) |>
   summary_() |> tabularise()
 ```
@@ -531,6 +585,7 @@ Les conclusions sont les mêmes, mais les valeurs estimées pour $\alpha$, $\bet
 Naturellement, nous pouvons aussi considérer la variable `smoke` comme une variable facteur ordonnée (**ordered**). Dans ce cas, c'est les contrastes polynomiaux qui sont utilisés :
 
 ```{r, warning=FALSE}
+# Encore un autre modèle, en considérant smoke comme variable ordonnée
 smutate(babies2, smoke = as.ordered(smoke)) |>
   lm(data = _, wt ~ smoke + wt1) |>
   summary_() |>
@@ -542,11 +597,13 @@ Notez que R est capable d'utiliser automatiquement les contrastes adéquats (pol
 Au final, il apparaît que l'élément important relatif à la variable `smoke` est en définitive le fait de fumer **pendant** la grossesse ou non, pas l'histoire de la mère avant sa grossesse par rapport à la cigarette ! En modélisation, nous avons toujours intérêt à choisir le **modèle le plus simple**. Donc ici, cela vaut le coup de simplifier `smoke` à une variable à deux niveaux `smokepreg` qui indique uniquement si la mère fume ou non pendant la grossesse. Ensuite, nous ajustons à nouveau un modèle plus simple avec cette nouvelle variable.
 
 ```{r, warning=FALSE}
+# Recodage de smoke en smokepreg : contraster fumer pendant la grossesse ou non
 babies2 %>.%
   smutate(., smokepreg = recode(smoke, "never" = "0", "before" = "0",
                                        "until" = "0", "during" = "1")) %>.%
   smutate(., smokepreg = factor(smokepreg, levels = c("0", "1"))) ->
   babies2
+# Modèle utilisant smokepreg
 babies2_lm4 <- lm(data = babies2, wt ~ smokepreg + wt1)
 summary_(babies2_lm4) |> tabularise()
 anova(babies2_lm4) |> tabularise()
@@ -555,6 +612,7 @@ anova(babies2_lm4) |> tabularise()
 À présent, tous les termes de notre modèle sont significatifs au seuil $\alpha$ de 5%. Le coefficient $\beta_1$ du terme $smokepreg_1$ est le décalage de l'ordonnée à l'origine du poids des bébés issus de mères fumant pendant la grossesse. Il donne donc directement la perte moyenne de poids des bébés lié aux femmes qui fument pendant la grossesse par rapport à celles qui ne fument pas à ce moment-là. La représentation graphique de ce dernier modèle est la suivante :
 
 ```{r}
+# Graphique du modèle linéaire avec smokepreg
 offsets <- c(0, -0.2458)
 cols <- scales::hue_pal()(2)
 chart(data = babies2, wt ~ wt1) +
@@ -568,18 +626,22 @@ chart(data = babies2, wt ~ wt1) +
 Enfin, n'oublions pas que notre modèle n'est valide que si les conditions d'application sont rencontrées, en particulier, une distribution Normale des résidus et une homoscédasticité (même variance pour les résidus). Nous vérifions cela visuellement toujours avec les graphiques d'analyse des résidus. En voici les plus importants :
 
 ```{r}
+# Graphique principal d'analyse des résidus
 chart$resfitted(babies2_lm4)
 ```
 
 ```{r}
+# Graphique quantile-quantile d'analyse des résidus
 chart$qqplot(babies2_lm4)
 ```
 
 ```{r}
+# Graphique d'analyse des résidus pour vérifier l'homoscédasticité
 chart$scalelocation(babies2_lm4)
 ```
 
 ```{r}
+# Graphique de la distance de Cook des résidus
 chart$cooksd(babies2_lm4)
 ```
 
@@ -593,7 +655,7 @@ Voilà, nous venons d'analyser et d'interpréter nos premiers modèles linéaire
 
 Le projet suivant est individuel et cadré.
 
-```{r assign_B03Ia_who, echo=FALSE, results='asis'}
+```{r assign_B03Ia_who, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B03Ia_who", part = NULL,
     url = "https://github.com/BioDataScience-Course/B03Ia_who",
@@ -609,7 +671,7 @@ if (exists("assignment"))
     toc = "Modèle linéaire (WHO)")
 ```
 
-```{r assign_B02Ga_models_II, echo=FALSE, results='asis'}
+```{r assign_B02Ga_models_II, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment2"))
   assignment2("B02Ga_models", part = "II",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
@@ -630,6 +692,11 @@ if (exists("assignment2"))
 Ce troisième module vous a permis de comprendre le modèle linéaire, les matrices de contraste et de découvrir l'ANCOVA. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("03")`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/03-mod-lineaire.html)
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/03-mod-lineaire.R){target="top"}
 
 ##### Progression {.unnumbered}
 

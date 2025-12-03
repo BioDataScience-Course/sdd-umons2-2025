@@ -11,6 +11,9 @@
 #' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
 #' 
 #' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+#' 
+#' [Installer un environnement R](https://github.com/SciViews/svbox/tree/main/svbox2025-native)
+#' adéquat pour reproduire cette analyse. 
 
 # Dialecte SciViews::R avec la section dédiée à la modélisation
 SciViews::R("model", lang = "fr")

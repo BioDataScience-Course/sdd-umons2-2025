@@ -1,8 +1,27 @@
 # Régression non linéaire {#reg-non-lin}
 
-```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 SciViews::R("model", lang = "fr")
 library(equatiomatic)
+```
+
+```{r purlheader, echo=FALSE}
+#' ---
+#' title: "SDD II module 5 : Régression non linéaire"
+#' author: "Ph. Grosjean et G. Engels"
+#' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
+#' ---
+#' 
+#' Document complémentaire au [module 5 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/mod-lineaire-gen.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+#' 
+#' [Installer un environnement R](https://github.com/SciViews/svbox/tree/main/svbox2025-native)
+#' adéquat pour reproduire cette analyse. 
 ```
 
 ##### Objectifs {.unnumbered}
@@ -21,6 +40,12 @@ library(equatiomatic)
 
 ## Rendement photosynthétique {#rend-photo}
 
+```{r purlrendphoto, echo=FALSE}
+#'
+#' ### Rendement photosynthétique {#rend-photo}
+#'
+```
+
 Afin d'avoir un premier aperçu de ce qu'est une régression non linéaire par les moindres carrés et comment on la calcule dans R, nous allons détailler un exemple concret. La posidonie *Posidonia oceanica* (L.) Delile (1813) est une plante à fleurs marine qui forme des herbiers denses en mer Méditerranée. Ses feuilles sont particulièrement adaptées à l'utilisation de la lumière qui règne à quelques dizaines de mètres en dessous de la surface où elle prospère en herbiers denses.
 
 ![Herbier de posidonies par Frédéric Ducarme, wikimedia, license Creative Commons Attribution-Share Alike 4.0.](https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Posidonia_oceanica_(L).jpg/800px-Posidonia_oceanica_(L).jpg)
@@ -34,6 +59,7 @@ Cet appareil est capable de déterminer le taux de transfert des électrons (ETR
 [^05-reg-non-lineaire-1]: Techniquement, l'ETR nécessite d'effectuer des mesures après stabilisation de la photosynthèse, ce qui prend plusieurs minutes. Donc, une courbe *rapide* est discutable de ce point de vue, mais reste un outil utile en écophysiologie où la comparaison de différentes RLCs indique un changement de capacité photosynthétique de la plante.
 
 ```{r}
+# Préparation des données de "rapid light curve"
 rlc <- as_dtx(tribble(
   ~etr, ~par,
   0.0,  0,
@@ -46,6 +72,7 @@ rlc <- as_dtx(tribble(
   8.4,  265,
   7.8,  399
 ))
+# Labélisation
 rlc <- labelise(rlc,
   label = list(
     etr = "ETR",
@@ -54,6 +81,7 @@ rlc <- labelise(rlc,
     etr = "µmol électrons/m²/s",
     par = "µmol photons/m²/s")
 )
+# Graphique général de la RLC
 chart(data = rlc, etr ~ par) +
   geom_point()
 ```
@@ -61,13 +89,14 @@ chart(data = rlc, etr ~ par) +
 Les trois phases successives sont bien visibles ici (linéaire pour des PAR de 0 à 25, plateau à des PAR de 150-200 et photoinhibition à partir de 200 PAR). Naturellement, une régression linéaire dans ces données n'a pas de sens. Une régression polynomiale d'ordre trois donne ceci :
 
 ```{r}
+# Modèle polynomial RLC (inadéquat)
 rlc_lm <- lm(data = rlc, etr ~  par + I(par^2) + I(par^3))
 chart(rlc_lm)
 ```
 
 La régression polynomiale tente maladroitement de s'ajuster dans les données, mais est incapable de retranscrire les trois phases correctement. En particulier, la troisième est incorrecte puisque le modèle semble indiquer une reprise du rendement aux intensités les plus élevées. **Une représentation incorrecte est à craindre lorsque le modèle mathématique utilisé ne représente pas les différentes caractéristiques du phénomène étudié. L'utilisation d'un modèle mécaniste adéquat est possible ici seulement par régression non linéaire.** En effet, aucune transformation monotone croissante ou décroissante ne peut linéariser ce type de données.
 
-```{block, type='info'}
+```{block, type='info', purl=FALSE}
 **Quand passer à la régression non linéaire ?**
 
 Nous pouvons être amenés à utiliser une régression non linéaire pour l'une de ces deux raisons, voire les deux en même temps :
@@ -83,13 +112,14 @@ $$ETR = ETR_{max} \cdot (1 - e^{-PAR \cdot \alpha/ETR_{max}}) \cdot e^{-PAR \cdo
 
 avec $PAR$ la variable indépendante, $ETR$, la variable dépendante, et $ETR_{max}$, $\alpha$ et $\beta$, les trois paramètres du modèle. $ETR_{max}$ est le rendement maximum possible, $\alpha$ est la pente de la partie initiale linéaire avant infléchissement vers le maximum et $\beta$ est le coefficient de photoinhibition.
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 En matière de régression non linéaire, il est tout aussi important de bien comprendre les propriétés mathématiques de la fonction utilisée que de faire un choix judicieux du modèle. En particulier, il faut s'attacher à bien comprendre la signification (biologique) des paramètres du modèle. Non seulement, cela aide à en définir des valeurs initiales plausibles, mais c'est aussi indispensable pour pouvoir ensuite bien interpréter les résultats obtenus.
 ```
 
 Nous pouvons facilement créer une fonction dans R qui représente ce modèle :
 
 ```{r}
+# Équation du modèle PGH
 pgh_model <- function(x, etr_max, alpha, beta)
   etr_max * (1 - exp(-x * alpha/etr_max)) * (exp(-x * beta/etr_max))
 ```
@@ -97,6 +127,7 @@ pgh_model <- function(x, etr_max, alpha, beta)
 Le premier argument de la fonction *doit* être la variable indépendante (notée de manière générique `x`, mais n'importe quel nom fait l'affaire ici) et les autres arguments correspondent aux paramètres du modèle, donc `etr_max`, `alpha` et `beta`. Ce modèle peut être ajusté dans R à l'aide de la fonction `nls()` pour "Nonlinear Least Squares" (regression). Par contre, nous devons fournir une information supplémentaire (l'explication sera détaillée plus loin) : des valeurs approximatives de départ pour les paramètres. Nous voyons sur le graphique que `etr_max = 9` est une estimation plausible, mais il est difficile de déterminer `alpha` et `beta` rien qu'en regardant le graphique. Nous allons fixer `alpha = 1` (rendement max), et partir d'un modèle sans photoinhibition en utilisant `beta = 0`. Voici comment la régression non linéaire par les moindres carrés avec notre fonction `pgh_model` peut être calculée :
 
 ```{r, warning=FALSE}
+# Régression non linéaire en utilisant PGH
 rlc_nls <- nls(data = rlc, etr ~ pgh_model(par, etr_max, alpha, beta),
   start = list(etr_max = 9, alpha = 1, beta = 0))
 # Note : tabularise() ne peut pas encore traiter les modèles non "self-start"
@@ -118,6 +149,7 @@ Voyons ce que cela donne sur le graphique. Nous utiliserons pour ce faire une pe
 [^05-reg-non-lineaire-3]: Il est également possible de l'utiliser avec `curve()` pour un graphique de base dans R.
 
 ```{r}
+# Graphique de la RLC avec le modèle PGH non linéaire ajusté
 chart(data = rlc, etr ~ par) +
   geom_point() +
   stat_function(fun = as.function(rlc_nls), col = "skyblue3", linewidth = 1)
@@ -128,6 +160,7 @@ chart(data = rlc, etr ~ par) +
 Ce modèle représente bien mieux le phénomène étudié, et il s'ajuste d'ailleurs beaucoup mieux également dans les données que notre modèle polynomial initial. Une comparaison sur base du critère d'Akaike est également en faveur de ce dernier modèle non linéaire (pour rappel, plus la valeur est faible, mieux c'est) :
 
 ```{r}
+# Comparaison des deux modèles par le critère d'Akaike
 AIC(rlc_lm, rlc_nls)
 ```
 
@@ -143,7 +176,7 @@ La régression non linéaire consiste à modéliser la variation d'une variable 
 
 Lorsque le nuage de point ne s'étire pas le long d'une droite, nous pouvons tenter de transformer les données afin de les linéariser. Malheureusement, il existe de nombreux cas où la relation n'est pas linéarisable et la régression non linéaire est alors notre meilleur choix.
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 Il existe, en réalité, une autre raison pour laquelle nous pourrions être amenés à ne pas transformer les données pour les linéariser. Il s'agit du cas où les résidus ont une distribution correcte avec les données non transformées (distribution normale, et variance homogène --homoscédasticité--) lorsqu'on utilise un modèle non linéaire. Dans ce cas précis, une transformation pour linéariser les données devrait permettre d'utiliser une régression linéaire. Mais ce faisant, on rend alors les résidus non normaux et/ou on perd la propriété d'homoscédasticité, ce qui constitue une violation des conditions d'application de la régression par les moindres carrés que nous utilisons ici. Ainsi, dans ce cas-là, il vaut alors mieux ne pas transformer et utiliser plutôt une régression non linéaire à la place d'une régression linéaire pourtant plus simple d'emploi.
 ```
 
@@ -176,6 +209,7 @@ La description détaillée et les développements mathématiques de ces algorith
 Reprenons le calcul de notre RLC pour *P. oceanica*. L'argument `trace = TRUE` peut être ajouté à l'appel de `nls()` pour visionner les différentes étapes du calcul itératif. Voici ce que cela donne :
 
 ```{r}
+# Ajustement du modèle avec trace=TRUE pour voir la progression des étapes
 rlc_nls <- nls(data = rlc, etr ~ pgh_model(par, etr_max, alpha, beta),
   start = list(etr_max = 9, alpha = 1, beta = 0),
   trace = TRUE)
@@ -185,7 +219,7 @@ rlc_nls <- nls(data = rlc, etr ~ pgh_model(par, etr_max, alpha, beta),
 
 Voici une animation de ce processus :
 
-```{r, echo=FALSE, include=FALSE, eval=FALSE}
+```{r, echo=FALSE, include=FALSE, eval=FALSE, purl=FALSE}
 params <- as_dtx(tribble(
   ~iter,    ~f_obj,     ~etr_max,  ~alpha,              ~beta,
       0,  24.34024,            9,            1,             0,
@@ -237,7 +271,7 @@ La recherche de la solution optimale nécessite de partir de **valeurs de dépar
 
 Considérons un cas fictif simple où la fonction à ajuster n'aurait qu'un seul paramètre $p$. Dans ce cas, nous pouvons visualiser la valeur de la fonction objective en fonction de la valeur choisie pour le paramètre $p$. Admettons que nous obtenons le graphique suivant pour cette représentation :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 chart(data = data.frame(p = c(-0.7, 1), f_obj = c(0, 20)), f_obj ~ p) +
   stat_function(fun = function(x) 5*x^5 - 5*x^3 + 0.8*x + 0.5, col = "red") +
   annotate("text", x = 0.75, y = 0.15, label = "minimum global") +
@@ -250,7 +284,7 @@ Nous observons que la fonction objective a un **minimum global** pour $p$ valant
 
 Si ce n'est toujours pas clair, imaginez que la courbe en rouge représente la forme d'un terrain sur lequel vous placer une balle à la position de départ. En fonction de l'endroit où vous la placer, la balle va glisser le long de la pente et finir par s'immobiliser dans une des deux cuvettes... mais celle de droite (minimum global) est plus profonde que celle de gauche (minimum local).
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 Il vaut toujours mieux tester différentes combinaisons de valeurs de départ pour vérifier si la convergence se fait correctement et pour démasquer les cas de minima locaux.
 ```
 
@@ -275,7 +309,14 @@ Par exemple, si nous décidons d'ajuster un modèle allométrique de Huxley, de 
 
 Toutes les fonctions **selfStart** ont un nom commençant par `SS`. Nous pouvons donc les lister à l'aide de l'instruction suivante :
 
+```{r purlmodbio, echo=FALSE}
+#'
+#' ### Modèles courants en biologie {#modelesbio}
+#'
+```
+
 ```{r}
+# Objects R commençant par "SS" (modèles self-start pour la plupart)
 apropos("^SS", ignore.case = FALSE)
 ```
 
@@ -295,7 +336,7 @@ où $conc$ est la concentration des réactifs ou de l'enzyme au début de la ré
 
 Voici le graphique d'un modèle Michaelis-Menten avec $V_{max} = 1$ et $K = 0,4$. Le trait horizontal en `Vm = 1` représente la vitesse maximale possible (asymptote horizontale du modèle). Nous voyons que cette vitesse maximale n'est atteinte que très lentement ici, et il faudrait que l'axe des X s'étende beaucoup plus sur la droite pour l'observer.
 
-```{r}
+```{r, purl=FALSE}
 micmen_data <- dtx(
   conc = seq(0, 10, by = 0.1),
   v    = SSmicmen(conc, Vm = 1, K = 0.5)
@@ -347,13 +388,14 @@ avec $y_0$, la taille initiale de la population au temps $t = 0$. Ce modèle à 
 Dans R, nous pourrons utiliser la fonction suivante :
 
 ```{r}
+# Fonction exponentielle (pas de modèle self-start)
 exponent <- function(x, y0, k)
   y0 * exp(k * x)
 ```
 
 Voici un exemple d'un modèle de croissance exponentiel avec $y_0 = 1,5$ et $k = 0,9$. Le paramètre $y_0$ est indiqué sur le graphique.
 
-```{r}
+```{r, purl=FALSE}
 # Graphique avec y0 = 1.5 et k = 0.9
 exponent_data <- dtx(
   t = seq(0, 3, by = 0.1),
@@ -385,7 +427,7 @@ Ceci est une des formes de la *courbe logistique*. Cette fonction a deux asympto
 
 Voici le graphique d'une courbe logistique avec $y_\infty = 0,95$, $t_0 = 5$ et $k = 1$.
 
-```{r}
+```{r, purl=FALSE}
 logis_data <- dtx(
   t = seq(0, 10, by = 0.1),
   y = SSlogis(t, Asym = 0.95, xmid = 5, scal = 1)
@@ -415,7 +457,7 @@ Ceci est le modèle logistique généralisé à quatre paramètres (modèle **se
 
 Le graphique ressemble très fort à celui de la fonction logistique, mais la première asymptote n'est plus nécessairement à 0 (ici, $y_0$ = 0,15).
 
-```{r}
+```{r, purl=FALSE}
 fpl_data <- dtx(
   t = seq(0, 10, by = 0.1),
   y = SSfpl(t, A = 0.15, B = 0.95, xmid = 5, scal = 1)
@@ -449,7 +491,7 @@ La dernière forme apparaît plus simple et est le plus souvent utilisée. La pr
 
 Voici le graphique d'une courbe de Gompertz avec $y_\infty = 0,95$, $a = 5$ et $b = 0,5$.
 
-```{r}
+```{r, purl=FALSE}
 gomp_data <- dtx(
   t = seq(0, 10, by = 0.1),
   y = SSgompertz(t, Asym = 0.95, b2 = 5, b3 = 0.5)
@@ -488,7 +530,7 @@ Un graphique des deux modèles est présenté ci-dessous. Le modèle de von Bert
 
 -   `SSAsymp()` est définie comme $y(t) = y_\infty + (R_0 - y_\infty) \ e^{-e^{lrc} \cdot t}$. Par rapport à la forme habituelle, outre l'astuce de $e^{lrc}$ à la place de $k$, $t_0$ est également reparamétré en $R_0$ qui représente la taille initiale au temps $t = 0$. Cela met l'accent sur cette "taille à la naissance".
 
-```{block, type='info'}
+```{block, type='info', purl=FALSE}
 **Reparamétriser un modèle** consiste à exprimer la fonction mathématique qui le représente d'une façon différente. Étant donné que l'interprétation biologique des paramètres fait partie des objectifs de la méthode. On parle d'approche **mécaniste**, qui vise à décrypter le mécanisme sous-jacent *versus* une approche purement **empirique** basée sur les données uniquement avec un modèle polynomial tout venant, par exemple.
 
 Ainsi, L'équation du modèle de von Bertalanffy présentée au début montre une paramétrisation "classique", implémentée dans `SSasympOff()` alors que `SSasymp()` met la taille initiale en évidence au travers du paramètre $R_0$.
@@ -499,12 +541,13 @@ Ainsi, L'équation du modèle de von Bertalanffy présentée au début montre un
 Le modèle von Bertalanffy en poids n'est pas implémenté, nous devons utiliser une fonction personnalisée dans ce cas (avec une paramétrisation similaire à `SSasympOff()` :
 
 ```{r}
+# Modèle von Bertalanffy en poids (pas de modèle self-start)
 asympOff3 <- function(x, Asym, lrc, c0, m) Asym*(1 - exp(-exp(lrc) * (x - c0)))^3
 ```
 
 Voici les deux modèles de von Bertalanffy présentés sur le même graphique avec $y_\infty$ (alias `Asym`) = 0,95, `lrc` = 0,1 et $t_0$ (alias `c0`) = 0.
 
-```{r}
+```{r, purl=FALSE}
 vb_data <- dtx(
   t  = seq(0, 10, by = 0.1),
   y  = SSasympOff(t, Asym = 0.95, lrc = 0.1, c0 = 0),
@@ -532,12 +575,13 @@ Von Bertalanffy (1938, 1957) a fixé $m$ à 1 ou à 3. Richards (1959) permet à
 Avec une paramétrisation proche de celle de `SSasympOff()`, la fonction de Richards peut s'écrire comme ceci :
 
 ```{r}
+# Equation de Richards (pas de modèle self-start)
 richards <- function(x, Asym, lrc, c0, m) Asym*(1 - exp(-exp(lrc) * (x - c0)))^m
 ```
 
 Voici l'allure de différentes courbes de Richards en fonction de la valeur de $m$ (0,5, 1, 3, 6 et 9) avec $lrc = 0,1$, $y_\infty = 0,95$ et $t_0 = 0$ pour toutes les courbes.
 
-```{r}
+```{r, purl=FALSE}
 rich_data <- dtx(
   t   = seq(0, 10, by = 0.1),
   y   = richards(t, Asym = 0.95, lrc = 0.1, c0 = 0, m = 1),
@@ -572,7 +616,7 @@ avec $d = y_\infty - y_0$. Un modèle à trois paramètres est également utilis
 
 Voici l'allure de différentes courbes de Weibull pour respectivement $m$ (alias `pwr`) = 5, 2, 1 et 0,5, avec $lrc = -0,5$ (donc, $k = e^{-0,5}$ = 0,61), $y_\infty$ (alias `Asym`) = 0,95 et $y_0= 0,05$, ce qui donne $d$ (alias `Drop`) = 0,95 - 0,05 = 0,9. La courbe avec $m = 1$ est équivalente à un modèle de von Bertalanffy linéaire. Toutes les courbes démarrent en $y_0$ et passent par $y_\infty - d \ e^{-k}$ qui est également le point d'inflexion pour les sigmoïdes lorsque $m > 1$.
 
-```{r}
+```{r, purl=FALSE}
 weib_data <- dtx(
   t   = seq(0, 10, by = 0.1),
   y   = SSweibull(t, Asym = 0.95, Drop = 0.9, lrc = -0.5, pwr = 1),
@@ -604,6 +648,7 @@ $$y(t) = y_\infty - \frac{2 (y_\infty - d)}{e^{k1 \ (t - t_0)} + e^{k2 \ (t - t_
 Dans R, la fonction à utiliser (avec une paramétrisation similaire à celle des autres modèles **selfStart**) est :
 
 ```{r}
+# Equation de Preece Baines 1 de croissance humaine (pas de modèle self-start)
 preece_baines1 <- function(x, Asym, Drop, lrc1, lrc2, c0)
   Asym - (2 * (Asym - Drop)) / (exp(exp(lrc1) * (x - c0)) + exp(exp(lrc2) * (x - c0)))
 ```
@@ -612,7 +657,7 @@ $k1$ et $k2$ sont forcés à des valeurs positives ou nulles grâce à l'astuce 
 
 Ci-dessous un exemple de courbe Preece-Baines 1 avec $y_\infty$ (alias `Asym`) = 0,95, $d$ (alias `Drop`) = 0,8, $k1 = 0,19$ (alias `lrc1` = log(0,19) = -1,7), $k2 = 2,5$ (alias `lrc2`= log(2,5) = 0,92) et $t_0$ (alias `c0`) = 6.
 
-```{r}
+```{r, purl=FALSE}
 pb1_data <- dtx(
   t = seq(0, 10, by = 0.1),
   y = preece_baines1(t, Asym = 0.95, Drop = 0.8, lrc1 = -1.7, lrc2 = 0.92, c0 = 6)
@@ -635,13 +680,14 @@ Ce modèle complexe à quatre paramètres a une période initiale de croissance 
 Dans R, nous pouvons utiliser la fonction suivante pour ajuster un modèle de Tanaka :
 
 ```{r}
+# Équation de Tanaka de croissance indéterminée (pas de modèle self-start)
 tanaka <- function(x, a, b, c0, d)
   1 / sqrt(b) * log(abs(2 * b * (x - c0) + 2 * sqrt(b^2 * (x - c0)^2 + a * b))) + d
 ```
 
 Ci-dessous, un exemple de courbe de Tanaka avec $a$ = 3, $b$ = 2,5, $d$ = -0,2 et $t_0$ (alias `c0`) = 2.
 
-```{r}
+```{r, purl=FALSE}
 tanaka_data <- dtx(
   t = seq(0, 10, by = 0.1),
   y = tanaka(t, a = 3, b = 2.5, c0 = 2, d = -0.2)
@@ -653,12 +699,20 @@ chart(data = tanaka_data, y ~ t) +
 
 ## Choix du modèle {#choixmodele}
 
+```{r purlex2, echo=FALSE}
+#'
+#' ### Choix du modèle {#choixmodele}
+#'
+```
+
 Le choix d'un modèle non linéaire fait intervenir des critères identiques à ceux d'un modèle linéaire (qualité d'ajustement évaluée par l'AIC, inspection visuelle de l'ajustement dans le nuage de points), mais il fait aussi intervenir une dimension supplémentaire : le choix de la fonction mathématique à ajuster. Comme nous venons de le voir au travers de quelques modèles courants en biologie, le nombre de fonctions mathématiques résultant en des formes similaire, par exemple de type sigmoïde, est grand. Ainsi, le choix de la meilleure fonction à utiliser dans un cas particulier est rendu plus difficile.
 
 Nous allons illustrer l'ajustement d'une courbe non linéaire par le choix et l'ajustement d'un modèle de croissance dans un jeu de données en modélisant la croissance somatique de l'oursin *Paracentrotus lividus* [@grosjean2001]. Ce jeu de données est disponible dans le package `data.io`, sous le nom `urchin_growth`.
 
 ```{r}
+# Configuration de R pour le dialecte SciViews avec modélisation
 SciViews::R("model", lang = "fr")
+# Chargement et visualisation des données
 urchins <- read("urchin_growth", package = "data.io")
 chart(data = urchins, diameter ~ age) +
   geom_point()
@@ -675,6 +729,7 @@ Le choix du meilleur modèle se fait grâce à deux critères :
 Notons toutefois que, comme les animaux sont mesurés aux mêmes âges, tous les 3 à 6 mois, certains points se superposent. Afin d'afficher tous les points, il est utile d'utiliser la fonction `geom_jitter()` à la place de `geom_point()` qui décale les points d'une valeur aléatoire pour éviter ces superpositions (l'argument `width =` indique le décalage maximum à appliquer). Voici ce que cela donne (en ajoutant également un titre avec formatage correct du nom en latin)  :
 
 ```{r}
+# Graphique avec points jitterisés
 urchins_plot <- chart(data = urchins, diameter ~ age) +
   geom_jitter(width = 0.1, alpha = 0.2, color = "darkgrey") +
   ggtitle(expression(paste("Croissance de l'oursin ", italic("Paracentrotus lividus"))))
@@ -686,6 +741,7 @@ Nous avons ici également représenté les points de manière semi-transparente 
 Ajustons maintenant un modèle de Gompertz (modèle **selfStart**, notez qu'ici `tabularise()` est capable de calculer l'équation du modèle tout seul) :
 
 ```{r, warning=FALSE}
+# Régression non linéaire avec modèle de Gompertz
 urchins_gomp <- nls(data = urchins, diameter ~ SSgompertz(age, Asym, b2, b3))
 summary_(urchins_gomp) |> tabularise()
 ```
@@ -693,6 +749,7 @@ summary_(urchins_gomp) |> tabularise()
 Utilisons maintenant l'astuce de `stat_function()` combinée à `as.function.nls()` pour ajouter la courbe sur le graphique.
 
 ```{r}
+# Graphique du modèle de Gompertz ajusté
 urchins_plot +
   stat_function(fun = as.function(urchins_gomp), color = "red", linewidth = 1)
 ```
@@ -700,6 +757,7 @@ urchins_plot +
 L'ajustement de cette fonction semble très bon, à l'œil. Voyons ce qu'il en est d'autres modèles. Par exemple, une courbe logistique :
 
 ```{r, warning=FALSE}
+# Régression non linéaire avec modèle logistique
 urchins_logis <- nls(data = urchins, diameter ~ SSlogis(age, Asym, xmid, scal))
 summary_(urchins_logis) |> tabularise()
 ```
@@ -707,6 +765,7 @@ summary_(urchins_logis) |> tabularise()
 Et voici le graphique avec les deux modèles superposés :
 
 ```{r}
+# Graphique avec les deux modèles ajustés pour comparaison visuelle
 urchins_plot +
   stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), linewidth = 1) +
   stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), linewidth = 1) +
@@ -718,12 +777,14 @@ Notez qu'ici, la couleur a été incluse dans le "mapping" (argument `mapping =`
 Nous pouvons comparer ces modèles à l'aide du critère d'Akaike.
 
 ```{r}
+# Comparaison des deux modèles via le critère d'Akaike
 AIC(urchins_gomp, urchins_logis)
 ```
 
 Comme on peut le voir clairement sur le graphique, la courbe logistique donne une autre solution, cette dernière est à peine moins bonne que le modèle de Gompertz, selon le critère d'Akaike. Pourtant, la courbe est assez bien démarquée de celle de Gompertz. Essayons maintenant un modèle de Weibull. Ce modèle est plus complexe, car il a quatre paramètres au lieu de trois pour les deux modèles précédents :
 
 ```{r, warning=FALSE}
+# Régression non linéaire avec modèle de Weibull
 urchins_weib <- nls(data = urchins, diameter ~ SSweibull(age, Asym, Drop, lrc, pwr))
 summary_(urchins_weib) |> tabularise()
 ```
@@ -731,6 +792,7 @@ summary_(urchins_weib) |> tabularise()
 Ajoutons ce nouveau modèle sur le graphique :
 
 ```{r}
+# Graphique des trois modèles ajustés
 urchins_plot +
   stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), linewidth = 1) +
   stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), linewidth = 1) +
@@ -741,6 +803,7 @@ urchins_plot +
 ... et comparons à l'aide du critère d'Akaike :
 
 ```{r}
+# Comparaison par critère d'Akaike
 AIC(urchins_gomp, urchins_logis, urchins_weib)
 ```
 
@@ -749,12 +812,13 @@ Ce modèle fait presque jeu égal avec le modèle de Gompertz d'après le critè
 À ce stade, nous voudrions également essayer un autre modèle flexible à quatre paramètres : le modèle de Richards. Malheureusement, il n'existe pas de fonction **selfStart** dans R pour ce modèle. Nous sommes donc réduits "à mettre les mains dans le cambouis", à définir la fonction nous-mêmes, à trouver de bonnes valeurs de départ, etc. Voici comment définir la fonction :
 
 ```{r}
+# Équation de Richards
 richards <- function(x, Asym, lrc, c0, m) Asym*(1 - exp(-exp(lrc) * (x - c0)))^m
 ```
 
 Pour les valeurs de départ, là ce n'est pas facile. `Asym` est l' asymptote horizontale à la taille maximum. On voit qu'elle se situe aux environs de 55 mm sur le graphique. Pour les autres paramètres, c'est plus difficile à évaluer. Prenons par exemple 1 comme valeur de départ pour les trois autres paramètres, ce qui donne (les valeurs de départ sont obligatoires ici puisque ce n'est pas un modèle **selfStart**) :
 
-```{r, error=TRUE}
+```{r, error=TRUE, purl=FALSE}
 urchins_rich <- nls(data = urchins, diameter ~ richards(age, Asym, lrc, c0, m),
   start = c(Asym = 55, lrc = 0.1, c0 = 1, m = 1))
 ```
@@ -764,6 +828,7 @@ urchins_rich <- nls(data = urchins, diameter ~ richards(age, Asym, lrc, c0, m),
 Il nous faut donc soit tester d'autres valeurs de départ, soit utiliser un autre algorithme de minimisation, soit les deux. Après différents essais il apparaît que le changement des valeurs de départ suffit dans le cas présent :
 
 ```{r, error=TRUE, warning=FALSE}
+# Régression non linéaire avec modèle de Richards
 urchins_rich <- nls(data = urchins, diameter ~ richards(age, Asym, lrc, c0, m),
   start = c(Asym = 55, lrc = -0.7, c0 = 0, m = 1))
 # N'étant pas une fonction selfStart, tabularise() ne peut pas déterminer
@@ -774,6 +839,7 @@ summary_(urchins_rich) |> tabularise(equation = FALSE)
 Ajoutons ce dernier modèle sur notre graphique (avec des traits un peu plus fins pour mieux distinguer les modèles les uns des autres) :
 
 ```{r}
+# Graphique avec les 4 modèles ajustés
 urchins_plot +
   stat_function(fun = as.function(urchins_gomp), aes(color = "Gompertz"), linewidth = 0.7) +
   stat_function(fun = as.function(urchins_logis), aes(color = "logistique"), linewidth = 0.7) +
@@ -785,6 +851,7 @@ urchins_plot +
 ... et comparons à l'aide du critère d'Akaike :
 
 ```{r}
+# Comparaison par critère d'Akaike des 4 modèles
 AIC(urchins_gomp, urchins_logis, urchins_weib, urchins_rich)
 ```
 
@@ -796,7 +863,7 @@ Le choix final entre Gompertz ou Weibull dépend de l'usage que l'on veut faire 
 
 `r learnr("B05La_nls", title = "Modèles non linéaires", toc = "Récapitulatif modèles non linéaires")`
 
-```{r assign_B05Ia_abies_balsamea, echo=FALSE, results='asis'}
+```{r assign_B05Ia_abies_balsamea, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B05Ia_abies_balsamea", part = NULL,
     url = "https://github.com/BioDataScience-Course/B05Ia_abies_balsamea",
@@ -812,7 +879,7 @@ if (exists("assignment"))
     toc = "Croissance d'un conifère")
 ```
 
-```{r assign_B02Ga_models_IV, echo=FALSE, results='asis'}
+```{r assign_B02Ga_models_IV, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment2"))
   assignment2("B02Ga_models", part = "IV",
     url = "https://github.com/BioDataScience-Course/B02Ga_models",
@@ -835,7 +902,7 @@ if (exists("assignment2"))
 
 ##### À vous de jouer ! {.unnumbered}
 
-```{r assign_B05Ca_models, echo=FALSE, results='asis'}
+```{r assign_B05Ca_models, echo=FALSE, results='asis', purl=FALSE}
 if (exists("challenge"))
   challenge("B05Ca_models", part = NULL,
     url = "https://github.com/BioDataScience-Course/B05Ca_models",
@@ -865,6 +932,11 @@ Vous pouvez soumettre vos résultats pendant une période de temps précise via 
 Ce cinquième module vous a permis de comprendre les régressions non linéaires. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("05")`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/05-reg-non-lineaire.html)
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/05-reg-non-lineaire.R){target="top"}
 
 ##### Progression {.unnumbered}
 

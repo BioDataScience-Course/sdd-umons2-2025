@@ -4,7 +4,8 @@
 # - Knit it to PDF using purl
 # - Place these files in /more subdirectory of the website
 
-files_noext <- c("01-reg-lineaire", "02-reg-lineaire-2")
+files_noext <- c("01-reg-lineaire", "02-reg-lineaire-2", "03-mod-lineaire",
+  "04-mod-lineaire-gen", "05-reg-non-lineaire")
 output_dir <- "../wp.sciviews.org/htdocs/sdd-umons2-2025/more"
 fs::dir_create(output_dir)
 fs::dir_create("R")
