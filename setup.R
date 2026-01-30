@@ -78,7 +78,7 @@ learnitdown$assign_url <- list(
   B05Ia_abies_balsamea = "https://classroom.github.com/a/0rhjeqUM",
   B05Ca_models         = "https://classroom.github.com/a/...",
   # Q2
-  B06Ia_fish_market    = "https://classroom.github.com/a/...",
+  B06Ia_fish_market    = "https://classroom.github.com/a/jKW9Yt6H",
   B07Ia_acp_afc        = "https://classroom.github.com/a/...",
   B07Ca_multi          = "https://classroom.github.com/a/...",
   B08Ia_mfa            = "https://classroom.github.com/a/...",

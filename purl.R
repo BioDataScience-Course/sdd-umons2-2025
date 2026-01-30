@@ -1,11 +1,11 @@
 # Purl-spin SDD I
 
 # - Extract important R code from the R Markdown files using purl in an R script
-# - Knit it to PDF using purl
+# - Knit it to HTML using purl
 # - Place these files in /more subdirectory of the website
 
 files_noext <- c("01-reg-lineaire", "02-reg-lineaire-2", "03-mod-lineaire",
-  "04-mod-lineaire-gen", "05-reg-non-lineaire")
+  "04-mod-lineaire-gen", "05-reg-non-lineaire", "06-cah-kmeans-div")
 output_dir <- "../wp.sciviews.org/htdocs/sdd-umons2-2025/more"
 fs::dir_create(output_dir)
 fs::dir_create("R")
@@ -33,7 +33,7 @@ for (f in files_noext) {
     c(TRUE, diff(grepl("^\\s*$", rlines)) != 0)]
   writeLines(rlines_clean, rfile)
 
-  # Knit with spin to PDF
+  # Knit with spin to HTML
   knitr::spin(rfile, knit = FALSE, format = "Rmd")
   rmarkdown::render(rmdfile, output_format = "html_document")
   fs::file_move(htmlfile, htmlfilefinal)

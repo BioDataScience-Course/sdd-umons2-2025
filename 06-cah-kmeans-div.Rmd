@@ -2,9 +2,29 @@
 
 # Classification & indices {#cah-kmeans-div}
 
-```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 SciViews::R("explore")
 ```
+
+```{r purlheader, echo=FALSE}
+#' ---
+#' title: "SDD II module 6 : Classification & indices"
+#' author: "Ph. Grosjean et G. Engels"
+#' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
+#' ---
+#' 
+#' Document complémentaire au [module 6 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/mod-lineaire-gen.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+#' 
+#' [Installer un environnement R](https://github.com/SciViews/svbox/tree/main/svbox2025-native)
+#' adéquat pour reproduire cette analyse. 
+```
+
 
 ##### Objectifs {.unnumbered}
 
@@ -32,7 +52,7 @@ L'analyse de données (on parle aussi d'*analyse exploratoire des données*, EAD
 
 La vidéo suivante introduit l'EAD (jusqu'à 2:11) :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 vembedr::embed_youtube("q-IVQoh1nxA", width = 770, height = 433, query = "end=131")
 ```
 
@@ -42,17 +62,25 @@ vembedr::embed_youtube("q-IVQoh1nxA", width = 770, height = 433, query = "end=13
 
 ## Distance entre individus {#distance}
 
+```{r purldistance, echo=FALSE}
+#'
+#' ### Indices et matrices de distances {#dist-mat}
+#'
+```
+
 Pour partir d'un exemple concret, imaginez que vous êtes en train d'analyser des données concernant les échantillons de plancton que vous avez prélevé sur votre lieu de recherche. Ce plancton a été numérisé (photo de chaque organisme) et les images ont été traitées avec un logiciel qui mesure automatiquement une vingtaine de variables telles que la surface de l'objet sur l'image, son périmètre, sa longueur... Vous vous trouvez donc face à un jeu de données qui a une taille non négligeable : 20 colonnes par 1262 lignes, soit le nombre d'individus mesurés dans vos échantillons.
 
 SciViews vous propose, comme d'habitude, une série de fonctions qui simplifient et homogénéisent l'utilisation de R (avec la part belle à l'interface "formule") pour votre exploration de données multivariées, notamment avec le package {exploreit}. Tout ce que vous aurez besoin est chargé automatiquement si vous spécifiez `"explore"` comme section dans `SciViews::R`. Vous commencerez donc vos scripts R et vos documents Quarto ou R Markdown avec l'instruction suivante :
 
 ```{r}
+#Configure SciViews::R for multivariate data exploration
 SciViews::R("explore")
 ```
 
 Ensuite, nous récupérons les données avec `read()` à partir du package {data.io} :
 
 ```{r}
+# Read the zooplankton dataset
 zoo <- read("zooplankton", package = "data.io")
 zoo
 ```
@@ -85,7 +113,7 @@ Par conséquent, seulement une portion de notre matrice de distance (soit le tri
 
 `r h5p(76, "B06Hb_matrice", height = 270, toc = "Objectif de la matrice de distance")`
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 
 Le package {exploreit} met à votre disposition les fonctions suivantes pour créer une matrice de dissimilarité et pour effectuer des regroupements (*cluster* en anglais) sur base de l'information qu'elle contient (nous verrons leur usage progressivement dans ce module) :
 
@@ -102,10 +130,12 @@ Le package {exploreit} met à votre disposition les fonctions suivantes pour cr�
 Voici comment nous calculons une matrice de distance `zoo6_dist`, ici sur un petit sous-ensemble de six lignes de notre jeu de données (nous devons aussi éliminer la colonne `class` qui ne contient pas de données numériques et qui ne nous intéresse pas pour le moment) :
 
 ```{r}
+# Sous-ensemble des 6 premiers individus de zoo dans zoo6
 zoo %>.%
   sselect(., -class) %>.% # Élimination de la colonne class
   head(., n = 6) ->
   zoo6 # Récupération des 6 premiers individus
+# Calcul de la matrice de distance euclidienne
 zoo6_dist <- dissimilarity(zoo6, method = "euclidean")
 zoo6_dist
 ```
@@ -114,7 +144,7 @@ Nous voyons bien ici que R n'imprime que le *triangle inférieur* de notre matri
 
 Nous verrons plus loin comment nous pouvons utiliser l'information que cette matrice de distance contient pour regrouper les individus de manière pertinente à l'aide de la technique CAH. Mais avant cela, nous avons besoin d'un peu de théorie pour bien comprendre quelle **métrique** choisir pour calculer nos distances et pourquoi. On parle aussi d'**indices** de **similarité** ou **dissimilarité**.
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 
 **Attention :** nous n'avons pas considéré ici les unités respectives de nos variables. Une surface (mm^2^) ou une longeur (mm) ne sont pas mesurées dans les mêmes unités. Nous risquons alors de donner plus de poids dans nos calculs aux variables qui présentent des valeurs élevées. Nous aurions le même effet si nous décidions par exemple d'exprimer une mesure longitudinale en µm au lieu de l'exprimer en mm. Dans ce cas, il vaut mieux standardiser d'abord le tableau (moyenne de zéro et écart type de un) selon les colonnes avant d'effectuer le calcul. Une illustration de cette approche sera discutée plus loin.
 
@@ -128,7 +158,7 @@ Nous verrons plus loin comment nous pouvons utiliser l'information que cette mat
 
 Un indice de similarité (*similarity index* en anglais) est un descripteur statistique (nombre unique) de la similitude de deux échantillons ou individus représentés par plusieurs variables dans un échantillon multivarié. Un indice de similarité prend une valeur comprise entre 0 (différence totale) et 1 ou 100% (similitude totale). Un indice de dissimilarité est le complément d'un indice de similarité (dis = 1 -- sim) ; sa valeur est comprise entre 100% (différence totale) et 0 (similitude totale).
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 
 **Attention :** dans certains cas, un indice de dissimilarité peut varier de 0 à +$\infty$. Il n'existe alors pas d'indice de similarité complémentaire. C'est le cas précisément de la distance euclidienne que nous avons explorée jusqu'ici.
 
@@ -166,7 +196,7 @@ Toute double absence n'est pas prise en compte ici également. Seuls les indices
 
 -   Bray-Curtis sur données transformées ($log(x+1)$ ou double racine carrée) pour un compromis entre les deux avec prise en compte de toutes les espèces, mais dépondération partielle des espèces les plus abondantes. C'est souvent un bon compromis.
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 
 Attention : Si les volumes échantillonnés entre stations ne sont pas comparables, il faut standardiser (moyenne nulle et écart type un) les données selon les échantillons avant de faire les calculs de distances. L'argument `scale = TRUE` pourra être ajouté à l'appel de `dissimilarity()` pour ce faire.
 
@@ -232,7 +262,7 @@ La dernière propriété d'inégalité triangulaire est la plus difficile à obt
 
 -   Pour bien comprendre la logique derrière ces indices, il est utile de comprendre leurs équations. Si elles sont pour vous trop abstraites, une façon efficace de comprendre consiste à faire le calcul à la main. Par exemple, dans le cas de l'indice de Canberra, la notion de nombre de données non nulles $nz$ n'est pas évidente. Effectuons un calcul à la main détaillé sur le tableau fictif suivant concernant trois espèces `A`, `B`, et `C` dénombré en trois stations `sta1`, `sta2` et `sta3` dans le tableau nommé `ex1` :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 ex1 <- dtf( # Here we need to create a data.frame explicitly to use row names!
   A = c(4, 3, 1),
   B = c(0, 0, 8),
@@ -254,7 +284,7 @@ où :
 
 Voici le détail du calcul (notez bien comment le double zéro pour l'espèce `B` entre les stations `sta1` et `sta2` est pris en compte dans le calcul) :
 
-```{r}
+```{r, purl=FALSE}
 sta1_2 <- (1/2) * ((abs(4 - 3)) / (4 + 3) + (abs(2 - 10)) / (2 + 10))
 round(sta1_2, 3)
 
@@ -269,7 +299,7 @@ round(sta2_3, 3)
 
 La matrice finale est la suivante :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 vegan::vegdist(ex1, method = "canberra") %>.%
   round(., 3) %>.%
   as.matrix(.) ->
@@ -281,11 +311,17 @@ knitr::kable(dst)
 
 Vérifions en laissant R faire le calcul :
 
-```{r}
+```{r, purl=FALSE}
 (dissimilarity(ex1, method = "canberra"))
 ```
 
 ## Regroupement avec CAH {#cah}
+
+```{r purlcah, echo=FALSE}
+#'
+#' ### Regroupement avec CAH {#group-cah}
+#'
+```
 
 À partir du moment où nous avons une matrice de dissimilarité entre toutes les paires d'individus de notre jeu de données, nous pouvons les regrouper en fonction de leurs ressemblances. Deux approches radicalement différentes existent. Soit nous pouvons diviser l'échantillon progressivement jusqu'à obtenir des groupes homogènes (**méthodes divisives, telles que les k-moyennes** que nous aborderons un peu plus loin), soit nous pouvons regrouper les items semblables petit à petit jusqu'à avoir traité tout l'échantillon (**méthodes agglomératives, telles que la classification ascendante hiérarchique** ou CAH étudiée ici).
 
@@ -315,12 +351,14 @@ Partons, pour étayer notre raisonnement, d'une matrice de distance euclidienne 
 Voici donc notre matrice de distance euclidienne sur les données ainsi traitées. Les individus initiaux 13 à 18 sont renumérotés 1 à 6. Nous n'imprimons plus ici la matrice de distance obtenue, car ce n'est que la première étape du travail vers une représentation plus utile (le dendrogramme).
 
 ```{r}
+# Sous-enseble de zoo (individus 13 à 18)
 zoo %>.%
   select(., -class) %>.%   # Élimination de la colonne class
   slice(., 13:18) ->       # Récupération des lignes 13 à 18
   zoo6
 
-zoo6 %>.% # Matrice de dissimilarité sur données standardisées
+# Matrice de dissimilarité sur données standardisées
+zoo6 %>.%
   dissimilarity(., method = "euclidean", scale = TRUE) ->
   zoo6std_dist
 ```
@@ -328,6 +366,7 @@ zoo6 %>.% # Matrice de dissimilarité sur données standardisées
 Notre objet `zoo6std_dist` est ensuite utilisé pour calculer notre CAH à l'aide de `cluster()`. Enfin, `chart()`se charge de tracer le dendrogramme.
 
 ```{r}
+# Dendrogramme
 zoo6std_dist %>.%
   cluster(.) ->
   zoo6std_clust # Calcul du dendrogramme
@@ -337,7 +376,7 @@ zoo6std_dist %>.%
 
 Voici comment lire ce graphique. Les deux individus les plus semblables sont le 2 et le 5 (regroupement effectué le plus bas, donc, avec la valeur de l'indice de dissimilarité le plus faible). Ensuite ce groupe formé du 2 et du 5 est le plus similaire au 3. Ensuite, le 1 et le 6 sont rassemblés. Puis le 4 se rattache au groupe formé des 2, 3 et 5 un peu plus haut sur l'axe. Finalement, le groupe de droite constitué des individus 2, 3, 4 et 5 et celui de gauche contenant le 1 et le 6 sont reliés encore plus haut suggérant ainsi la dissimilitude la plus forte entre ces deux sous-groupes.
 
-```{block, type='warning'}
+```{block, type='warning', purl=FALSE}
 
 **Attention :** La position des individus selon l'axe horizontal n'est pas importante. Il faut voir le dendrogramme comme un mobile qui peut tourner librement. C'est-à-dire que le groupe constitué de 2, 3, 4 et 5 aurait très bien pu être placé à la gauche de celui constitué de 1 et 6. De même, le sous-groupe 2, 3 et 5 aurait très bien pu être à la gauche du regroupement avec 4 à la droite, etc. Seul compte la hauteur sur l'axe vertical à laquelle le regroupement se fait.
 
@@ -348,6 +387,7 @@ Notez que nous n'avons *pas* utilisé l'information concernant les classes taxon
 [^06-cah-kmeans-div-2]: Les techniques complémentaires de classification supervisées seront abordées dans le cours de Science des Données biologiques III l'an prochain.
 
 ```{r}
+# Classes des individus 13 à 18
 zoo$class[13:18]
 ```
 
@@ -358,6 +398,7 @@ Les individus 2, 3 et 5 ("Poecilostomatoid" ou "Calanoid") sont des [copépodes]
 Si notre dendrogramme est satisfaisant (nous le déterminons en l'étudiant et en vérifiant que les regroupements obtenus ont un sens biologique par rapport à l'objectif de notre étude), nous concrétisons les groupes que nous souhaitons retenir au final en coupant l'arbre horizontalement à une hauteur choisie et en récupérant ces groupes avec la méthode `predict()`. Nous pouvons matérialiser ce niveau de coupure en traçant un trait horizontal rouge dans le dendrogramme en ajoutant `geom_dendroline(h = XXX, color = "red")`, avec 'XXX' la hauteur de coupure souhaitée. Par exemple, si nous coupons l'arbre à une hauteur de 8, nous obtenons deux groupes :
 
 ```{r}
+# Coupure du dendrogramme à 8 (2 groupes)
 chart(zoo6std_clust) +
   geom_dendroline(h = 8, color = "red")
 ```
@@ -365,6 +406,7 @@ chart(zoo6std_clust) +
 Si nous coupons l'arbre plus bas, par exemple à la hauteur de 5,8, nous obtenons trois groupes :
 
 ```{r}
+# Coupure du dendrogramme à 5,8 (3 groupes)
 chart(zoo6std_clust) +
   geom_dendroline(h = 5.8, color = "red")
 ```
@@ -372,6 +414,7 @@ chart(zoo6std_clust) +
 Les niveaux de coupure ne sont pas toujours très lisibles sur le dendrogramme, mais ils peuvent être obtenus à l'aide de `str()`.
 
 ```{r}
+# Détail sur les noeuds du dendrogramme
 str(zoo6std_clust)
 ```
 
@@ -382,11 +425,13 @@ Ici, deux niveaux de coupure se détachent :
 -   en deux groupes, nous avons les crustacés séparés du reste.
 
 ```{r}
+# Deux groupes
 chart(zoo6std_clust) +
   geom_dendroline(h = 7.5, color = "red")
 ```
 
 ```{r}
+# Extraction des deux groupes
 (group2 <- predict(zoo6std_clust, h = 7.5))
 ```
 
@@ -395,6 +440,7 @@ Les individus 1 et 6 sont dans le groupe 1, et les autres dans le groupe 2.
 -   en quatre groupes, nous avons les copépodes séparés des trois autres items chacun dans un groupe séparé.
 
 ```{r}
+# Quatre groupes
 chart(zoo6std_clust) +
   geom_dendroline(h = 5, color = "red")
 ```
@@ -402,6 +448,7 @@ chart(zoo6std_clust) +
 Le groupe des individus 2, 3 et 5 est formé. Les trois autres groupes contiennent des individus uniques 1, 6 et 4 respectivement.
 
 ```{r}
+# Extraction des quatre groupes
 (group4 <- predict(zoo6std_clust, h = 5))
 ```
 
@@ -410,10 +457,12 @@ L'individu 1 est dans le groupe 1, les individus 2, 3 et 5 sont dans le groupe 2
 Nous pouvons ajouter cette variable indiquant les groupes dans le tableau de données à l'aide de la méthode `augment()`. Le nom de la variable ainsi créée est `.fitted`. Ensuite, nous utilisons cette information pour en faire d'autres choses utiles. Par exemple, nous représentons un nuage de point à partir de deux variables quantitatives et colorons nos points en fonction de nos groupes comme suit :
 
 ```{r}
+# Ajout du regroupement dans zoo6
 zoo6g <- augment(data = zoo6, zoo6std_clust, h = 7.5)
 names(zoo6g) # Nom des variables dans ce tableau
 # Nous transformons ces groupes en variable facteur
 zoo6g$group <- factor(zoo6g$.fitted)
+# Graphique des deux variables en utilisant la couleur en fonction des groupes CAH
 chart(data = zoo6g, area ~ circularity %col=% group) +
   geom_point()
 ```
@@ -429,6 +478,7 @@ Tant que l'on compare des individus isolés entre eux, il n'y a pas d'ambiguït�
 ![](images/sdd2_06/link_single.png)
 
 ```{r}
+# Dendrogramme avec liens simples
 zoo6std_dist %>.%
   cluster(., method = "single") %>.%
   chart(.)
@@ -449,6 +499,7 @@ Le dendrogramme a tendance à effectuer des groupes séparés plus nettement les
 Nous obtenons une situation intermédiaire entre liens simples et liens moyens.
 
 ```{r}
+# Dendrogramme avec liens moyens
 zoo6std_dist %>.%
   cluster(., method = "average") %>.%
   chart(.)
@@ -459,6 +510,7 @@ Dans ce cas-ci, le résultat est similaire aux liens complets, mais ce n'est pas
 -   **Méthode de Ward D2** `cluster(DIS, method = "ward.D2")`. Considérant le partitionnement de la variance totale du nuage de points (on parle aussi de l'*inertie* du nuage de points) entre variance interclasse et variance intraclasse, la méthode vise à maximiser la variance interclasse et minimiser la variance intraclasse, ce qui revient d'ailleurs au même. Cette technique fonctionne souvent très bien pour obtenir des groupes bien individualisés.
 
 ```{r}
+# Dendrogramme avec liens Ward D2
 zoo6std_dist %>.%
   cluster(., method = "ward.D2") %>.%
   chart(.)
@@ -469,6 +521,7 @@ Ici nous obtenons un dendrogramme très proche des liens complets. Encore une fo
 -   Liens **médians**, **centroïdes**..., constituent encore d'autres méthodes possibles, mais moins utilisées. Elles ont l'inconvénient de produire parfois des *inversions* dans le dendrogramme, c'est-à-dire qu'un regroupement plus avant se fait parfois à une hauteur plus basse sur l'axe des ordonnées, ce qui rend le dendrogramme peu lisible et beaucoup moins esthétique. Dans notre exemple, la méthode centroïde crée une telle inversion à la hauteur de 5 environ sur l'axe des ordonnées entre l'individu 6 et l'individu 1. Alors, qui est regroupé en premier ? Pas facile à déterminer dans ce cas !
 
 ```{r}
+# Dendrogramme avec liens centroïdes
 zoo6std_dist %>.%
   cluster(., method = "centroid") %>.%
   chart(.)
@@ -483,10 +536,12 @@ zoo6std_dist %>.%
 Voici ce que cela donne si nous effectuons une CAH sur le jeu `zoo`plancton complet avec ses 1262 lignes. Notez que pour visionner les labels lorsque le nombre d'items augmente, vous pouvez combiner comme ici un dendrogramme horizontal et un étirement en hauteur du graphique en indiquant `fig.asp=...` comme paramètre du chunk avec une valeur de `fig.asp` \> 1.
 
 ```{r, fig.asp=4/3}
+# Dendrogramme sur le jeu de données complet zoo
 zoo %>.%
   sselect(., -class) %>.% # Élimination de la colonne class
   # Matrice de dissimilarité sur données standardisées
   dissimilarity(., method = "euclidean", scale = TRUE) %>.%
+  # CAH Ward D2
   cluster(., method = "ward.D2") -> # CAH avec Ward D2
   zoo_clust
 
@@ -501,18 +556,21 @@ Naturellement, avec 1262 branches, notre dendrogramme est très encombré. Cepen
 Notre CAH est terminée, nous pouvons récupérer les groupes dans une variable supplémentaire dans notre tableau et l'utiliser ensuite.
 
 ```{r}
+# Ajout des groupes dans zoo
 augment(data = zoo, zoo_clust, h = 70) %>.%
   smutate(., group = as.factor(.fitted)) ->
   zoog
 
+# Nuage de points avec mise en évidence des groupes par la couleur
 chart(data = zoog, compactness ~ ecd %col=% group) +
-  geom_point() + # Exploration visuelle des groupes (exemple)
+  geom_point() +
   coord_trans(x = "log10", y = "log10") # Axes en log10
 ```
 
 Et de manière optionnelle, si un classement est disponible par ailleurs (c'est le cas ici avec la variable `class`), nous pouvons réaliser un tableau de contingence à doubles entrées entre le regroupement obtenu par CAH et le classement récupéré de manière indépendante à cette analyse pour comparaison.
 
 ```{r}
+# Tableau de contingence entre classes et groupes CAH
 table(classe = zoog$class, cah = zoog$group)
 ```
 
@@ -522,7 +580,7 @@ Ainsi, nous pouvons constater que le groupe 1 contient une fraction importante d
 
 -   La vidéo suivante présente la matière que nous venons d'étudier de manière légèrement différente. Plus d'explications sont également apportées concernant la méthode de Ward.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 vembedr::embed_youtube("SE_4dLh5vXY", width = 770, height = 433, query = list(start = 192, end = 1004))
 ```
 
@@ -530,7 +588,7 @@ vembedr::embed_youtube("SE_4dLh5vXY", width = 770, height = 433, query = list(st
 
 -   Pour bien comprendre la façon dont une CAH est réalisée, il est utile de détailler le calcul étape par étape sur un exemple simple. Voici une matrice de distance euclidienne fictive entre six stations nommées A à F :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 dat <- dtf(
   espece1 = c(0,  9,  2,  1,  1,  7),
   espece2 = c(8,  0,  2,  5,  8,  1),
@@ -560,7 +618,7 @@ Effectuons une CAH manuellement par liens complets et traçons le dendrogramme c
 
 Matrice de distance recalculée :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 dst1 <- dtf(
   I = c(15,  7.28,  7.81, 10.39),
   B = c("", 10.86, 13.04,  7.42),
@@ -579,7 +637,7 @@ knitr::kable(dst1)
 
 Matrice de distance recalculée :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 dst2 <- dtf(
   I  = c(15,  7.81, 10.39),
   B  = c("", 13.04,  7.42),
@@ -596,7 +654,7 @@ knitr::kable(dst2)
 
 Matrice de distance recalculée :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 dst3 <- dtf(
   I   = c(15,  7.81),
   III = c("", 13.04))
@@ -611,7 +669,7 @@ knitr::kable(dst3)
 
 Matrice de distance recalculée :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 dst4 <- dtf(III = c(15))
 dst4 <- as.matrix(dst4)
 rownames(dst4) <- c("**IV**")
@@ -624,7 +682,7 @@ knitr::kable(dst4)
 
 Voici le dendrogramme résultant *(si vous avez réalisé l'exercice à la main, vous pouvez aussi tracer le dendrogramme avec votre crayon et le comparer à la version ci-dessous tout en vous rappelant que l'ordre des labels sur l'axe des abscisses n'a pas d'importante, par exemple, si vous avez placé le groupe B-F à la droite de votre dendrogramme, c'est également correct)* :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 complete <- cluster(dst0, method = "complete")
 chart(complete)
 ```
@@ -633,7 +691,7 @@ chart(complete)
 
 `r learnr("B06La_ahc", title = "Matrices de distance et classification hiérarchique ascendante", toc = "Matrices de distance et CAH")`
 
-```{r assign_B06Ia_fish_market_I, echo=FALSE, results='asis'}
+```{r assign_B06Ia_fish_market_I, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B06Ia_fish_market", part = "I",
     url = "https://github.com/BioDataScience-Course/B06Ia_fish_market",
@@ -650,6 +708,12 @@ if (exists("assignment"))
 ```
 
 ## K-moyennes {#kmoyennes}
+
+```{r purlkmeans, echo=FALSE}
+#'
+#' ### K-moyennes {#kmeans}
+#'
+```
 
 Les k-moyennes (ou *k-means* en anglais) représentent une autre façon de regrouper les individus d'un tableau multivarié. Par rapport à la CAH, cette technique est généralement moins efficace, mais elle a l'avantage de permettre le regroupement d'un très grand nombre d'individus (gros jeu de données), là où la CAH nécessiterait trop de temps de calcul et de mémoire vive. Il est donc utile de connaître cette seconde technique à utiliser comme solution de secours lorsque le dendrogramme de la CAH devient illisible sur de très gros jeux de données.
 
@@ -670,14 +734,14 @@ Le principe des k-moyennes est assez simple[^06-cah-kmeans-div-3] :
 
 La technique est illustrée dans la vidéo suivante :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 #vembedr::embed_youtube("Aic2gHm9lt0", width = 770, height = 433)
 vembedr::embed_youtube("5I3Ei69I40s", width = 770, height = 433)
 ```
 
 Essayez par vous-même via l'application ci-dessous qui utilise le [célèbre jeu de données `iris`](https://archive.ics.uci.edu/ml/datasets/iris). Notez que vous devez utiliser des variables **numériques**. Par exemple, `Species` étant une variable qualitative, vous verrez que cela ne fonctionne pas dans ce cas.
 
-```{r, echo=FALSE, include=TRUE, out.extra='style="border: none;"', out.width='100%'}
+```{r, echo=FALSE, include=TRUE, out.extra='style="border: none;"', out.width='100%', purl=FALSE}
 knitr::include_app("https://jjallaire.shinyapps.io/shiny-kmeans/", height = "600px")
 ```
 
@@ -686,6 +750,7 @@ knitr::include_app("https://jjallaire.shinyapps.io/shiny-kmeans/", height = "600
 R propose la fonction `kmeans()` et différents packages la supplémentent pour enrichir votre boite à outils. Nous rassemblons tout cela sous une interface cohérente dans `SciViews::R` autour d'une fonction légèrement différente : `k_means()`. Vous rendez cette fonction disponible grâce à l'instruction `SciViews::R("explore")`.
 
 ```{r}
+# Dialect SciViews::R avec l'extension d'exploration de données multivariées
 SciViews::R("explore")
 ```
 
@@ -694,6 +759,7 @@ Vous avez les méthodes `print()`, `plot()`, `autoplot()`, `chart()`, `augment()
 Afin de comparer la classification par k-moyennes à celle par CAH, nous reprendrons ici le même jeu de données `zooplankton`.
 
 ```{r}
+# Jeu de données zooplankton
 zoo <- read("zooplankton", package = "data.io")
 zoo
 ```
@@ -701,16 +767,18 @@ zoo
 Commençons par l'exemple simplissime de la réalisation de deux groupes à partir de six individus issus de ce jeu de données, comme nous l'avons fait avec la CAH :
 
 ```{r, echo=FALSE}
+# Initialisation du générateur de nombres psuedo-aléatoires
 set.seed(38)
 ```
 
 ```{r}
+# Individus 13 à 18 uniquement
 zoo %>.%
   select(., -class) %>.% # Élimination de la colonne class
   slice(., 13:18) ->   # Récupération des lignes 13 à 18
   zoo6
 
-# Ne pas oublier de standardiser avec scale()
+# K-moyennes, ne pas oublier de standardiser avec scale()
 zoo6_kmn <- k_means(scale(zoo6), k = 2)
 zoo6_kmn
 ```
@@ -726,18 +794,21 @@ Nous voyons que la fonction `k_means()` effectue notre classification[^06-cah-km
 -   et enfin, la liste des composants accessibles avec l'opérateur `$` ; par exemple, pour obtenir la taille de chaque groupe (en nombre d'individus), nous ferons :
 
 ```{r}
+# Taille des groupes K-moyennes
 zoo6_kmn$size
 ```
 
 Le package {broom} contient trois fonctions complémentaires qui nous seront utiles : `tidy()`, `augment()` et `glance()`. `broom::glance()` retourne un **data.frame** avec les statistiques permettant d'évaluer la qualité de la classification obtenue :
 
 ```{r}
+# Information sur la classification K-moyennes
 glance(zoo6_kmn)
 ```
 
 Si nous voulons déterminer la valeur optimale de *k*, nous pouvons utiliser `profile_k()` appliqué au jeu de données initial, ou à la composante `data` de notre objet `k_means` (spécifier éventuellement une valeur différente de celle par défaut pour l'argument `k.max =` de la fonction, voir l'aide en ligne de `?factoextra::fviz_nbclust`) dont `profile_k()` dérive :
 
 ```{r}
+# Profil de la somme des carrés intragroupes en fonction de k
 profile_k(scale(zoo6)) # ou zoo6_kmn$data
 ```
 
@@ -747,7 +818,7 @@ Ensuite, avec *k* croissant, notre objectif est de faire des regroupements qui d
 
 Nous recherchons ici des sauts importants dans la décroissance de la somme des carrés, tout comme dans le dendrogramme obtenu par la CAH nous recherchions des sauts importants dans les regroupements (hauteur des barres verticales du dendrogramme). Nous observons ici un saut important pour *k* = 2, puis une diminution un peu moins forte. Ceci *suggère* que nous pourrions considérer deux groupes, mais qu'un regroupement plus détaillé a quand même un sens ici.
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 Le nombre de groupes proposé par `profile_k()` n'est qu'indicatif ! Si vous avez par ailleurs d'autres informations qui vous suggèrent un regroupement différent, ou si vous voulez essayer un regroupement plus ou moins détaillé par rapport à ce qui est proposé, c'est tout aussi correct.
 
 La fonction `profile_k()` propose d'ailleurs deux autres méthodes pour déterminer le nombre optimal de groupes *k*, avec `method = "silhouette"` ou `method = "gap_stat"`. Voyez l'aide en ligne de la fonction `?factoextra::fviz_nbclust`. Ces différentes méthodes peuvent d'ailleurs suggérer des regroupements différents pour les mêmes données... preuve qu'il n'y a pas *une et une seule* solution optimale !
@@ -758,6 +829,7 @@ La fonction `profile_k()` propose d'ailleurs deux autres méthodes pour détermi
 [^06-cah-kmeans-div-5]: De manière générale, éviter de rajouter des données calculées dans le jeu de données initial. Cela peut amener à des erreurs particulièrement délicates si vous relancez ensuite l'analyse sur ce tableau.
 
 ```{r}
+# Récupération des groupes K-moyennes dans le jeu de données
 augment(zoo6_kmn, zoo6) %>.%
   srename(., cluster = .cluster) ->
   zoo6b
@@ -767,18 +839,21 @@ names(zoo6b)
 La nouvelle variable `cluster` contient ceci :
 
 ```{r}
+# Contenu de la variable cluster
 zoo6b$cluster
 ```
 
 C'est le contenu de `zoo6_kmn$cluster`, mais transformé en variable `factor`.
 
 ```{r}
+# Variable factor
 class(zoo6b$cluster)
 ```
 
 Nous pouvons enfin utiliser `tidy()` pour obtenir un tableau avec les coordonnées des *k* centres. Nous l'enregistrerons dans la variable `zoo6_centers`, en ayant bien pris soin de nommer les variables du même nom que dans le tableau original `zoo6` (argument `col.names = names(zoo6)`, afin de conserver le nom de nos variables initiales dans ce nouveau tableau :
 
 ```{r}
+# Centres des groupes K-moyennes
 zoo6_centers <- tidy(zoo6_kmn, col.names = names(zoo6))
 zoo6_centers
 ```
@@ -788,6 +863,7 @@ La dernière colonne de ce tableau est également nommée `cluster`. C'est le li
 Un autre outil très utile est la représentation visuelle du regroupement effectué par nos k-moyennes sur un graphique en nuage de points. Évidemment, on ne peut choisir que deux variables parmi l'ensemble de celles qui sont utilisées pour le calcul (argument `choices =`).
 
 ```{r}
+# Graphique des K-moyennes
 kmn_chart <- chart(zoo6_kmn, choices = c("circularity", "area"),
   alpha = 0.8, c.size = 5, c.shape = 17)
 kmn_chart
@@ -795,6 +871,7 @@ kmn_chart
 Les arguments optionnels `c.size =` et `c.shape =` contrôlent l'apparence des centres des groupes. L'argument optionnel `alpha =` gère la semi-transparence des points, utile si vous avez beaucoup de points à afficher sur le graphique. À noter que nos variables étant standardisées avec `scale()`, les échelles des axes X et Y ne correspondent plus aux valeurs, ni aux unités initiales. De plus, les labels ont été perdus. Donc, vous pourriez y rajouter des labels plus informatifs pour indiquer que les valeurs sont standardisées :
 
 ```{r}
+# Meilleurs labels des axes
 kmn_chart +
   labs(x = "Circularité standardisée", y = "Aire standardisée")
 ```
@@ -816,10 +893,12 @@ Nous constatons que le point classé différemment est un "Poecilostomatoïd". O
 Comme les k-moyennes partent d'une position aléatoire des *k* centres, le résultat final peut varier et n'est pas forcément optimal. Pour éviter cela, nous pouvons indiquer à `k_means()` d'essayer différentes situations de départ via l'argument `nstart =`. Par défaut, nous prenons une seule situation aléatoire de départ `nstart = 1`, mais en indiquant une valeur plus élevée pour cet argument, il est possible d'essayer plusieurs situations de départ et ne garder que le meilleur résultat final. Cela donne une analyse plus robuste et plus reproductible... mais le calcul est naturellement plus long.
 
 ```{r, echo=FALSE}
+# Initialisation du générateur pseudo-aléatoire
 set.seed(9768)
 ```
 
 ```{r}
+# K-moyennes
 k_means(zoo6, k = 2, nstart = 50) # 50 positions de départ différentes
 ```
 
@@ -834,6 +913,7 @@ Dans ce cas simple, cela ne change pas grand-chose. Mais avec un plus gros jeu d
 Maintenant que nous savons utiliser `k_means()` et les fonctions annexes, nous pouvons classer le jeu de données `zoo` tout entier.
 
 ```{r}
+# Profil K sur le jeu entier zoo
 zoo %>.%
   sselect(., -class) %>.%
   scale(.) %>.%
@@ -843,7 +923,9 @@ zoo %>.%
 Nous observons un saut maximal pour *k* = 2, mais le saut pour *k* = 3 est encore conséquent. Afin de comparer avec ce que nous avons fait par CAH, nous utiliserons donc *k* = 3. Enfin, comme un facteur aléatoire intervient, qui définira au final le numéro des groupes, nous utilisons `set.seed()` pour rendre l'analyse reproductible. **Pensez à donner une valeur différente, choisie au hasard, à cette fonction pour chaque utilisation !** Pensez aussi à éliminer les colonnes non numériques à l'aide de `sselect()` et à standardiser avec `scale()` si c'est nécessaire.
 
 ```{r}
+# Initialisation pseudo-aléatoire
 set.seed(562)
+# K-moyennes sur jeu complet standardisé
 sselect(zoo, -class) %>.%
   scale(.) %>.%
   k_means(., k = 3, nstart = 50) ->
@@ -854,6 +936,7 @@ zoo_kmn
 Récupérons les groupes dans `zoob`
 
 ```{r}
+# Récupération des groupes K-moyennes dans le jeu de données zoo
 augment(zoo_kmn, zoo) %>.%
   srename(., cluster = .cluster) ->
   zoob
@@ -862,6 +945,7 @@ augment(zoo_kmn, zoo) %>.%
 Et enfin, effectuons un graphique similaire à celui réalisé pour la CAH au module précédent. À noter que nous pouvons ici choisir n'importe quelle paire de variables quantitatives pour représenter le nuage de points. Nous ajoutons des ellipses pour matérialiser les groupes à l'aide de `stat_ellipse()`. Elles contiennent 95% des points du groupe à l'exclusion des extrêmes. Enfin, comme il y a beaucoup de points, nous choisissons de les rendre semi-transparents avec l'argument `alpha = 0.2` pour plus de lisibilité du graphique.
 
 ```{r}
+# Graphique K-moyennes ECD vs Compacité
 chart(zoo_kmn, choices = c("ecd", "compactness"), alpha = 0.2) +
   labs(x = "ECD standardisée", y = "Compacité standardisée") +
   stat_ellipse()
@@ -870,6 +954,7 @@ chart(zoo_kmn, choices = c("ecd", "compactness"), alpha = 0.2) +
 Nous observons ici un regroupement similaire, mais pas identique à la CAH. La tabulation des groupes en fonction des classes connues par ailleurs montre aussi que les k-moyennes donnent des résultats similaires à la CAH :
 
 ```{r}
+# Table de con,tingence entre classes et groupes K-moyennes
 table(zoob$class, zoob$cluster)
 ```
 
@@ -891,7 +976,7 @@ Cet [article](https://www.r-bloggers.com/the-complete-guide-to-clustering-analys
 
 `r learnr("B06Lb_kmeans", title = "Partitionnement par k-moyennes", toc = "Partitionnement par k-moyennes")`
 
-```{r assign_B06Ia_fish_market_II, echo=FALSE, results='asis'}
+```{r assign_B06Ia_fish_market_II, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B06Ia_fish_market", part = "II",
     url = "https://github.com/BioDataScience-Course/B06Ia_fish_market",
@@ -909,6 +994,12 @@ if (exists("assignment"))
 
 ## Indices de diversité {#indicesdiversite}
 
+```{r purldiversity, echo=FALSE}
+#'
+#' ### Indices de diversité {#diversity}
+#'
+```
+
 Au premier abord, la notion de biodiversité est simple. Elle représente toute la variété des formes de la vie des gènes jusqu'à l'écosystème. Cependant, réduire toute cette richesse à un seul nombre n'est pas quelque chose d'évident. Les scientifiques vont donc avoir recours à ce que l'on appelle des **indices de diversité** pour tenter de la quantifier. Ces indices sont des paramètres qui sont fréquemment utilisés pour obtenir des informations sur l'état de communautés végétales ou animales, leur viabilité ou leur évolution dans le temps par exemple. Ils permettront également d'apprécier la diversité qui peut exister entre des zones ou des milieux différents. Le choix d'un indice dépendra de la taille de l'échantillon, du type de données et de la résolution spatiale. Dès lors, il existe différentes expressions de la diversité :
 
 -   la **diversité alpha** ($\alpha$) ou diversité locale, entre les différents relevés à l'intérieur d'une zone (diversité intrazone),
@@ -924,10 +1015,13 @@ Le premier indice et le plus simple à calculer correspond à la **richesse spé
 Le jeu de données `BCI` du package {vegan} contient les valeurs de dénombrement obtenues suite au recensement des arbres sur 50 parcelles de 1 hectare sur l'île de Barro Colorado (BCI = Barro Colorado Island). Le nombre total d'espèces recensées sur les 50 parcelles est de 225. Prenons, un sous-ensemble de cinq parcelles de ce jeu de données et cherchons à identifier la richesse spécifique pour chacune d'entre-elles.
 
 ```{r}
+# Dialecte SciViews::R avec module d'exploration multivariée
 SciViews::R("explore")
 
+# Jeu de données BCI
 bci <- read("BCI", package = "vegan")
 
+# Sous-échantillon de 5 parcelles
 set.seed(2003)
 bci_sub <- sample_n(bci, 5) 
 
@@ -963,6 +1057,7 @@ Pour calculer l'indice de Shannon avec R, vous pouvez utiliser la fonction `vega
 -   base : la base du logarithme lors du calcul de l'indice de Shannon. Par défaut, la fonction utilise le logarithme népérien.
 
 ```{r}
+# Indice de Shannon
 bci_sub_h <- vegan::diversity(bci_sub)
 bci_sub_h
 ```
@@ -984,8 +1079,10 @@ La valeur de l'indice d'équitabilité de Piélou (J) varie donc entre 0 et 1 o�
 Il n'existe pas de fonction pour calculer cet indice dans R mais on peut le calculer facilement à partir de l'indice de Shannon que l'on vient de calculer et avec la fonction `vegan::specnumber()` pour connaître la richesse spécifique.
 
 ```{r}
+# Richesse spécifique S
 bci_sub_s <- vegan::specnumber(bci_sub)
 bci_sub_s
+# Indice d'équitabilité de Piélou J 
 bci_sub_j <- bci_sub_h / ln(bci_sub_s)
 bci_sub_j  
 ```
@@ -1010,6 +1107,7 @@ $$E = 1 - \sum_{i=1}^S p_i^2$$
 L'indice de Simpson varie dans l'intervalle $[0,1[$. Cet indice tend donc vers 0 lorsque la diversité est minimale et vers $1 - \frac{1}{S}$ lorsque la diversité est maximale. Il vaudra donc 0 si une seule espèce est présente et une probabilité de $p_i = 1$ et $1 - \frac{1}{S}$ si les différentes espèces présentes ont la même probabilité $p_i = \frac{1}{S}$. Le calcul de cet indice dans R se fait aussi avec la fonction `diversity()`, mais en précisant l'argument `index=` : `vegan::diversity(, index = "simpson")`.
 
 ```{r}
+# Indice de diversité de Simpson
 bci_sub_e <- vegan::diversity(bci_sub, index = "simpson")
 bci_sub_e
 ```
@@ -1040,6 +1138,7 @@ $$ similarité = 1 – dissimilarité$$
 Regardons comment calculer l'indice de dissimilarité de Jaccard pour nos cinq parcelles avec R :
 
 ```{r}
+# Indice de diversité de Jaccard
 dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
 ```
 
@@ -1062,6 +1161,12 @@ dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
 Ce sixième module vous a permis de comprendre la classification hiérarchique, la méthode des k-moyennes et divers indices intéressants en biologie. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("06")`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/06-cah-kmeans-div.html)
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/06-cah-kmeans-div.R){target="top"}
+
 
 ##### Progression {.unnumbered}
 
