@@ -413,23 +413,24 @@ Nous n'avons fait qu'effleurer les nombreuses possibilités des cartes auto-adap
 
 `r learnr("B10La_som", title = "Cartes auto-adaptatives (SOM)", toc = "Cartes auto-adaptatives (SOM)")`
 
-Terminez maintenant votre projet de groupe.
+**Terminez maintenant votre projet de groupe.**
 
-```{r assign_B08Ga_open_data_II, echo=FALSE, results='asis'}
+```{r assign_B06Ga_open_data_V, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B09Ga_open_data", part = "II",
-    url = "https://github.com/BioDataScience-Course/B09Ga_open_data",
+  assignment2("B06Ga_open_data", part = "V",
+    url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
     course.ids = c(
-      'S-BIOG-061' = !"B09Ga_{YY}M_open_data"),
+      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
     course.urls = c(
-      'S-BIOG-061' = !"{assign_url$B09Ga_open_data}"),
+      'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
     course.starts = c(
-      'S-BIOG-061' = !"{class2_start(mod, 'B09')}"),
+      'S-BIOG-061' = !"{class2_start(mod, 'B06')}"),
     course.ends = c(
       'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
     term = "Q2", level = 4, n = 4,
-    toc = "Étude de données ouvertes choisies librement (II)")
+    toc = "Étude de données ouvertes choisies librement (V)")
 ```
+
 
 ## Récapitulatif des exercices {#recapitulatifb10}
 

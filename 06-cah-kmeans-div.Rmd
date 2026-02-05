@@ -1156,6 +1156,25 @@ dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
 
 <!-- Ce document n'est malheureusement plus accessible! [Numerical Ecology with R](https://www.springer.com/gp/book/9781441979766) traite en détail de nombreuses méthodes multivariées avec illustrations dans R (ouvrage recommandé pour tous ceux qui explorent des données multivariées en écologie, en anglais). -->
 
+**Créez un projet de groupe par quatre étudiants, que vous continuerez aux modules suivants.**
+
+```{r assign_B06Ga_open_data_I, echo=FALSE, results='asis'}
+if (exists("assignment2"))
+  assignment2("B06Ga_open_data", part = "I",
+    url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
+    course.ids = c(
+      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
+    course.urls = c(
+      'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
+    course.starts = c(
+      'S-BIOG-061' = !"{class2_start(mod, 'B06')}"),
+    course.ends = c(
+      'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
+    term = "Q2", level = 4, n = 4,
+    toc = "Étude de données ouvertes choisies librement (I)")
+```
+
+
 ## Récapitulatif des exercices {#recapitulatifb06}
 
 Ce sixième module vous a permis de comprendre la classification hiérarchique, la méthode des k-moyennes et divers indices intéressants en biologie. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :

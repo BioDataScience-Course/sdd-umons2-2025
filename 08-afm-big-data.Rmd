@@ -710,6 +710,25 @@ if (exists("assignment"))
     toc = "AFM sur plancton (gros jeu de données) partie II")
 ```
 
+**Continuez à travailler sur votre projet de groupe.**
+
+```{r assign_B06Ga_open_data_III, echo=FALSE, results='asis'}
+if (exists("assignment2"))
+  assignment2("B06Ga_open_data", part = "III",
+    url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
+    course.ids = c(
+      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
+    course.urls = c(
+      'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
+    course.starts = c(
+      'S-BIOG-061' = !"{class2_start(mod, 'B06')}"),
+    course.ends = c(
+      'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
+    term = "Q2", level = 4, n = 4,
+    toc = "Étude de données ouvertes choisies librement (III)")
+```
+
+
 ## Récapitulatif des exercices {#recapitulatifb08}
 
 Ce module 8 vous a permis de découvrir l'AFM, et de traiter correctement des jeux de données volumineux. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :

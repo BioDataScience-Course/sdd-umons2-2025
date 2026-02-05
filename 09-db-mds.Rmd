@@ -798,22 +798,22 @@ if (exists("assignment"))
     toc = "Bases de données et analyse MDS (rat-kangourous à Portal)")
 ```
 
-**Créez un projet de groupe par quatre étudiants, que vous continuerez au module 10.**
+**Progressez également dans votre travail de groupe.**
 
-```{r assign_B09Ga_open_data_I, echo=FALSE, results='asis'}
+```{r assign_B06Ga_open_data_IV, echo=FALSE, results='asis'}
 if (exists("assignment2"))
-  assignment2("B09Ga_open_data", part = "I",
-    url = "https://github.com/BioDataScience-Course/B09Ga_open_data",
+  assignment2("B06Ga_open_data", part = "IV",
+    url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
     course.ids = c(
-      'S-BIOG-061' = !"B09Ga_{YY}M_open_data"),
+      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
     course.urls = c(
-      'S-BIOG-061' = !"{assign_url$B09Ga_open_data}"),
+      'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
     course.starts = c(
-      'S-BIOG-061' = !"{class2_start(mod, 'B09')}"),
+      'S-BIOG-061' = !"{class2_start(mod, 'B06')}"),
     course.ends = c(
       'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
     term = "Q2", level = 4, n = 4,
-    toc = "Étude de données ouvertes choisies librement (I)")
+    toc = "Étude de données ouvertes choisies librement (IV)")
 ```
 
 ## Récapitulatif des exercices {#recapitulatifb09}

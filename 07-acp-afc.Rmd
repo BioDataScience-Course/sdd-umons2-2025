@@ -1058,6 +1058,25 @@ Vous pouvez soumettre vos résultats pendant une période de temps précise via 
 `r launch_shiny("https://sdd.umons.ac.be/B07Ca_multi/", height = 800, delay = 20, toc = NULL, alt1 = "*Cliquez pour visualiser le classement.*", alt2 = "*Cliquez pour visualiser le classement.*")`
 :::
 
+**Continuez votre projet de groupe entamé au module 6.**
+
+```{r assign_B06Ga_open_data_II, echo=FALSE, results='asis'}
+if (exists("assignment2"))
+  assignment2("B06Ga_open_data", part = "II",
+    url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
+    course.ids = c(
+      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
+    course.urls = c(
+      'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
+    course.starts = c(
+      'S-BIOG-061' = !"{class2_start(mod, 'B06')}"),
+    course.ends = c(
+      'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
+    term = "Q2", level = 4, n = 4,
+    toc = "Étude de données ouvertes choisies librement (II)")
+```
+
+
 ## Récapitulatif des exercices {#recapitulatifb07}
 
 Ce module 7 vous a permis de découvrir deux méthodes très utilisées dans les statistiques exploratoires : l' ACP et l'AFC. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
