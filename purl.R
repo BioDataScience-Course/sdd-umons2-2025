@@ -1,4 +1,4 @@
-# Purl-spin SDD I
+# Purl-spin SDD II
 
 # - Extract important R code from the R Markdown files using purl in an R script
 # - Knit it to HTML using purl

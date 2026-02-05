@@ -7,7 +7,7 @@
 #'     highlight: kate
 #' ---
 #' 
-#' Document complémentaire au [module 6 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/mod-lineaire-gen.html).
+#' Document complémentaire au [module 6 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/cah-kmeans-div.html).
 #' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
 #' 
 #' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
@@ -278,3 +278,17 @@ bci_sub_e
 
 # Indice de diversité de Jaccard
 dissimilarity(bci_sub, method = "jaccard", binary = TRUE)
+
+if (exists("assignment2"))
+  assignment2("B06Ga_open_data", part = "I",
+    url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
+    course.ids = c(
+      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
+    course.urls = c(
+      'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
+    course.starts = c(
+      'S-BIOG-061' = !"{class2_start(mod, 'B06')}"),
+    course.ends = c(
+      'S-BIOG-061' = !"{n4_end(mod, 'B10')}"),
+    term = "Q2", level = 4, n = 4,
+    toc = "Étude de données ouvertes choisies librement (I)")
