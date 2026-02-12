@@ -80,7 +80,7 @@ learnitdown$assign_url <- list(
   # Q2
   B06Ia_fish_market    = "https://classroom.github.com/a/jKW9Yt6H",
   B06Ga_open_data      = "https://classroom.github.com/a/9Y7xILiH",
-  B07Ia_acp_afc        = "https://classroom.github.com/a/...",
+  B07Ia_acp_afc        = "https://classroom.github.com/a/sheuR9QS",
   B07Ca_multi          = "https://classroom.github.com/a/...",
   B08Ia_mfa            = "https://classroom.github.com/a/...",
   B08Ib_zooscannet     = "https://classroom.github.com/a/...",
