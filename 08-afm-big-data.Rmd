@@ -1,20 +1,40 @@
 # AFM & big data {#afm-big-data}
 
-```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 SciViews::R("explore", lang = "fr")
 ```
+
+```{r purlheader, echo=FALSE}
+#' ---
+#' title: "SDD II module 8 : AFM & big data"
+#' author: "Ph. Grosjean et G. Engels"
+#' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
+#' ---
+#' 
+#' Document complémentaire au [module 8 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/afm-big-data.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+#' 
+#' [Installer un environnement R](https://github.com/SciViews/svbox/tree/main/svbox2025-native)
+#' adéquat pour reproduire cette analyse. 
+```
+
 
 ##### Objectifs {.unnumbered}
 
 -   Être capable d'analyser des données présentes dans des tableaux multiples et/ou hétérogènes simultanément à l'aide de l'analyse factorielle multiple
 
--   Être capable de choisir les meilleurs outils de traitement et de remaniement de données en fonction de la taille des jeux de données à traiter, en particulier pour les (très) gros tableaux (= big data)
+-   Pouvoir choisir les meilleurs outils de traitement et de remaniement de données en fonction de la taille des jeux de données à traiter, en particulier pour les (très) gros tableaux (= big data)
 
 ##### Prérequis {.unnumbered}
 
 -   Les modules 6 et 7 doivent être assimilés avant d'attaquer le présent module.
 
-```{asis, eval=is_html_output()}
+```{asis, eval=is_html_output(), purl=FALSE}
 ![[Plume, generative aRt (art généré à l'aide du langage R), CC-BY-4.0, Danielle Navarro.](https://storage.googleapis.com/djnavarro-art/series-puffs/3000/pollen_13_1366.jpg)](https://storage.googleapis.com/djnavarro-art/series-puffs/800/pollen_13_1366.jpg)
 ```
 
@@ -45,11 +65,17 @@ L'analyse factorielle multiple (AFM, *multiple factorial analysis* ou MFA en ang
 
 ### AFM dans SciViews::R
 
-Lorsque vous chargez les packages nécessaires à l'analyse exploratoire dans SciViews R à l'aide de `SciViews::R("explore")`, vous avez à disposition la fonction `mfa(data = ...., formula)` qui fera les calculs qui nous intéressent. Ensuite nous utiliserons `summary()` et `chart$type()` pour les graphiques, où `type` pourra être `screeplot`, `altscreeplot`, `loadings`, `scores`, `groups`, `axes`, `contingency` ou `ellipses` (nous verrons plus loin ce que représentent tous ces graphiques).
+Lorsque vous chargez les packages nécessaires à l'analyse exploratoire dans SciViews::R à l'aide de `SciViews::R("explore")`, vous avez à disposition la fonction `mfa(data = ...., formula)` qui fera les calculs qui nous intéressent. Ensuite nous utiliserons `summary()` et `chart$type()` pour les graphiques, où `type` pourra être `screeplot`, `altscreeplot`, `loadings`, `scores`, `groups`, `axes`, `contingency` ou `ellipses` (nous verrons plus loin ce que représentent tous ces graphiques).
 
 Nous allons aborder cette technique puissante, mais un peu plus complexe qu'est l'AFM sur la base d'un jeu de données que nous connaissons bien maintenant via nos exercices précédents : la communauté de plancton le long d'un transect entre Nice et la Corse.
 
 ### Plancton en Méditerranée
+
+```{r afm1, echo=FALSE}
+#'
+#' ### Première AFM sur le plancton avec seulement des ACP {#afm1}
+#'
+```
 
 Les jeux de données `marphy` et `marbio` dans le package {pastecs} présentent deux tableaux de données complémentaires. Le premier, `marphy` reprend les mesures environnementales de base (température, salinité et densité des masses d'eaux), ainsi qu'une information indirecte sur la concentration en phytoplancton : la fluorescence de la chlorophylle. Le second tableau `marbio` reprend les effectifs observés dans 24 groupes de zooplancton mesurés sur des échantillons issus des mêmes stations que `marphy`. Ces stations sont réparties de manière équidistante le long d'un transect entre le continent (vers Nice, station n°1) et la Corse (à Calvi, station n°68).
 
@@ -60,6 +86,9 @@ Jusqu'à présent, nous avions utilisé ces deux tableaux séparément. Notre ob
 Les données environnementales dans `marphy` étant mesurées dans des unités différentes, nous les standardiserons. Concernant le plancton dans `marbio`, nous allons pondérer les espèces rares par rapport aux espèces abondantes en transformant $log(x + 1)$ les abondances observées avec la fonction `log1p()`. Enfin, nous rajouterons les différentes masses d'eaux identifiées par ailleurs (voir l'aide `?pastecs::marphy`) dans `marzones` que nous utiliserons comme troisième tableau de **variables supplémentaires** (un tableau que nous n'utilisons *pas* dans l'analyse, mais que nous représenterons dans les graphiques afin d'aider à leur interprétation). Voici donc la constitution d'un gros tableau qui reprend toutes les données dans la variable `mar` :
 
 ```{r}
+# Chargement du dialecte SciViews::R avec le module explore
+SciViews::R("explore", lang = "fr")
+# Identification des différentes masses d'eaux (transect entre Nice et la Corse)
 marzones <- factor(c(
   rep("périphérique", 16),
   rep("divergente1", 8),
@@ -70,6 +99,7 @@ marzones <- factor(c(
   levels = c("périphérique", "divergente1", "convergente",
     "frontale", "divergente2", "centrale"))
 
+# Jointure des deux tableaux marphy, marbio et ajout de marzones
 bind_cols(
   read("marphy", package = "pastecs"),
   log1p(read("marbio", package = "pastecs"))) %>.%
@@ -80,10 +110,11 @@ bind_cols(
 Ce tableau n'a aucune valeur manquante et il contient 29 variables :
 
 ```{r}
+# Nom des variables de mar
 names(mar)
 ```
 
-Il y a trois groupes distincts :
+Il contient trois groupes de variables distincts :
 
 -   les 4 premières colonnes comme variables quantitatives continues pour l'**environnement**,
 -   les 24 colonnes suivantes comme quantitatives pour le **plancton**,
@@ -105,13 +136,14 @@ Un groupe est décrit dans la formule comme `n * type %as% nom` (donc avec les o
 
 Dans notre cas concret ici, cela donne :
 
-```
+```         
 ~ 4*std %as% environnement + 24*num %as% plancton - 1*fct %as% zone
 ```
 
 L'analyse se fait en appelant `mfa(data = ...., formula)`. Nous assignons le résultat du calcul à `mar_mfa` :
 
 ```{r, warning=FALSE}
+# Première AFM sur mar
 mar_mfa <- mfa(data = mar,
   ~ 4*std %as% environment + 24*num %as% plancton - 1*fct %as% zone)
 ```
@@ -119,18 +151,21 @@ mar_mfa <- mfa(data = mar,
 Le résumé de l'analyse renvoyé par `summary()` donne beaucoup d'information.
 
 ```{r}
+# Résumé de la première AFM
 summary(mar_mfa)
 ```
 
 Ne nous intéressons pour l'instant qu'au tableau `Eigenvalues` qui reprend les valeurs propres, c'est-à-dire, la part de variance sur les axes de l'ACP globale réalisée. Nous voyons qu'une variance cumulée de 74% (`Cumulative % of var.`) est représentée sur les deux premiers axes `Dim.1` et `Dim.2`. Le graphe des éboulis nous représente la partition de la variance sur les différents axes comme pour l'ACP :
 
 ```{r}
+# Graphique des éboulis de la première AFM
 chart$scree(mar_mfa, fill = "cornsilk")
 ```
 
 Ici, on voit très clairement que deux axes suffisent. La suite de l'analyse se fait à peu près comme une ACP, mais des données et graphes supplémentaires nous permettent d'interpréter les groupes de variables les uns par rapport aux autres. Le graphique des variables s'obtient comme pour l'ACP avec `chart$loadings()`. Il est ici plus encombré, car nous avons 28 variables. La direction des différents vecteurs par rapport aux dimensions de l'AFM et entre eux nous indique la corrélation directe (même sens), inverse (opposition), ou l'absence de corrélation (vecteurs orthogonaux). Ce graphique permet aussi d'orienter le plan de l'AFM pour nos graphiques ultérieurs.
 
 ```{r}
+# Graphique des variables de la première AFM
 chart$loadings(mar_mfa, choices = c(1, 2))
 ```
 
@@ -143,6 +178,7 @@ D'autre part, les variables environnementales pour lesquelles deux dimensions fo
 L'AFM est en fait un compromis réalisé entre des analyses indépendantes faites sur chaque groupe. Le graphique suivant montre comment ce compromis a été construit :
 
 ```{r}
+# Graphique du compromis de la la première AFM
 chart$axes(mar_mfa, choices = c(1, 2))
 ```
 
@@ -151,12 +187,14 @@ Ce graphique est similaire au précédent, si ce n'est qu'au lieu de projeter le
 Tout comme pour l'ACP, nous pouvons maintenant interpréter le graphique dans l'espace des individus, normalement avec `chart$scores()`.
 
 ```{r}
+# Graphique des individus de la première AFM
 chart$scores(mar_mfa, choices = c(1, 2))
 ```
 
 Nous pouvons aussi profiter de la variable supplémentaire zone pour colorer les points en fonction des masses d'eaux et représenter des ellipses pour chaque masse d'eau sur le graphique. La variante avec ces ellipses se réalise avec `chart$ellipses()` et il est plus clair dans pareil cas.
 
 ```{r, warning=FALSE, fig.keep='last'}
+# Variante du graphique des individus avec annotations des zones et ellipses
 chart$ellipses(mar_mfa, choices = c(1, 2), keepvar = "Zone")
 ```
 
@@ -181,6 +219,7 @@ Si on interprète ce graphique des individus en fonction de l'orientation donné
 Revenons sur la façon dans l'AFM est construite (le fameux "compromis"), et son interprétation par rapport aux masses d'eaux. Le graphique suivant montre les relations entre les groupes.
 
 ```{r}
+# Graphique de la relation entre groupes de la première AFM
 chart$groups(mar_mfa, choices = c(1, 2))
 ```
 
@@ -190,9 +229,17 @@ La variable supplémentaire zone est aussi représentée à proximité de la str
 
 ### AFM avec données mixtes
 
-Jusqu'ici, nous avons réalisé une AFM avec uniquement des données quantitatives (hors variable supplémentaire "zones"), mais l'AFM peut aussi traiter des données qualitatives, sous forme de tableaux de contingence à double entrée, ou sous forme de variables facteurs. Nous allons tester cette variante sans sortir de notre exemple du plancton méditerranéen. En effet, le tableau plancton peut *aussi* être considéré comme un tableau de contingence à double entrée. Il nous suffit de changer le type de **cnum** à **cnt** (pour l'analyse des fréquences) dans la formule pour traiter à présent le plancton sous la forme d'une AFC dans `mar_mfa2` :
+```{r afm2, echo=FALSE}
+#'
+#' ### Seconde AFM sur le plancton avec données mixtes ACP et AFC {#afm2}
+#'
+```
+
+
+Jusqu'ici, nous avons réalisé une AFM avec uniquement des données quantitatives (hors variable supplémentaire "zones"), mais l'AFM peut aussi traiter des données qualitatives, sous forme de tableaux de contingence à double entrée, ou sous forme de variables facteurs. Nous allons tester cette variante sans sortir de notre exemple du plancton méditerranéen. En effet, le tableau plancton peut *aussi* être considéré comme un tableau de contingence à double entrée. Il nous suffit de changer le type de **num** à **cnt** (pour l'analyse des fréquences) dans la formule pour traiter à présent le plancton sous la forme d'une AFC dans `mar_mfa2` :
 
 ```{r, warning=FALSE}
+# Seconde AFM avec plancton traité selon une AFC au lieu d'une ACP
 mar_mfa2 <- mfa(data = mar,
   ~ 4*std %as% environment + 24*cnt %as% plancton - 1*fct %as% zone)
 ```
@@ -202,12 +249,14 @@ Rappelons-nous que l'AFC se ramène à une étape de son analyse à une ACP. C'e
 Au lieu d'imprimer tout à l'aide de `summary()`, si nous souhaitons seulement les premières valeurs propres, nous pouvons aussi les extraire de l'objet comme ceci :
 
 ```{r}
+# Premières valeurs propres de la seconde AFM
 head(mar_mfa2$eig)
 ```
 
 Ici, les deux premiers axes comptent pour 74,6% de variance cumulée. Le graphe des éboulis confirme que deux axes suffisent :
 
 ```{r}
+# Graphique des éboulis de la seconde AFM
 chart$scree(mar_mfa2, fill = "cornsilk")
 ```
 
@@ -216,16 +265,19 @@ Le graphique des variables ne montre plus que celles relatives à l'ACP, donc se
 [^08-afm-big-data-3]: Les ACP sont définies au signe près. Or une inversion de signe dans une dimension a pour effet de faire apparaître les graphiques en miroir.
 
 ```{r}
+# Graphique des variables de la seconde AFM
 chart$loadings(mar_mfa2, choices = c(1, 2))
 ```
 
 ```{r}
+# Graphique du compromis de la la seconde AFM
 chart$axes(mar_mfa2, choices = c(1, 2))
 ```
 
 Les conclusions sont similaires sur les axes. Voyons maintenant l'espace des individus, toujours avec les couleurs et les ellipses par zones :
 
 ```{r, warning=FALSE, fig.keep='last'}
+# Graphique des individus annoté pour la seconde AFM
 chart$ellipses(mar_mfa2, choices = c(1, 2), keepvar = "Zone")
 ```
 
@@ -234,18 +286,20 @@ Encore une fois ici, le résultat est sensiblement le même (gardez à l'esprit 
 Les groupes montrent toujours le groupe zone plus proche d'environnement que de plancton.
 
 ```{r}
+# Graphique de la relation entre groupes de la seconde AFM
 chart$groups(mar_mfa2, choices = c(1,2))
 ```
 
 La partie AFC de l'analyse est accessible via `chart$contingency()` :
 
 ```{r}
+# Biplot de l'AFC réalisée sur le plancton de la seconde AFM
 chart$contingency(mar_mfa2, choices = c(1, 2))
 ```
 
 Ici aussi les quatre classes de plancton `EchinodermLarvae`, `GasteropodsLarvae`, `Cladocerans` et `Pteropods` s'individualisent à gauche, contre tous les autres à droite. Également les stations proches de Nice se retrouvent à la gauche, et toutes les autres à droite.
 
-```{block, type='note'}
+```{block, type='note', purl=FALSE}
 Nous voyons ici que le traitement sous forme ACP ou sous forme AFC (pour le comptage exhaustif d'espèces ou de classes taxonomiques par station, les deux sont envisageables) ne donne pas de résultats franchement différents. Ce n'est pas forcément toujours le cas. Veuillez à bien choisir vos types de variables dans l'AFM !
 ```
 
@@ -267,7 +321,7 @@ Nous voyons ici que le traitement sous forme ACP ou sous forme AFC (pour le comp
 
 `r learnr("B08La_mfa", title = "Analyse factorielle multiple", toc = "Analyse factorielle multiple")`
 
-```{r assign_B08Ia_mfa, echo=FALSE, results='asis'}
+```{r assign_B08Ia_mfa, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B08Ia_mfa", part = NULL,
     url = "https://github.com/BioDataScience-Course/B08Ia_mfa",
@@ -283,7 +337,7 @@ if (exists("assignment"))
     toc = "AFM sur oiseaux alpins")
 ```
 
-```{r assign_B08Ib_zooscannet_I, echo=FALSE, results='asis'}
+```{r assign_B08Ib_zooscannet_I, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B08Ib_zooscannet", part = "I",
     url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
@@ -301,17 +355,27 @@ if (exists("assignment"))
 
 ## Big data {#bigdata}
 
+```{r bigdata, echo=FALSE}
+#'
+#' ### Big data et base de données {#bigdata}
+#'
+```
+
+
 On entend souvent parler de "big data", mais qu'est-ce que c'est réellement ? En quoi cela me concerne en qualité de biologiste ? Que dois-je faire si je suis confronté à un gros jeu de données ? Autant de questions auxquelles nous allons nous attaquer maintenant.
 
 Le "big data" va s'intéresser aux jeux de données qui sont trop volumineux pour être traités avec les outils classiques que nous avons utilisés jusqu'ici. Il va donc de pair avec des outils logiciels spécifiques. Mais au fait, à partir de quelle taille de tableau dois-je m'inquiéter ?
 
 ### Gros jeux de données dans R
 
-Au départ, vos données sont stockées sur le disque, proviennent d'Internet, ou d'un package R. Dans `SciViews::R`, vous les lisez en mémoire vive avec la fonction `read()`. Cette fonction importe les données depuis différents formats. Nous allons considérer principalement deux formats très fréquents en biologie : CSV et Excel. Microsoft Excel a une limitation maximale de la taille du tableau à un peu plus d'un million de lignes et un peu plus de 16.000 colonnes. Donc, est-ce qu'un million de lignes, c'est à considérer comme du "big data" avec R aussi ? Pour y répondre, il faut déterminer si un tel tableau de données peut tenir en mémoire vive. Admettons que le tableau ne contienne que des nombres réels. Dans R, ces nombres sont représentés par des **"doubles"** qui occupent chacun 8 octets (les entiers de R, dits **"long integers"** occupent, eux, 4 octets chacun). Si vous avez 10 variables matérialisées par des "doubles" dans ce tableau d'un million de lignes, vous aurez : 1.000.000 \* 10 \* 8 octets = 80 millions d'octets ou encore environ 80 mégaoctets (en réalité, un mégaoctet, c'est 1024\*1024 octets, mais ne chicanons pas). La mémoire vive d'un PC moyen fait 8 gigaoctets, soit environ 8000 mégaoctets. Aucun problème pour R avec un tableau de cette taille ou même plus gros. **En matière de nombre de lignes, Excel déclare forfait vers le million, mais R peut facilement gérer des tableaux bien plus volumineux.**
+Au départ, vos données sont stockées sur le disque, proviennent d'Internet, ou d'un package R. Dans `SciViews::R`, vous les lisez en mémoire vive avec la fonction `read()`. Cette fonction importe les données depuis différents formats. Nous allons considérer principalement deux formats très fréquents en biologie : CSV et Excel. Microsoft Excel a une limitation maximale de la taille du tableau à un peu plus d'un million de lignes et un peu plus de 16.000 colonnes. Donc, est-ce qu'un million de lignes, c'est à considérer comme du "big data" avec R aussi ? Pour y répondre, il faut déterminer si un tel tableau de données peut tenir en mémoire vive. Admettons que le tableau ne contienne que des nombres réels. Dans R, ces nombres sont représentés par des **"doubles"** qui occupent chacun 8 octets[^08-afm-big-data-4] (les entiers de R, dits **"long integers"** occupent, eux, 4 octets chacun). Si vous avez 10 variables matérialisées par des "doubles" dans ce tableau d'un million de lignes, vous aurez : 1.000.000 \* 10 \* 8 octets = 80 millions d'octets ou encore environ 80 mégaoctets (en réalité, un mégaoctet, c'est 1024\*1024 octets, mais ne chicanons pas). La mémoire vive d'un PC moyen fait 8 gigaoctets, soit environ 8000 mégaoctets. Aucun problème pour R avec un tableau de cette taille ou même plus gros. **En matière de nombre de lignes, Excel déclare forfait vers le million, mais R peut facilement gérer des tableaux bien plus volumineux.**
+
+[^08-afm-big-data-4]: Un octet est l'unité de base en informatique. Il est constitué de 8 bits. Le bit est l'unité minimale constitué de 1 ou 0, et stockant donc une information binaire. Un rassemblement de 8 bits en un octet permet de stocker 2^8^, ou encore 256 valeurs différentes. Pour plus de valeurs différentes, on rassemble plusieurs octets, donc 4 octets pour les entiers et 8 octets pour les valeurs numériques de type "double" en R.
 
 Pour les objets **data.table** que nous utilisons régulièrement dans `SciViews::R`, la limite vient du nombre entier le plus grand que R peut gérer (les entiers sont utilisés pour indexer les lignes du tableau en mémoire). Ce nombre est :
 
-```{r}
+```{r, purl=FALSE}
+# Plus grand entier que R peut représenter
 .Machine$integer.max
 ```
 
@@ -323,7 +387,7 @@ Si vous souhaitez monter un PC qui ne sera limité que par la taille maximale ad
 
 Mais prenons maintenant un peu de recul : combien de fois aurez-vous à traiter d'aussi gros jeux de données (et surtout à les traiter en une seule fois) ? Il est fort probable plutôt que vous ne rencontrerez déjà que rarement des tableau avec plus de quelques dizaines de millions de lignes. Donc, la quasi-totalité de vos tableaux de données pourra être traitée entièrement en mémoire vive, que ce soit dans votre PC directement, ou dans une machine virtuelle plus grosse dans le cloud. Aujourd'hui, un PC puissant, style station de travail, qui coûte quelques milliers d'euros, peut accueillir très facilement 128Go de mémoire vive. De plus, vous avez aussi accès (avec un compte payant) à des machines sur le cloud qui ont autant, voire plus de mémoire vive. Par exemple, dans [SaturnCloud](https://saturncloud.io), vous avez les machines **4XLarge** avec 16 cœurs et 128Go de RAM, **8XLarge** avec 32 cœurs et 256Go RAM, et même **16XLarge** avec 64 cœurs et 512Go de RAM !
 
-```{block, type='info'}
+```{block, type='info', purl=FALSE}
 Avec Excel, vous ne pourrez pas traiter des tableaux plus gros qu'environ 1 million de lignes (voir [ici](https://support.microsoft.com/en-us/office/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3)) et aujourd'hui des tableaux de cette taille se rencontrent en biologie, même si ce n'est pas ultra fréquent. Par contre, la limite dans R est :
 
 -   soit de 2^31-1 lignes = plus de 2 milliards de lignes (nombre de lignes maximales indexables dans un **data.table**),
@@ -336,36 +400,44 @@ Aujourd'hui, les PC ou machines virtuelles sur le cloud ayant 128Go de mémoire 
 
 Nous allons prendre comme exemple un jeu de données de près de deux millions de lignes et cinq variables (impossible d'ouvrir dans Excel, donc) : `babynames`, du package du même nom. Il s'agit des prénoms choisis pour des bébés américains entre 1880 et 2017. Nous utiliserons régulièrement la fonction `system.time()[["elapsed]]` pour calculer le temps qu'il faut pour exécuter une portion de code car dès que les tableaux deviennent très volumineux, le **temps de calcul** devient aussi un élément déterminant.
 
-```{r}
+Si vous voulez essayer dans votre SciViews Box sur SaturnCloud ce qui suit, le package {babynames} n'étant pas installé par défaut, il vous faut l'installer d'abord comme ceci :
+
+```{r, eval=FALSE, purl=FALSE}
+if (!require("babynames")
+  install.packages("babynames")
+```
+
+Ensuite, nous minutons le temps nécessaire au chargement du jeu de données `babynames`.
+
+```{r, purl=FALSE}
+# Chargement du dialecte SciViews::R
 SciViews::R
+# Lecture du jeu de données babynames + minutage
 (time <- system.time(
   babynames <- read("babynames", package = "babynames")
 )[["elapsed"]])
 ```
 
-Il nous a fallu seulement `r round(time, 3)` secondes pour charger ce jeu de données en mémoire depuis la machine qui a compilé ce cours en ligne. Essayez dans votre SciViews Box sur SaturnCloud pour voir ce que cela donne..., mais avant cela, vous devez installer le package {babynames} comme ceci :
+Il nous a fallu seulement `r round(time, 3)` secondes pour charger ce jeu de données en mémoire depuis la machine qui a compilé ce cours en ligne. Pour visualiser de manière compacte la structure du tableau, vous pouvez utiliser `str()` :
 
-```{r, eval=FALSE}
-install.packages("babynames")
-```
-
-Ensuite seulement, vous pourrez lire le jeu de données avec l'instruction `read()`un peu plus haut. Pour visualiser de manière compacte la structure du tableau, vous pouvez utiliser `str()` :
-
-```{r}
-str(babynames) # Structure du tableau
+```{r, purl=FALSE}
+# Structure du tableau
+str(babynames)
 ```
 
 Nous avons deux colonnes de nombres réels (l'année `year`, qui aurait aussi pu être encodée en entiers et les proportions annuelles de chaque prénom dans `prop`). Il y a aussi une colonne d'entiers, `n`, le nombre de fois qu'un prénom apparaît chaque année, et deux colonnes textuelles : `sex` prenant les modalités `"F"` ou `"M"` et `name`, les prénoms.
 
 Pour examiner la place occupée en mémoire vive par un objet R, vous pouvez utiliser `lobstr::obj_size()`.
 
-```{r}
+```{r, purl=FALSE}
+# Taille du jeu de données babynames en mémoire
 lobstr::obj_size(babynames)
 ```
 
 Notre tableau occupe près de 75 millions d'octets (*Bytes* en anglais, d'où l'unité `B`). Si vous voulez convertir cette valeur en mégaoctets de manière exacte, vous devez savoir qu'un mégaoctet est exactement 1024 x 1024 octets, ou encore 2\^20 octets = 1.048.576 octets. Appliquons cela à la sortie de `lobstr::obj_size()`, tout en déclassant le résultat obtenu pour éviter qu'il n'imprime le `B` à la fin qui ne serait plus l'unité correcte, puisqu'on sera cette fois-ci en `MB`. (essayez sans `unclass()` pour comprendre son rôle ici) :
 
-```{r}
+```{r, purl=FALSE}
+# Taille en mégaoctets de babynames en mémoire
 (lobstr::obj_size(babynames) / 2^20) |> unclass()
 ```
 
@@ -373,7 +445,8 @@ Notre tableau occupe 71,5 mégaoctets en mémoire vive. Pour connaitre la quanti
 
 Mais revenons à notre onglet **Environment**. Si vous cliquez sur la petite flèche noire pointant vers le bas à la droite du graphique en parts de tarte et de l'indication, vous avez un menu déroulant qui donne accès à un rapport plus complet de l'utilisation, de la mémoire vive par la session actuelle... C'est très pratique pour voir où on en est, surtout quand on manipule de très gros jeux de données ! Notez, à présent, la quantité de mémoire utilisée par la session R (le nombre qui apparaît dans la barre d'outils) après avoir chargé le tableau `babynames`. Nous allons maintenant faire une opération classique sur ce tableau. Nous allons résumer l'utilisation des prénoms toutes années confondues et les trier du plus utilisé au moins utilisé. Ce faisant, nous enregistrerons également le temps nécessaire à ce calcul dans R avec `system.time()`.
 
-```{r}
+```{r, purl=FALSE}
+# Détermination des prénoms les plus fréquents et minutage de l'opération
 (time <- system.time(
   babynames %>.%
     sgroup_by(., name) %>.%
@@ -385,71 +458,77 @@ Mais revenons à notre onglet **Environment**. Si vous cliquez sur la petite fl�
 
 Il a fallu bien moins d'une seconde sur la machine qui compile ce cours pour faire cette opération. Vous voyez donc que, non seulement, nous pouvons lire dans R très facilement des tableaux de plusieurs millions de lignes, mais qu'en plus, les remaniements classiques avec les fonctions "speedy" dont le nom commence par "s" sont également très rapides.
 
-```{block, type='note'}
-Lorsque vos calculs commencent à "devenir lents", c'est-à-dire, quand il faut plus d'une dizaine de secondes pour retrouver la main, cela vaut la peine d'utiliser les versions les plus rapides des fonctions de manipulation de tableaux de données. En général, les fonctions "tidy" privilégient la clarté de l'interface utilisateur à la vitesse. Les fonctions "speedy" sont plus rapides et moins gourmandes en mémoire vive. S'il faut encore gagner, utilisez [{data.table}](https://rdatatable.gitlab.io/data.table/), [{duckdb}](https://r.duckdb.org), ou [{polars}](https://rpolars.github.io). Dans tous les cas, il existe un package qui permet de continuer à écrire son code presque comme d'habitude avec des `select()`, `filter()` ... grâce à [{dtplyr}](https://dtplyr.tidyverse.org), [{dbplyr}](https://dbplyr.tidyverse.org) ou [{tidypolars}](https://tidypolars.etiennebacher.com). [Cette page](https://duckdblabs.github.io/db-benchmark/) présente une comparaison des performances de différents systèmes de traitement de gros jeux de données en mémoire.
+```{block, type='note', purl=FALSE}
+Lorsque vos calculs commencent à "devenir lents", c'est-à-dire, quand il faut plus d'une dizaine de secondes pour retrouver la main, cela vaut la peine d'utiliser les versions les plus rapides des fonctions de manipulation de tableaux de données. En général, les fonctions "tidy" privilégient la clarté de l'interface utilisateur à la vitesse. Les fonctions "speedy" sont plus rapides et moins gourmandes en mémoire vive. S'il faut encore gagner, utilisez [{data.table}](https://rdatatable.gitlab.io/data.table/), [{duckdb}](https://r.duckdb.org), ou [{polars}](https://pola-rs.github.io/r-polars/). Dans tous les cas, il existe un package qui permet de continuer à écrire son code presque comme d'habitude avec des `select()`, `filter()` ... grâce à [{dtplyr}](https://dtplyr.tidyverse.org), [{dbplyr}](https://dbplyr.tidyverse.org) ou [{tidypolars}](https://tidypolars.etiennebacher.com). [Cette page](https://duckdblabs.github.io/db-benchmark/) présente une comparaison des performances de différents systèmes de traitement de gros jeux de données en mémoire.
 ```
 
 Suite au traitement que nous venons de réaliser ci-dessus, voici les dix prénoms les plus utilisés aux États-Unis :
 
-```{r}
+```{r, purl=FALSE}
+# Dix prénoms les plus fréquents
 head(names, n = 10)
 ```
 
-Il s'agit de prénoms masculins. Cela veut donc dire que les principaux prénoms masculins sont bien plus (ré)utilisés que les principaux prénoms féminins pour lesquels il y a plus de diversité.
+Il s'agit de prénoms masculins essentiellement. Cela veut donc dire que les principaux prénoms masculins sont bien plus (ré)utilisés que les principaux prénoms féminins pour lesquels il y a plus de diversité.
 
 Notez à présent la quantité de mémoire utilisée par votre session R... Normalement, si vous êtes parti d'une session vide, vous restez encore en dessous du gigaoctet, soit encore loin des 4Go disponibles. On a de la marge et aucune précaution particulière ne doit être prise avec des tableaux "aussi petits" pour R. Par contre, faites bien attention aux outils statistiques que vous utilisez dessus. Par exemple, ajuster un modèle linéaire généralisé avec variable aléatoire dans une telle quantité de données prendra soit un temps très, très long, soit fera planter la machine par manque de mémoire (il s'agit d'une technique qui demande énormément de calculs).
 
-```{block, type='info'}
+```{block, type='info', purl=FALSE}
 Lorsque vous manipulez des gros jeux de données dans R, pensez toujours à surveiller l'utilisation de la mémoire vive par la session en cours et à éliminer les objets qui ne sont plus utiles. Pour cela, vous pouvez utiliser `rm()`. Par exemple, pour effacer de la mémoire un tableau nommé `df`, et un vecteur `x`, vous entrez `rm(df, x)`.
 ```
 
 ### Format de stockage
 
-Le format de stockage conseillé pour les tableaux cas par variables est le [CSV](https://docs.fileformat.com/spreadsheet/csv/) ("coma-separated values"). Il s'agit d'un format qui existe depuis les années 1970 et qui est le plus universel pour l'échange et l'archivage des données[^08-afm-big-data-4]. Malheureusement, le format CSV n'est pas le plus économe en espace disque, car il stocke les données en clair (lisible par un humain) et donc de manière non compressée. Il est toutefois possible de compresser le fichier à l'aide de trois algorithmes différents : **gz**, **bz2** ou **xz**, dans l'ordre de l'efficacité de compression, mais dans l'ordre inverse de temps de calcul pour compresser et décompresser les données. Ainsi la compression **gz** (le fichier portera l'extension **.csv.gz**) est le mode de compression le plus rapide, mais qui génère une compression moyenne. **C'est un bon choix pour les tableaux de taille petite à moyenne et pour un usage en local.** À l'opposé, le **xz** (fichiers **.csv.xz**) permet une bien meilleure compression, au prix d'un temps de calcul bien plus long à la compression (la décompression restant moyennement rapide). **C'est un excellent choix pour les fichiers à archiver définitivement ou encore pour un échange via Internet.** La compression **.bz2** est intermédiaire, et donc utile si vous voulez un compromis entre les deux. Avec le format CSV combiné à la compression, vous pourrez déjà faire beaucoup.
+Le format de stockage conseillé pour les tableaux cas par variables est le [CSV](https://docs.fileformat.com/spreadsheet/csv/) ("coma-separated values"). Il s'agit d'un format qui existe depuis les années 1970 et qui est le plus universel pour l'échange et l'archivage des données[^08-afm-big-data-5]. Malheureusement, le format CSV n'est pas le plus économe en espace disque, car il stocke les données en clair (lisible par un humain) et donc de manière non compressée. Il est toutefois possible de compresser le fichier à l'aide de trois algorithmes différents : **gz**, **bz2** ou **xz**, dans l'ordre de l'efficacité de compression, mais dans l'ordre inverse de temps de calcul pour compresser et décompresser les données. Ainsi la compression **gz** (le fichier portera l'extension **.csv.gz**) est le mode de compression le plus rapide, mais qui génère une compression moyenne. **C'est un bon choix pour les tableaux de taille petite à moyenne et pour un usage en local.** À l'opposé, le **xz** (fichiers **.csv.xz**) permet une bien meilleure compression, au prix d'un temps de calcul bien plus long à la compression (la décompression restant moyennement rapide). **C'est un excellent choix pour les fichiers à archiver définitivement ou encore pour un échange via Internet.** La compression **.bz2** est intermédiaire, et donc utile si vous voulez un compromis entre les deux. Avec le format CSV combiné à la compression, vous pourrez déjà faire beaucoup.
 
-[^08-afm-big-data-4]: Pensez toujours à adjoindre un **dictionnaire des données** à votre fichier CSV qui renseigne les métadonnées nécessaires pour expliciter chaque colonne du tableau... Nous avons traité cette question dans le module 5 du premier cours.
+[^08-afm-big-data-5]: Pensez toujours à adjoindre un **dictionnaire des données** à votre fichier CSV qui renseigne les métadonnées nécessaires pour expliciter chaque colonne du tableau... Nous avons traité cette question dans le module 5 du premier cours.
 
 ##### À vous de jouer ! {.unnumbered}
 
 `r h5p(223, "B08Hb_write", height = 270, toc = "Écriture de gros jeux de données")`
 
-Nous allons maintenant enregistrer le tableau d'origine `babynames` sur le disque. Une fois n'est pas coutume, nous sortirons du dépôt et créerons un dossier temporaire nommé `babynames_to_delete` qui, comme son nom l'indique, est voué à être effacé[^08-afm-big-data-5]. **Évitez d'exécuter ceci dans la machine SaturnCloud du cours**, car vous n'avez que 2GiB de disque disponible au total. Vous pouvez essayer cela dans une machine SaturnCloud créée dans votre espace personnelle en choisissant un espace disque de 10Go.
+Nous allons maintenant enregistrer le tableau d'origine `babynames` sur le disque. Une fois n'est pas coutume, nous sortirons du dépôt et créerons un dossier temporaire nommé `babynames_to_delete` qui, comme son nom l'indique, est voué à être effacé[^08-afm-big-data-6]. **Évitez d'exécuter ceci dans la machine SaturnCloud du cours**, car vous n'avez que 2GiB de disque disponible au total. Vous pouvez essayer cela dans une machine SaturnCloud créée dans votre espace personnelle en choisissant un espace disque de 10Go.
 
-[^08-afm-big-data-5]: Nous pourrions aussi utiliser un dossier temporaire créé comme sous-dossier de `tempdir()`, mais il ne sera alors pas si facile d'explorer les fichiers créés dans l'onglet **Files** de RStudio.
+[^08-afm-big-data-6]: Nous pourrions aussi utiliser un dossier temporaire créé comme sous-dossier de `tempdir()`, mais il ne sera alors pas si facile d'explorer les fichiers créés dans l'onglet **Files** de RStudio.
 
-```{r}
+```{r, purl=FALSE}
+# Création d'un dossier temporaire pour contenir les différents fichiers
 testdir <- "../babynames_to_delete"
 dir_create(testdir)
 ```
 
 Voici le tableau où nous allons stocker les différentes données utiles à la comparaison :
 
-```{r}
+```{r, purl=FALSE}
+# Initiation d'un data frame avec les minutages
 timings <- dtx(
   format = c("csv", "csv.gz", "csv.bz2", "csv.xz"),
   ecriture_s = NA, lecture_s = NA, taille_Mo = NA)
 ```
 
-Nous allons maintenant enregistrer notre tableau de données en CSV non compressé et le relire, tout en minutant les opérations d'écriture et de relecture. Le chemin d'accès au fichier est construit à l'aide de `path()`.
+Nous allons maintenant enregistrer notre tableau de données en CSV non compressé et le relire, tout en minutant les opérations d'écriture et de relecture. Le chemin d'accès au fichier est construit à l'aide de `path()`. Notez aussi que nous utilisons `csv_alt` qui utilise la fonction `readr::read_csv()` en interne car la fonction par défaut ne gère pas bien le format de compression BZ2.
 
-```{r}
+```{r, purl=FALSE}
+# Minutage de l'écriture du fichier CSV avec babynames
 csv_file <- path(testdir, "babynames.csv")
 (timings$ecriture_s[1] <- system.time(
-  write$csv(babynames, csv_file)
+  write$csv_alt(babynames, csv_file)
 )[["elapsed"]])
 ```
 
 Et pour la lecture :
 
-```{r}
+```{r, purl=FALSE}
+# Minutage de la lecture du fichier CSV avec babynames
 (timings$lecture_s[1] <- system.time(
-  babynames2 <- read(csv_file)
+  babynames2 <- read$csv_alt(csv_file)
 )[["elapsed"]])
 ```
 
 Nous récupérons également la taille du fichier :
 
-```{r}
+```{r, purl=FALSE}
+# Taille du fichier CSV babynames
 timings$taille_Mo[1] <- file_size(csv_file) / 2^20 # Transformation en Mo
 ```
 
@@ -457,47 +536,50 @@ La vitesse d'écriture (et de lecture) dépend naturellement de R, mais aussi de
 
 Nous faisons maintenant de même pour les trois formats de compression **.gz**, **.bz2** et .**xz**. Compression GZ :
 
-```{r}
+```{r, purl=FALSE}
+# Minutage écriture, lecture de babynames.csv.gz + taille du fichier
 csv_gz_file <- path(testdir, "babynames.csv.gz")
 (timings$ecriture_s[2] <- system.time(
-  write$csv.gz(babynames, csv_gz_file)
+  write$csv.gz_alt(babynames, csv_gz_file)
 )[["elapsed"]])
 (timings$lecture_s[2] <- system.time(
-  babynames2 <- read(csv_gz_file)
+  babynames2 <- read$csv.gz_alt(csv_gz_file)
 )[["elapsed"]])
 timings$taille_Mo[2] <- file_size(csv_gz_file) / 2^20 # Transformation en Mo
 ```
 
 Compression BZ2 :
 
-```{r}
+```{r, purl=FALSE}
+# Minutage écriture, lecture de babynames.csv.bz2 + taille du fichier
 csv_bz2_file <- path(testdir, "babynames.csv.bz2")
 (timings$ecriture_s[3] <- system.time(
-  write$csv.bz2(babynames, csv_bz2_file)
+  write$csv.bz2_alt(babynames, csv_bz2_file)
 )[["elapsed"]])
-# error read csv.bz2
-#(timings$lecture_s[3] <- system.time(
-#  babynames2 <- read$csv.bz2(csv_bz2_file)
-#)[["elapsed"]])
+(timings$lecture_s[3] <- system.time(
+  babynames2 <- read$csv.bz2_alt(csv_bz2_file)
+)[["elapsed"]])
 timings$taille_Mo[3] <- file_size(csv_bz2_file) / 2^20 # Transformation en Mo
 ```
 
 Compression XZ :
 
-```{r}
+```{r, purl=FALSE}
+# Minutage écriture, lecture de babynames.csv.xz + taille du fichier
 csv_xz_file <- path(testdir, "babynames.csv.xz")
 (timings$ecriture_s[4] <- system.time(
-  write$csv.xz(babynames, csv_xz_file)
+  write$csv.xz_alt(babynames, csv_xz_file)
 )[["elapsed"]])
 (timings$lecture_s[4] <- system.time(
-  babynames2 <- read(csv_xz_file)
+  babynames2 <- read$csv.xz_alt(csv_xz_file)
 )[["elapsed"]])
 timings$taille_Mo[4] <- file_size(csv_xz_file) / 2^20 # Transformation en Mo
 ```
 
 Cela donne les résultats suivants :
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, purl=FALSE}
+# Tableau comparatif écriture, lecture et taille pour les différents formats
 tabularise(timings)
 ```
 
@@ -513,7 +595,8 @@ Comme vous pouvez le constater, la compression de ce type de tableau n'est pas n
 
 Vous pouvez naviguer jusque dans votre dossier `babynames_to_delete` dans l'onglet **Fichiers** pour voir vos différents fichiers. Enfin, lorsque vous avez fini de travailler avec de gros jeux de données, pensez à nettoyer votre environnement de travail, et éventuellement, vos dossiers des objets et fichiers devenus inutiles (**important sur SaturnCloud !**).
 
-```{r}
+```{r, purl=FALSE}
+# Nettoyage de l'environnement R et des fichiers créés sur le disque
 rm(babynames, babynames2)
 fs::dir_delete(testdir)
 ```
@@ -532,10 +615,18 @@ Deuxièmement, décidez si vous voulez *toujours* télécharger vos données dep
 
 Troisièmement, vous utilisez `read()` sur l'URL et indiquez le fichier désiré dans `cache_file=`. Cela donne quelque chose comme ceci (spécifiez toujours bien le format avec `$…` si vous chargez vos données depuis une URL) :
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, purl=FALSE}
 dir_create("data/cache") # S"assurer que le dossier existe
 big_data <- read$csv.xz("https://mysite.org/mybigdata.cs.xz",
   cache_file = "data/cache/mybigdata.csv.xz")
+```
+
+```{r, eval=FALSE, echo=FALSE}
+# Exemple fictif de lecture de données depuis internet avec mise en cache
+# (décommentez et ajustez le code ci-dessous pour l'utiliser)
+#dir_create("data/cache") # S"assurer que le dossier existe
+#big_data <- read$csv.xz("https://mysite.org/mybigdata.cs.xz",
+#  cache_file = "data/cache/mybigdata.csv.xz")
 ```
 
 Une fois mis en place, cela fonctionnera comme suit :
@@ -593,14 +684,16 @@ Il existe deux grandes catégories de bases de données : les **bases de donné
 L'exemple présenté plus haut est fictif. Dans un premier temps, vous pouvez vous concentrer sur la façon de vous connecter et de vous déconnecter de la base de données. Ensuite, le package {dbplyr} permet d'utiliser vos verbes {dplyr} familiers tels que `filter()`, `select()`, `mutate()`, `group_by()` ou `summarise()`. Pour cela, nous allons toujours utiliser notre jeu de données `babynames`, mais nous créerons une base de données [DuckDB](https://duckdb.org) en mémoire dans l'unique but de comprendre la logique de connexion et d'interrogation d'une base de données avec {dbplyr}. Nous approfondirons l'utilisation des bases de données dans le module suivant. Assurons-nous d'abord d'avoir `SciViews::R` et le jeu de données `babynames` chargés.
 
 ```{r}
+# Chargement du dialecte SciViews::R
 SciViews::R
+# Lecture du jeu de données babynames depuis le package du même nom
 babynames <- read("babynames", package = "babynames")
 ```
 
 Nous créons une base de données DuckDB en mémoire et nous nous y connectons dans la foulée avec `DBI::dbConnect()`. Naturellement, la plupart du temps, la base de données sera créée sur le disque en indiquant un chemin d'accès à cette base pour l'argument `dbdir =` à `DBI::dbConnect()` (voir l'aide en ligne de `?duckdb::duckdb`). Ensuite, nous recopions `babynames` dans la base de données avec `copy_to()`. En pratique, vous pouvez imaginer une base de données préexistante n'importe où sur Internet et qui possède déjà les données à utiliser.
 
 ```{r}
-# Création de la base de données et connexion
+# Création de la base de données et copie de babynames dedans
 con <- DBI::dbConnect(duckdb::duckdb())
 copy_to(con, babynames)
 ```
@@ -608,35 +701,40 @@ copy_to(con, babynames)
 À présent, afin d'éviter de confondre la table "babynames" dans la base de données et le jeu de données dans R `babynames`, nous allons effacer ce dernier. Il ne subsistera donc plus que la version dans DuckDB.
 
 ```{r}
-rm(babynames) # Élimination du jeu de données dans la session R
+# Élimination du jeu de données dans la session R (on garde la version duckdb)
+rm(babynames)
 ```
 
 Le package {DBI} vous offre une panoplie de fonctions pour interagir avec la base de données. Par exemple, pour lister les tables présentes dans la base de données :
 
 ```{r}
+# Liste des tables dans notre base de données
 DBI::dbListTables(con)
 ```
 
 ... et pour lister les variables (on parle de **champs** pour une base de données, ou *fields* en anglais), vous ferez :
 
 ```{r}
+# Liste des champs (colonnes) de la table babynames dans la base de données
 DBI::dbListFields(con, "babynames")
 ```
 
 Tout cela concerne bien les données dans DuckDB. Dans l'environnement R, nous n'avons que `con` la connexion à cette base de données, mais aucune autre donnée dans R lui-même. Nous pouvons créer un objet **tbl** qui va être lié à une table de notre base de données comme ceci :
 
 ```{r}
+# Liaison à une table dans la base de données
 db_babynames <- tbl(con, "babynames")
-db_babynames
+# Premières lignes de la table
+head(db_babynames)
 ```
 
-Quand vous imprimez le contenu de `db_babynames`, vous pouvez avoir l'impression qu'il contient les données, mais il n'en est rien. Une requête sur les 10 premières lignes du tableau est faite en interne dans la base de données. Ensuite ces 10 lignes sont affichées, et le résultat est jeté. Aucune donnée n'est réellement stockée dans `db_babynames`. D'ailleurs, ce n'est pas un data frame, mais une liste.
+Si jamais vous décidez d'imprimez le contenu de `db_babynames` tout entier, vous pouvez avoir l'impression qu'il contient les données, mais il n'en est rien. Une requête sur les 10 premières lignes du tableau est faite en interne dans la base de données. Ensuite ces 10 lignes sont affichées, et le résultat est jeté. Aucune donnée n'est réellement stockée dans `db_babynames`. D'ailleurs, ce n'est pas un data frame, mais une liste (voyez dans l'onglet **Environment**).
 
 La particularité de l'objet `db_babynames` est donc qu'il ne fait qu'un lien avec la table de la base de données. Insistons bien : le contenu de la base n'est *pas* dans R, il appartient au serveur de la base de données, ici, à DuckDB qui gère sa base en mémoire vive. Cependant, vous pourrez l'utiliser presque comme si c'était un jeu de données habituel dans R. Mais à chaque fois que vous écrirez du code qui utilise une fonction "tidy", l'action est mise en attente et traduite en **langage SQL** qui est le langage compris par le serveur de base de données. La fonction `show_query()` permet de visualiser ce code SQL à tout moment.
 
 À titre d'exemple, reprenons notre petit traitement précédent. Il consiste à sommer les occurrences de tous les prénoms sur toutes les années et puis à les arranger du plus fréquent au moins fréquent. Pour rappel, voici le code que nous avions utilisé avec les fonctions "speedy" pour effectuer l'opération sur le data frame `babynames` en mémoire vive dans la session R :
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, purl=FALSE}
 babynames %>.%
   sgroup_by(., name) %>.%
   ssummarise(., total = fsum(n)) %>.%
@@ -647,6 +745,7 @@ babynames %>.%
 Nous allons maintenant réécrire ce code en fonction "tidy" (**attention : les fonctions "speedy" commençant par "s" et les fonctions "fast" commençant par "f" ne sont *pas* utilisables avec les objets tbl !)**.
 
 ```{r}
+# Remaniement de données dans la base de données
 db_babynames %>.%
   group_by(., name) %>.%
   summarise(., total = sum(n, na.rm = TRUE)) %>.%
@@ -657,12 +756,14 @@ db_babynames %>.%
 Nous avons éliminé les "s" et "f" devant le nom des fonctions. Comme la fonction `sum()` n'élimine pas les valeurs manquantes par défaut, contrairement à `fsum()`, nous devons préciser `na.rm = TRUE` pour avoir le même traitement. À ce stade, rien n'est réalisé en fait. La base de données n'est **pas encore** interrogée. Utilisons maintenant `show_query()` pour voir à quoi ressemble le code SQL équivalent, code qui sera exécuté dans la base de données ultérieurement.
 
 ```{r}
+# Visualiation de la requête SQL équivalent
 show_query(query)
 ```
 
 Même si vous n'avez jamais rencontré de code SQL auparavant, vous noterez qu'il est relativement compréhensible. Les mots clés utilisés sont proches des noms de fonction de {dplyr}. Ce n'est pas un hasard : {dplyr} s'est inspiré de l'existant, et notamment du langage SQL. À présent, il est temps d'effectuer notre requête dans la base de données et de récupérer le résultat. Pour cela, nous utilisons :`collect_dtx()`
 
 ```{r}
+# Réalisation de la requête SQL
 names <- collect_dtx(query)
 names
 ```
@@ -678,6 +779,7 @@ Notez bien les points suivants :
 Lorsque nous avons fini avec cette base de données, nous nous déconnectons avec `DBI::dbDisconnect()`, en indiquant `shutdown = TRUE` pour la fermer par la même occasion (dans le cas d'un serveur distant, nous n'avons pas besoin de le fermer ; il restera disponible pour d'autres requêtes ultérieures). Cela libère la mémoire vive occupée dans notre cas.
 
 ```{r}
+# Déconnexion et destruction de notre base de données en mémoire
 DBI::dbDisconnect(con, shutdown = TRUE)
 ```
 
@@ -694,7 +796,7 @@ DBI::dbDisconnect(con, shutdown = TRUE)
 
 `r learnr("B08Lb_bigd", title = "Données volumineuses (big data)", toc = "Données volumineuses (big data)")`
 
-```{r assign_B08Ib_zooscannet_II, echo=FALSE, results='asis'}
+```{r assign_B08Ib_zooscannet_II, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment"))
   assignment("B08Ib_zooscannet", part = "II",
     url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
@@ -712,7 +814,7 @@ if (exists("assignment"))
 
 **Continuez à travailler sur votre projet de groupe.**
 
-```{r assign_B06Ga_open_data_III, echo=FALSE, results='asis'}
+```{r assign_B06Ga_open_data_III, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment2"))
   assignment2("B06Ga_open_data", part = "III",
     url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
@@ -728,12 +830,16 @@ if (exists("assignment2"))
     toc = "Étude de données ouvertes choisies librement (III)")
 ```
 
-
 ## Récapitulatif des exercices {#recapitulatifb08}
 
 Ce module 8 vous a permis de découvrir l'AFM, et de traiter correctement des jeux de données volumineux. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("08")`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/08-afm-big-data.html)
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/08-afm-big-data.R){target="top"}
 
 ##### Progression {.unnumbered}
 

@@ -6,7 +6,7 @@
 
 files_noext <- c("01-reg-lineaire", "02-reg-lineaire-2", "03-mod-lineaire",
   "04-mod-lineaire-gen", "05-reg-non-lineaire", "06-cah-kmeans-div",
-  "07-acp-afc")
+  "07-acp-afc", "08-afm-big-data")
 output_dir <- "../wp.sciviews.org/htdocs/sdd-umons2-2025/more"
 fs::dir_create(output_dir)
 fs::dir_create("R")

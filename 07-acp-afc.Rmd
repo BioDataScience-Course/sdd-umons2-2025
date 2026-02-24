@@ -687,7 +687,7 @@ text(-0.32, 0.55, "y'", col = "red")
 
 Effectuons une ACP sur matrice var/covar sans réduction des données (mais calcul très similaire lorsque les données sont réduites) sur un exemple numérique simple.
 
--   Étape 1 : centrage des données (moyenne nulle de chaque colonne)
+-   Étape 1 : centrage des données (soustraction de la moyenne de chaque colonne, ce qui donne une moyenne nulle pour chaque colonne des données centrées)
 
 $$
 \mathop{\begin{pmatrix}
@@ -1202,7 +1202,6 @@ Ce module 7 vous a permis de découvrir deux méthodes très utilisées dans les
 
 -  [Document HTML](more/07-acp-afc.html)
 -  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/07-acp-afc.R){target="top"}
-
 
 ##### Progression {.unnumbered}
 
