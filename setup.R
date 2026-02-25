@@ -82,8 +82,8 @@ learnitdown$assign_url <- list(
   B06Ga_open_data      = "https://classroom.github.com/a/9Y7xILiH",
   B07Ia_acp_afc        = "https://classroom.github.com/a/sheuR9QS",
   B07Ca_multi          = "https://classroom.github.com/a/...",
-  B08Ia_mfa            = "https://classroom.github.com/a/...",
-  B08Ib_zooscannet     = "https://classroom.github.com/a/...",
+  B08Ia_mfa            = "https://classroom.github.com/a/EcAqwuZ0",
+  B08Ib_zooscannet     = "https://classroom.github.com/a/MyO1yWPo",
   B09Ia_portalr        = "https://classroom.github.com/a/..."
 )
 
