@@ -1,7 +1,26 @@
 # Données ouvertes & SOM {#open-data-som}
 
-```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide'}
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
 SciViews::R("explore", lang = "fr")
+```
+
+```{r purlheader, echo=FALSE}
+#' ---
+#' title: "SDD II module 10 : données ouvertes & SOM"
+#' author: "Ph. Grosjean et G. Engels"
+#' date: "2025-2026"
+#' output:
+#'   html_document:
+#'     highlight: kate
+#' ---
+#' 
+#' Document complémentaire au [module 10 du cours SDD II de 2025-2026](https://wp.sciviews.org/sdd-umons2-2025/open-data-som.html).
+#' Distribué sous licence [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr).
+#' 
+#' **Veuillez vous référer au cours en ligne pour les explications et les interprétations de cette analyse.**
+#' 
+#' [Installer un environnement R](https://github.com/SciViews/svbox/tree/main/svbox2025-native)
+#' adéquat pour reproduire cette analyse. 
 ```
 
 ##### Objectifs {.unnumbered}
@@ -39,7 +58,7 @@ Vos données et vos métadonnées doivent être faciles à trouver. C'est évide
 
 Dans le cadre des travaux scientifiques, Le "Digital Object Identifier" (*DOI*) est la méthode standardisée conseillée. Vous avez déjà été confronté à des DOI. Par exemple, le DOI suivant <https://doi.org/10.1038/sdata.2016.18> fait référence à l'article *The FAIR Guiding Principles for scientific data management and stewardship*. Ce code est unique et persistant. Ce code va toujours renvoyer vers cet article de la revue Scientific Data. Imaginons que cette revue disparaisse, le DOI sera toujours accessible, mais il pourrait bien pointer vers une autre URL dans ce cas. Ainsi, la publication pourra être retrouvée facilement ailleurs sur Internet grâce à ce DOI.
 
-Le DOI ne couvre pas que les articles scientifiques, il est également utilisé pour les données. Par exemple, le DOI suivant <https://doi.org/10.5281/zenodo.3711592> fait référence aux données intitulées *Dataset: Number of diagnoses with coronavirus disease (COVID-19) in The Netherlands* publié sur [Zenodo](https://zenodo.org), un site spécialisé dans le partage de données ouvertes. Nous y reviendrons dans les sections suivantes.
+Le DOI ne couvre pas que les articles scientifiques, il est également utilisé pour les données. Par exemple, le DOI <https://doi.org/10.5281/zenodo.3711592> fait référence aux données intitulées *Dataset: Number of diagnoses with coronavirus disease (COVID-19) in The Netherlands* publié sur [Zenodo](https://zenodo.org), un site spécialisé dans le partage de données ouvertes. Nous y reviendrons dans les sections suivantes.
 
 ##### Accessible (*Accessible*)
 
@@ -178,6 +197,13 @@ Comme vous venez de le constater, Zenodo, de par la façon dont il présente les
 
 ## Cartes auto-adaptatives (SOM) {#som}
 
+```{r som, echo=FALSE}
+#'
+#' ### Cartes auto-adaptatives (SOM) {#som}
+#'
+```
+
+
 Pour clore ce cours, nous allons étudier une nouvelle technique multivariée qui n'est pas très couramment employée en biologie, mais qui mérite pourtant que l'on s'y intéresse. Il s'agit d'une approche radicalement différente de l'ACP, AFC, ou encore MDS, qui reste plus générale, car non linéaire. C'est la méthode des **cartes auto-adaptatives**, ou encore, **cartes de Kohonen** du nom de son auteur. En anglais, nous parlerons de *"self-organizing map"*, d'où son acronyme **SOM** qui est fréquemment utilisé, même en français. Cette technique va encore une fois représenter les individus sur une carte. Cette fois-ci, la carte contient un certain nombre de cellules qui forment une grille rectangulaire, ou mieux, une disposition en nid d'abeille (nous verrons plus loin pourquoi cette disposition particulière est intéressante). Comme à l'habitude, nous allons faire en sorte que des individus qui se ressemblent soient proches sur la carte, et des individus différents soient éloignés. La division de la carte en différentes cellules permet, en plus, de regrouper les individus. La méthode réalise également une classification comme pour la CAH ou les k-moyennes, en bonus à la visualisation de la carte. Les SOM apparaissent donc comme une technique hybride entre **ordination** (représentation sur des cartes) et **classification** (regroupement des individus).
 
 ##### À vous de jouer ! {.unnumbered}
@@ -186,7 +212,7 @@ Pour clore ce cours, nous allons étudier une nouvelle technique multivariée qu
 
 La théorie et les calculs derrière les SOM sont complexes. Elles font appel aux **réseaux de neurones adaptatifs** et leur fonctionnement est inspiré de celui du cerveau humain. Tout comme notre cerveau, les SOM vont utiliser l'information en entrée pour aller assigner une zone de traitement de l'information (pour notre cerveau) ou une cellule dans la carte (pour les SOM). Étant donné la complexité du calcul, les développements mathématiques n'ont pas leur place dans ce cours. Ce qui importe, c'est de comprendre le concept et d'être ensuite capable d'utiliser les SOM à bon escient. Pour ceux d'entre vous qui désirent quand même comprendre les détails du calcul, vous pouvez lire [ici](https://towardsdatascience.com/understanding-self-organising-map-neural-network-with-python-code-7a77f501e985/) ou visionner la vidéo suivante **(facultative et en anglais)** :
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, purl=FALSE}
 vembedr::embed_youtube("0qtvb_Nx2tA", width = 770, height = 433, query = "end=266")
 ```
 
@@ -203,6 +229,9 @@ Ce qui est évident sur un exemple aussi visuel que celui-ci fonctionne aussi tr
 Reprenons notre exemple du zooplancton.
 
 ```{r}
+# Configuration du dialecte SciViews::R avec le module "explore"
+SciViews::R("explore", lang = "fr")
+# Lecture des données zooplankton
 zoo <- read("zooplankton", package = "data.io")
 zoo
 ```
@@ -210,6 +239,7 @@ zoo
 Les 19 premières colonnes représentent des mesures réalisées sur notre plancton et la vingtième est la classe. Nous nous débarrasserons de la colonne classe et transformons les données numériques en **matrice** après les avoir standardisées (étapes *obligatoires* avant une SOM) pour stocker le résultat dans `zoo_mat`.
 
 ```{r}
+# Élimination de class, standardisation et transformation en matrice
 zoo %>.%
   sselect(., -class) %>.%
   scale(.) %>.%
@@ -226,15 +256,17 @@ Avant de pouvoir réaliser notre analyse, nous devons décider d'avance la topol
 La grille rectangulaire est celle qui vous vient probablement immédiatement à l'esprit. Il s'agit d'arranger les cellules en lignes horizontales et colonnes verticales. La fonction `somgrid()` du package {kohonen} permet de créer une telle grille.
 
 ```{r}
-library(kohonen) # Charge le package kohonen
-rect_grid_7_7 <- somgrid(7, 7, topo = "rectangular") # Crée la grille
+# Charger le package kohonen
+library(kohonen)
+# Grille rectangulaire 7 x 7
+rect_grid_7_7 <- somgrid(7, 7, topo = "rectangular")
 ```
 
 Il n'y a pas de graphique `chart` ou `ggplot2` dans le package {kohonen}. Nous utiliserons ici les graphiques de base de R. Pour visualiser la grille, il faut la transformer en un objet **kohonen**. Nous pouvons ajouter plein d'information sur la grille. Ici, nous rajoutons une propriété calculée à l'aide de `unit.distances()` qui est la distance des cellules de la carte par référence à la cellule centrale. Les cellules sont numérotées de 1 à *n* en partant en bas à gauche, en progressant le long de la ligne du bas vers la droite, et en reprenant à gauche à la ligne au-dessus. Donc, la ligne du bas contient de gauche à droite les cellules n°1 à 7. La ligne au-dessus contient les cellules n°8 à 14, et ainsi de suite. Donc, pour vérifier si on a bien compris, quel est le numéro de la cellule centrale dans notre grille ? Elle est située en quatrième ligne en partant du bas et en position 4 sur cette ligne, soit trois lignes complètes plus quatre ($3*7+4=25$). C'est donc la cellule n°25.
 
 ```{r, warning=FALSE}
+# Transformation en un objet de classe kohonen qui est une liste
 rect_grid_7_7 %>.%
-  # Transformation en un objet de classe kohonen qui est une liste
   structure(list(grid = .), class = "kohonen") %>.% # Objet de classe kohonen
   plot(., type = "property", # Graphique de propriété
     property = unit.distances(rect_grid_7_7)[25, ], # distance à la cellule 25
@@ -246,10 +278,11 @@ Les cellules de la grille ne sont pas disposées au hasard dans la carte SOM. De
 L'autre topologie possible est la grille hexagonale. Voyons ce que cela donne :
 
 ```{r, warning=FALSE}
+# Grille hexagonale 7 x 7
 hex_grid_7_7 <- somgrid(7, 7, topo = "hexagonal")
 
+# Transformation en un objet de classe kohonen qui est une liste
 hex_grid_7_7 %>.%
-  # Transformation en un objet de classe kohonen qui est une liste
   structure(list(grid = .), class = "kohonen") %>.% # Objet de classe kohonen
   plot(., type = "property", # Graphique de propriété
     property = unit.distances(hex_grid_7_7)[25, ], # distance à la cellule 25
@@ -265,7 +298,9 @@ Ici, nous n'avons que six voisins directs, mais trois directions dans lesquelles
 Effectuons maintenant le calcul de notre SOM à l'aide de la fonction `som()` du package {kohonen}. Comme l'analyse fait intervenir le générateur pseudo-aléatoire, nous pouvons utiliser de manière optionnelle `set.seed()` avec un nombre entier **choisi au hasard** (et toujours différent à chaque utilisation) pour que cette analyse particulière là soit reproductible. Sinon, à chaque exécution, nous obtiendrons un résultat légèrement différent.
 
 ```{r, warning=FALSE}
+# Initialisation du générateur de nombres pseudo-aléatoires
 set.seed(8657)
+# Analyse SOM avec grille hexagonale 7 x 7
 zoo_som <- som(zoo_mat, grid = somgrid(7, 7, topo = "hexagonal"))
 summary(zoo_som)
 ```
@@ -273,6 +308,7 @@ summary(zoo_som)
 Le résumé de l'objet ne nous donne pas beaucoup d'information. C'est normal. La technique étant visuelle, ce sont les représentations graphiques qui sont à utiliser ici. Avec les graphiques R de base, la fonction utilisée est `plot()`. Nous avons plusieurs types disponibles et une large palette d'options. Voyez l'aide en ligne de`?plot.kohonen`. Le premier graphique (`type = "changes"`) montre l'évolution de l'apprentissage au fil des itérations. L'objectif est de descendre le plus possible sur l'axe des ordonnées pour réduire au maximum la distance des individus par rapport aux cellules (*"units"* en anglais) où ils devraient se placer. Idéalement, nous souhaitons tendre vers zéro. En pratique, nous pourrons arrêter les itérations lorsque la courbe ne diminue plus de manière nette.
 
 ```{r}
+# Évolution de l'apprentissage de notre SOM au fil des itérations
 plot(zoo_som, type = "changes")
 ```
 
@@ -280,6 +316,7 @@ Ici, il semble que nous ne diminuons plus vraiment à partir de l'itération 85 
 
 ```{r, warning=FALSE}
 set.seed(954)
+# Nouvelle SOM avec 200 itérations
 zoo_som <- som(zoo_mat, grid = somgrid(7, 7, topo = "hexagonal"), rlen = 200)
 plot(zoo_som, type = "changes")
 ```
@@ -289,9 +326,12 @@ Vous serez sans doute surpris de constater que la diminution de la courbe se fai
 Le second graphique que nous pouvons réaliser consiste à placer les individus dans la carte, en utilisant éventuellement une couleur différente en fonction d'une caractéristique de ces individus (ici, leur `class`e). Ce graphique est obtenu avec `type = "mapping"`. Si vous ne voulez pas représenter la grille hexagonale à l'aide de cercles, vous pouvez spécifier `shape = "straight"`. Nous avons 17 classes de zooplancton et il est difficile de représenter plus de 10-12 couleurs distinctes, mais [ce site](https://sashat.me/2017/01/11/list-of-20-simple-distinct-colors/) propose une palette de 20 couleurs distinctes. Nous en utiliserons les 17 premières...
 
 ```{r}
+# Palette de 17 couleurs distinctes
 colors17 <- c("#e6194B", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4",
   "#42d4f4", "#f032e6", "#bfef45", "#fabebe", "#469990", "#e6beff", "#9A6324",
-  "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1")
+  "#fffac8", "#800000", "#aaffc3", "#808000")
+
+# Placement des individus dans la carte avec une couleur différente pour chaque classe
 plot(zoo_som, type = "mapping", shape = "straight", col = colors17[zoo$class])
 ```
 
@@ -300,18 +340,21 @@ Nous n'avons pas ajouté de légende qui indique à quelle classe correspond cha
 Nous voyons donc ici que, malgré que l'information contenue dans `class` n'ait pas été utilisées. Les différents individus de zooplancton ne se répartissent pas au hasard en fonction de ce critère. Nous pouvons également observer les cellules qui contiennent plus ou moins d'individus, mais si l'objectif est de visionner *uniquement* le remplissage des cellules, le graphique avec `type = "counts"` est plus adapté.
 
 ```{r, warning=FALSE}
+# Nombre d'individus dans chaque cellule
 plot(zoo_som, type = "counts", shape = "straight")
 ```
 
 Nous pouvons obtenir la cellule dans laquelle chaque individu est mappé comme suit :
 
 ```{r}
+# Cellule dans laquelle chaque individu est mappé
 zoo_som$unit.classif
 ```
 
 Par conséquent, nous pouvons créer un tableau de contingence qui répertorie le nombre d'individus mappés dans chaque cellule à l'aide de `table()`. Nous l'enregistrons dans `zoo_som_nb`, car nous réutiliserons cette table plus tard.
 
 ```{r}
+# Tableau de contingence des individus mappés dans chaque cellule
 zoo_som_nb <- table(zoo_som$unit.classif)
 zoo_som_nb
 ```
@@ -325,6 +368,7 @@ De nombreuses autres présentations graphiques sont possibles également. Nous a
 La carte SOM est orientée. C'est-à-dire que les cellules représentent des formes différentes de plancton telles qu'exprimées à travers les 19 variables utilisées ici (quantification de la taille, de la forme, de la transparence ...). Le graphique `type = "codes"` permet de visualiser ces différences de manière générale :
 
 ```{r, fig.height=7}
+# Orientation de la carte SOM en fonction des variables
 plot(zoo_som, type = "codes", codeRendering = "segments")
 ```
 
@@ -339,6 +383,7 @@ Ce graphique est riche en informations. Nous voyons que :
 Nous pouvons donc **orienter** notre carte SOM en indiquant l'information relative aux variables. Lorsque le nombre de variables est élevé ou relativement élevé comme ici, cela devient néanmoins difficile à lire. Il est aussi possible de colorer les cartes en fonction d'une et une seule variable pour en faciliter la lecture à l'aide de `type = "property"`. Voici quelques exemples (notez la façon de diviser une page graphique en lignes et colonnes à l'aide de `par(mfrow = )` en graphiques R de base, ensuite une boucle `for` réalise les six graphiques l'un après l'autre) :
 
 ```{r, warning=FALSE}
+# Coloration de la carte variable par variable (6 variables représentées ici)
 par(mfrow = c(2, 3)) # Graphiques sur 2 lignes et 3 colonnes
 for (var in c("size", "mode", "range", "aspect", "elongation", "circularity"))
   plot(zoo_som, type = "property", property = zoo_som$codes[[1]][, var],
@@ -353,13 +398,23 @@ Nous pouvons plus facilement inspecter les zones d'influence de différentes var
 
 #### Regroupements
 
+```{r groups, echo=FALSE}
+#'
+#' ### Regroupements {#groups}
+#'
+```
+
 Lorsque nous avons réalisé une Classification Ascendante Hiérarchique (CAH) sur le jeu de données `zooplankton`, nous étions obligés de choisir deux variables parmi les 19 pour visualiser le regroupement sur un graphique nuage de points. C'est peu, et cela ne permet pas d'avoir une vision synthétique sur l'ensemble de l'information. Les méthodes d'ordination permettent de visualiser plus d'information sur un petit nombre de dimensions grâce aux techniques de réduction des dimensions qu'elles implémentent. Les cartes SOM offrent encore un niveau supplémentaire de raffinement. Nous pouvons considérer que chaque cellule est un premier résumé des données et nous pouvons effectuer ensuite une CAH sur ces cellules afin de dégager un regroupement et le visualiser sur la carte SOM. L'intérêt est que l'on réduit un jeu de données potentiellement très volumineux à un nombre plus restreint de cellules (ici 7x7 = 49), ce qui est plus "digeste" pour la CAH. Voici comment cela fonctionne (notez que `dissimilarity()` attend un **data.frame** alors que `som()` travaille avec des objets **matrix**, donc une conversion s'impose ici) :
 
 ```{r}
+# Configuration de R
 SciViews::R("explore", lang = "fr")
+
 # Distance euclidienne entre cellules
 zoo_som_dist <- dissimilarity(as.data.frame(zoo_som$codes[[1]]),
   method = "euclidean")
+# CAH avec distance de Ward D2 et pondération des cellules
+# en fonction du nombre d'individus mappés
 zoo_som_cah <- cluster(zoo_som_dist, method = "ward.D2", members = zoo_som_nb)
 ```
 
@@ -368,13 +423,15 @@ Notre CAH a été réalisée ici avec la méthode D2 de Ward. L'argument `member
 Voici le dendrogramme :
 
 ```{r}
+# Dendrogramme et coupure à 10.5
 chart(zoo_som_cah) +
-  geom_dendroline(h = 10.5, col = "red") # Niveau de coupure proposé
+  geom_dendroline(h = 10.5, col = "red")
 ```
 
 Les V1 à V49 sont les numéros de cellules. Nous pouvons couper à différents endroits dans ce dendrogramme, mais si nous décidons de distinguer les six groupes correspondants au niveau de coupure à une hauteur de 10,5 (comme sur le graphique), voici ce que cela donne :
 
 ```{r}
+# Prédiction des groupoes à l'aide de la CAH
 groupes <- predict(zoo_som_cah, h = 10.5)
 groupes
 ```
@@ -384,6 +441,7 @@ Visualisons ce découpage sur la carte SOM (l'argument `bgcol =` colorie le fond
 [^10-open-data-som-4]: Nous avons choisi ici encore une autre palette de couleurs provenant du package {RColorBrewer}, voir [ici](http://www.sthda.com/french/wiki/couleurs-dans-r).
 
 ```{r}
+# Visualisation du découpage par CAH sur la carte SOM
 plot(zoo_som, type = "mapping", pchs = ".", main = "SOM zoo, six groupes",
   bgcol =  RColorBrewer::brewer.pal(5, "Set2")[groupes])
 add.cluster.boundaries(zoo_som, clustering = groupes)
@@ -415,7 +473,7 @@ Nous n'avons fait qu'effleurer les nombreuses possibilités des cartes auto-adap
 
 **Terminez maintenant votre projet de groupe.**
 
-```{r assign_B06Ga_open_data_V, echo=FALSE, results='asis'}
+```{r assign_B06Ga_open_data_V, echo=FALSE, results='asis', purl=FALSE}
 if (exists("assignment2"))
   assignment2("B06Ga_open_data", part = "V",
     url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
@@ -437,6 +495,11 @@ if (exists("assignment2"))
 Ce dixième module vous a permis de comprendre ce que sont des données ouvertes et comment partager ses propres données de manière optimale. Vous avez aussi appris à réaliser des cartes auto-adaptatives. Pour évaluer votre compréhension de cette matière, vous aviez les exercices suivants à réaliser :
 
 `r show_ex_toc("10", finalize = TRUE)`
+
+##### Code des exemples {.unnumbered}
+
+-  [Document HTML](more/10-open-data-som.html)
+-  [Script R](https://github.com/BioDataScience-Course/sdd-umons2-2025/blob/main/R/10-open-data-som.R){target="top"}
 
 ##### Progression {.unnumbered}
 

@@ -84,7 +84,7 @@ learnitdown$assign_url <- list(
   B07Ca_multi          = "https://classroom.github.com/a/...",
   B08Ia_mfa            = "https://classroom.github.com/a/EcAqwuZ0",
   B08Ib_zooscannet     = "https://classroom.github.com/a/MyO1yWPo",
-  B09Ia_portalr        = "https://classroom.github.com/a/..."
+  B09Ia_portalr        = "https://classroom.github.com/a/G2No12XP"
 )
 
 # Date and time for start and end of classes for each module
