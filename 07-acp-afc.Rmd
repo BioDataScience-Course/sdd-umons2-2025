@@ -830,7 +830,7 @@ if (exists("assignment"))
   assignment("B07Ia_acp_afc", part = "I",
     url = "https://github.com/BioDataScience-Course/B07Ia_acp_afc",
     course.ids = c(
-      'S-BIOG-061' = !"B07Ia_{YY}M_acp_afc"),
+      'S-BIOG-061' = !"B07Ia-{YY}M-acp-afc"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B07Ia_acp_afc}"),
     course.starts = c(
@@ -1123,7 +1123,7 @@ if (exists("assignment"))
   assignment("B07Ia_acp_afc", part = "II",
     url = "https://github.com/BioDataScience-Course/B07Ia_acp_afc",
     course.ids = c(
-      'S-BIOG-061' = !"B07Ia_{YY}M_acp_afc"),
+      'S-BIOG-061' = !"B07Ia-{YY}M-acp-afc"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B07Ia_acp_afc}"),
     course.starts = c(
@@ -1152,7 +1152,7 @@ if (exists("challenge"))
   challenge("B07Ca_multi", part = NULL,
     url = "https://github.com/BioDataScience-Course/B07Ca_multi",
     course.ids = c(
-      'S-BIOG-061' = !"B07Ca_{YY}M_multi"),
+      'S-BIOG-061' = !"B07Ca-{YY}M-multi"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B07Ca_multi}"),
     course.starts = c(
@@ -1180,7 +1180,7 @@ if (exists("assignment2"))
   assignment2("B06Ga_open_data", part = "II",
     url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
     course.ids = c(
-      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
+      'S-BIOG-061' = !"B06Ga-{YY}M-open-data"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
     course.starts = c(

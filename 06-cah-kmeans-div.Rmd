@@ -696,7 +696,7 @@ if (exists("assignment"))
   assignment("B06Ia_fish_market", part = "I",
     url = "https://github.com/BioDataScience-Course/B06Ia_fish_market",
     course.ids = c(
-      'S-BIOG-061' = !"B06Ia_{YY}M_fish_market"),
+      'S-BIOG-061' = !"B06Ia-{YY}M-fish-market"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B06Ia_fish_market}"),
     course.starts = c(
@@ -981,7 +981,7 @@ if (exists("assignment"))
   assignment("B06Ia_fish_market", part = "II",
     url = "https://github.com/BioDataScience-Course/B06Ia_fish_market",
     course.ids = c(
-      'S-BIOG-061' = !"B06Ia_{YY}M_fish_market"),
+      'S-BIOG-061' = !"B06Ia-{YY}M-fish-market"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B06Ia_fish_market}"),
     course.starts = c(
@@ -1163,7 +1163,7 @@ if (exists("assignment2"))
   assignment2("B06Ga_open_data", part = "I",
     url = "https://github.com/BioDataScience-Course/B06Ga_open_data",
     course.ids = c(
-      'S-BIOG-061' = !"B06Ga_{YY}M_open_data"),
+      'S-BIOG-061' = !"B06Ga-{YY}M-open-data"),
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B06Ga_open_data}"),
     course.starts = c(
