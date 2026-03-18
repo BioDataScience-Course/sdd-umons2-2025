@@ -342,7 +342,7 @@ if (exists("assignment"))
   assignment("B08Ib_zooscannet", part = "I",
     url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
     course.ids = c(
-      'S-BIOG-061' = !"B08Ib-{YY}M-zooscannet"),
+      'S-BIOG-061' = !"B08Ia-{YY}M-zooscannet"), # !!! Wrong name!
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B08Ib_zooscannet}"),
     course.starts = c(
@@ -794,7 +794,7 @@ if (exists("assignment"))
   assignment("B08Ib_zooscannet", part = "II",
     url = "https://github.com/BioDataScience-Course/B08Ib_zooscannet",
     course.ids = c(
-      'S-BIOG-061' = !"B08Ib-{YY}M-zooscannet"),
+      'S-BIOG-061' = !"B08Ia-{YY}M-zooscannet"), # !!! wrong name!
     course.urls = c(
       'S-BIOG-061' = !"{assign_url$B08Ib_zooscannet}"),
     course.starts = c(
